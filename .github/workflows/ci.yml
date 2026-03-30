@@ -205,7 +205,8 @@ jobs:
         run: |
           if [ -f Makefile ]; then
             echo "Detected Makefile"
-            bear -- make fclean all -j
+            make fclean
+            bear -- make all -j
             clang-tidy `find . -type f \( -name "*.c" -o -name "*.cpp" \)` \
             -p . 2>&1 | tee analysis.log
 
