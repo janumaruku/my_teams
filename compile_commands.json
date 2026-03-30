@@ -1,0 +1,249 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/clang++",
+      "-Isrc/Network/include",
+      "-Isrc/Utils/include",
+      "-Isrc/DesignPattern/include",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "build/src/DesignPattern/FactoryTemplate.o",
+      "src/DesignPattern/FactoryTemplate.cpp"
+    ],
+    "directory": "/home/janumaruku/epitech_project/my_teams",
+    "file": "/home/janumaruku/epitech_project/my_teams/src/DesignPattern/FactoryTemplate.cpp",
+    "output": "/home/janumaruku/epitech_project/my_teams/build/src/DesignPattern/FactoryTemplate.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang++",
+      "-Isrc/Network/include",
+      "-Isrc/Utils/include",
+      "-Isrc/DesignPattern/include",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "build/src/Network/ErrorCode.o",
+      "src/Network/ErrorCode.cpp"
+    ],
+    "directory": "/home/janumaruku/epitech_project/my_teams",
+    "file": "/home/janumaruku/epitech_project/my_teams/src/Network/ErrorCode.cpp",
+    "output": "/home/janumaruku/epitech_project/my_teams/build/src/Network/ErrorCode.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang++",
+      "-Isrc/Network/include",
+      "-Isrc/Utils/include",
+      "-Isrc/DesignPattern/include",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "build/src/Network/Buffer.o",
+      "src/Network/Buffer.cpp"
+    ],
+    "directory": "/home/janumaruku/epitech_project/my_teams",
+    "file": "/home/janumaruku/epitech_project/my_teams/src/Network/Buffer.cpp",
+    "output": "/home/janumaruku/epitech_project/my_teams/build/src/Network/Buffer.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang++",
+      "-Isrc/Network/include",
+      "-Isrc/Utils/include",
+      "-Isrc/DesignPattern/include",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "build/src/Network/Endpoint.o",
+      "src/Network/Endpoint.cpp"
+    ],
+    "directory": "/home/janumaruku/epitech_project/my_teams",
+    "file": "/home/janumaruku/epitech_project/my_teams/src/Network/Endpoint.cpp",
+    "output": "/home/janumaruku/epitech_project/my_teams/build/src/Network/Endpoint.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang++",
+      "-Isrc/Network/include",
+      "-Isrc/Utils/include",
+      "-Isrc/DesignPattern/include",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "build/src/Network/IoContext.o",
+      "src/Network/IoContext.cpp"
+    ],
+    "directory": "/home/janumaruku/epitech_project/my_teams",
+    "file": "/home/janumaruku/epitech_project/my_teams/src/Network/IoContext.cpp",
+    "output": "/home/janumaruku/epitech_project/my_teams/build/src/Network/IoContext.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang++",
+      "-Isrc/Network/include",
+      "-Isrc/Utils/include",
+      "-Isrc/DesignPattern/include",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "build/src/Network/ConnectedSocket.o",
+      "src/Network/ConnectedSocket.cpp"
+    ],
+    "directory": "/home/janumaruku/epitech_project/my_teams",
+    "file": "/home/janumaruku/epitech_project/my_teams/src/Network/ConnectedSocket.cpp",
+    "output": "/home/janumaruku/epitech_project/my_teams/build/src/Network/ConnectedSocket.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang++",
+      "-Isrc/Network/include",
+      "-Isrc/Utils/include",
+      "-Isrc/DesignPattern/include",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "build/src/Utils/OptionException.o",
+      "src/Utils/OptionException.cpp"
+    ],
+    "directory": "/home/janumaruku/epitech_project/my_teams",
+    "file": "/home/janumaruku/epitech_project/my_teams/src/Utils/OptionException.cpp",
+    "output": "/home/janumaruku/epitech_project/my_teams/build/src/Utils/OptionException.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang++",
+      "-Isrc/Network/include",
+      "-Isrc/Utils/include",
+      "-Isrc/DesignPattern/include",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "build/src/Utils/Options.o",
+      "src/Utils/Options.cpp"
+    ],
+    "directory": "/home/janumaruku/epitech_project/my_teams",
+    "file": "/home/janumaruku/epitech_project/my_teams/src/Utils/Options.cpp",
+    "output": "/home/janumaruku/epitech_project/my_teams/build/src/Utils/Options.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang++",
+      "-Isrc/Network/include",
+      "-Isrc/Utils/include",
+      "-Isrc/DesignPattern/include",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "build/src/Utils/StringUtils.o",
+      "src/Utils/StringUtils.cpp"
+    ],
+    "directory": "/home/janumaruku/epitech_project/my_teams",
+    "file": "/home/janumaruku/epitech_project/my_teams/src/Utils/StringUtils.cpp",
+    "output": "/home/janumaruku/epitech_project/my_teams/build/src/Utils/StringUtils.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang++",
+      "-Isrc/Network/include",
+      "-Isrc/Utils/include",
+      "-Isrc/DesignPattern/include",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "build/src/app/main.o",
+      "src/app/main.cpp"
+    ],
+    "directory": "/home/janumaruku/epitech_project/my_teams",
+    "file": "/home/janumaruku/epitech_project/my_teams/src/app/main.cpp",
+    "output": "/home/janumaruku/epitech_project/my_teams/build/src/app/main.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang++",
+      "-Isrc/Network/include",
+      "-Isrc/Utils/include",
+      "-Isrc/DesignPattern/include",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "build/src/Network/ListeningSocket.o",
+      "src/Network/ListeningSocket.cpp"
+    ],
+    "directory": "/home/janumaruku/epitech_project/my_teams",
+    "file": "/home/janumaruku/epitech_project/my_teams/src/Network/ListeningSocket.cpp",
+    "output": "/home/janumaruku/epitech_project/my_teams/build/src/Network/ListeningSocket.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang++",
+      "-Isrc/Network/include",
+      "-Isrc/Utils/include",
+      "-Isrc/DesignPattern/include",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "build/src/Network/Acceptor.o",
+      "src/Network/Acceptor.cpp"
+    ],
+    "directory": "/home/janumaruku/epitech_project/my_teams",
+    "file": "/home/janumaruku/epitech_project/my_teams/src/Network/Acceptor.cpp",
+    "output": "/home/janumaruku/epitech_project/my_teams/build/src/Network/Acceptor.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang++",
+      "-Isrc/Network/include",
+      "-Isrc/Utils/include",
+      "-Isrc/DesignPattern/include",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "build/src/Utils/Logger.o",
+      "src/Utils/Logger.cpp"
+    ],
+    "directory": "/home/janumaruku/epitech_project/my_teams",
+    "file": "/home/janumaruku/epitech_project/my_teams/src/Utils/Logger.cpp",
+    "output": "/home/janumaruku/epitech_project/my_teams/build/src/Utils/Logger.o"
+  }
+]

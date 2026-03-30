@@ -1,0 +1,1 @@
+SRC		= $(shell find src/ -wholename "*.cpp")
