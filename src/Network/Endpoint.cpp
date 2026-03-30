@@ -15,7 +15,7 @@
 #include "constants.hpp"
 
 namespace network {
-Endpoint::Endpoint(const short &port, const std::string &hostName): _port{port},
+Endpoint::Endpoint(const int &port, const std::string &hostName): _port{port},
     _hostName{hostName}
 {
     _address.sin_family = AF_INET;

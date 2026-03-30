@@ -36,6 +36,8 @@
 *.exe
 *.out
 *.app
+myteams_server
+myteams_cli
 
 # debug information files
 *.dwo

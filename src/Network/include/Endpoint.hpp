@@ -16,7 +16,7 @@ class Endpoint {
 public:
     Endpoint() = default;
 
-    explicit Endpoint(const short &port, const std::string &hostName = "");
+    explicit Endpoint(const int &port, const std::string &hostName = "");
 
     explicit Endpoint(const sockaddr_in &address);
 
@@ -27,7 +27,7 @@ public:
     sockaddr_in &getAddress() noexcept;
 
 private:
-    short _port = 0;
+    int _port = 0;
     std::string _hostName;
     sockaddr_in _address{};
 };
