@@ -47,6 +47,6 @@ inline const FtpErrorCodeCategory &ftpCategory() noexcept
     return category;
 }
 
-std::error_code make_error_code(FtpErrorCode errCode) noexcept;
+std::error_code make_error_code(FtpErrorCode errCode) noexcept; // NOLINT
 
 #endif //MYFTP_ERRORCODE_HPP
