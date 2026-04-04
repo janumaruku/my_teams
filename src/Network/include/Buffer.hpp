@@ -81,6 +81,15 @@ MutableBuffer buffer(std::vector<PodType> &vec)
         .size = vec.size()
     };
 }
+
+template <typename PodType>
+ConstBuffer buffer(const std::vector<PodType> &vec)
+{
+    return ConstBuffer {
+        .data = vec.data(),
+        .size = vec.size()
+    };
+}
 } // ftp
 
 #endif //MYFTP_BUFFER_HPP
