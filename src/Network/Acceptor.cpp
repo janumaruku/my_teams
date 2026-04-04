@@ -31,9 +31,6 @@ Acceptor::Acceptor(IOContext &ioContext, Endpoint &&endpoint): _endpoint(
     _logger.start(ULogLevel::DEBUG_LEVEL) << "Listening on port " << _endpoint.
         getPort() << utils::END;
 
-    // _ioContext.registerNotifier(_socket.getFd(), [this]() {
-    //     handleNewConnection();
-    // });
     _ioContext.registerFileDescriptor(_socket.getFd());
 }
 
@@ -44,7 +41,6 @@ int Acceptor::getSocketFd() const noexcept
 
 void Acceptor::asyncAccept(const ConnectionHandler &handler)
 {
-    // _handlerFunction.emplace(handler);
     _ioContext.postRead(_socket.getFd(), [this, handler] {
         const auto clientSocket = acceptClient();
         if (!clientSocket) {
