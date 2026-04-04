@@ -41,6 +41,8 @@ public:
 
     void asyncReadSome(Buffer outputBuffer, Callback handler);
 
+    void asyncWrite(Buffer buffer, Callback handler);
+
     [[nodiscard]] IOContext &getIOContext() const noexcept;
 
 private:

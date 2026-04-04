@@ -15,26 +15,28 @@
 
 namespace network {
 ConnectedSocket::ConnectedSocket(IOContext &ioContext): _socketFd{
-    socket(AF_INET, SOCK_STREAM, 0)}, _ioContext{ioContext}
+        socket(AF_INET, SOCK_STREAM, 0)}, _ioContext{ioContext}
 {
     if (_socketFd == -1)
         throw std::runtime_error("Socket creation failed");
     _logger.start(ULogLevel::DEBUG) << "Connected socket created" << utils::END;
 
-    ioContext.registerNotifier(_socketFd, [this]() {
-        handleAsyncOperation();
-    });
+    // ioContext.registerNotifier(_socketFd, [this]() {
+    //     handleAsyncOperation();
+    // });
+    _ioContext.registerFileDescriptor(_socketFd);
 }
 
 ConnectedSocket::ConnectedSocket(IOContext &ioContext, const int &clientFd,
     Endpoint &&endpoint): _socketFd{clientFd}, _endpoint{std::move(endpoint)},
-    _ioContext{ioContext}
+                          _ioContext{ioContext}
 {
     _logger.start(ULogLevel::DEBUG) << "Connected socket created" << utils::END;
 
-    ioContext.registerNotifier(_socketFd, [this]() {
-        handleAsyncOperation();
-    });
+    // ioContext.registerNotifier(_socketFd, [this]() {
+    //     handleAsyncOperation();
+    // });
+    _ioContext.registerFileDescriptor(_socketFd);
 }
 
 void ConnectedSocket::connect(Endpoint &endpoint)
@@ -72,18 +74,47 @@ void ConnectedSocket::syncWrite(const Buffer &buffer, Callback handler) const
         handler(std::error_code{}, result);
 }
 
-void ConnectedSocket::asyncReadSome(Buffer outputBuffer,
-    Callback handler)
+void ConnectedSocket::asyncReadSome(Buffer outputBuffer, Callback handler)
 {
-    _handlers.emplace([this, outputBuffer, handler]() {
-        const ssize_t result = read(_socketFd, outputBuffer.data(),
-            outputBuffer.size());
+    // _handlers.emplace([this, outputBuffer, handler] {
+    //     const ssize_t result =
+    //         read(_socketFd, outputBuffer.data(), outputBuffer.size());
+    //
+    //     if (result == -1)
+    //         handler(FtpErrorCode::CS_READ_ERROR, 0);
+    //     else {
+    //         handler(std::error_code{}, result);
+    //     }
+    // });
+    _ioContext.postRead(_socketFd, [this, outputBuffer, handler] {
+        const ssize_t result =
+            read(_socketFd, outputBuffer.data(), outputBuffer.size());
 
         if (result == -1)
             handler(FtpErrorCode::CS_READ_ERROR, 0);
         else {
             handler(std::error_code{}, result);
         }
+    });
+}
+
+void ConnectedSocket::asyncWrite(Buffer buffer, Callback handler)
+{
+    // _handlers.emplace([this, buffer, handler] {
+    //     const ssize_t result = ::write(_socketFd, buffer.data(), buffer.size());
+    //
+    //     if (result == -1)
+    //         handler(FtpErrorCode::CS_WRITE_ERROR, 0);
+    //     else
+    //         handler(std::error_code{}, result);
+    // });
+    _ioContext.postWrite(_socketFd, [this, buffer, handler] {
+        const ssize_t result = ::write(_socketFd, buffer.data(), buffer.size());
+
+        if (result == -1)
+            handler(FtpErrorCode::CS_WRITE_ERROR, 0);
+        else
+            handler(std::error_code{}, result);
     });
 }
 
@@ -104,4 +135,4 @@ void ConnectedSocket::handleAsyncOperation()
 
     handler();
 }
-} // ftp
+} // namespace network

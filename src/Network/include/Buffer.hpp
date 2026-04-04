@@ -16,7 +16,7 @@ class Buffer {
 public:
     explicit Buffer(const std::string &buffer);
 
-    explicit Buffer(std::string &&buffer);
+    explicit Buffer(const std::string &&buffer);
 
     explicit Buffer(char *buffer, const std::size_t &size);
 

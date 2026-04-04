@@ -13,9 +13,12 @@ Buffer::Buffer(const std::string &buffer): _data{
     _size{buffer.size()}
 {}
 
-Buffer::Buffer(std::string &&buffer): _data{buffer.data()},
+Buffer::Buffer(const std::string &&buffer): /*_data{buffer.data()},*/
     _size{buffer.size()}
-{}
+{
+    auto temp = buffer;
+    _data = temp.data();
+}
 
 Buffer::Buffer(char *buffer, const std::size_t &size): _data{buffer},
     _size{size}
@@ -29,5 +32,14 @@ void *Buffer::data() const noexcept
 std::size_t Buffer::size() const noexcept
 {
     return _size;
+}
+
+std::size_t Buffer::len(const char *str) noexcept
+{
+    std::size_t size = 0;
+
+    for (; str[size] != 0; ++size) {}
+
+    return size;
 }
 } // ftp
