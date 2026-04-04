@@ -58,7 +58,14 @@ void IOContext::updateEventType(const int &fileDescriptor)
         !_pendingOperations.at(fileDescriptor).empty()) {
         const OpType opType = _pendingOperations.at(fileDescriptor).front().
             first;
-        _pollFds.at(fileDescriptor).events = opType == OpType::READ
+        auto itt = std::ranges::find_if(_pollFds, [fileDescriptor](const pollfd &pollFd) {
+            return pollFd.fd == fileDescriptor;
+        });
+
+        if (itt == _pollFds.end())
+            return;
+
+        itt->events = opType == OpType::READ
             ? POLLIN
             : POLLOUT;
     }

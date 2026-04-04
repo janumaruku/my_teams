@@ -21,9 +21,7 @@ ConnectedSocket::ConnectedSocket(IOContext &ioContext): _socketFd{
         throw std::runtime_error("Socket creation failed");
     _logger.start(ULogLevel::DEBUG_LEVEL) << "Connected socket created" << utils::END;
 
-    ioContext.registerNotifier(_socketFd, [this]() {
-        handleAsyncOperation();
-    });
+    _ioContext.registerFileDescriptor(_socketFd);
 }
 
 ConnectedSocket::ConnectedSocket(IOContext &ioContext, const int &clientFd,
@@ -32,9 +30,7 @@ ConnectedSocket::ConnectedSocket(IOContext &ioContext, const int &clientFd,
 {
     _logger.start(ULogLevel::DEBUG_LEVEL) << "Connected socket created" << utils::END;
 
-    ioContext.registerNotifier(_socketFd, [this]() {
-        handleAsyncOperation();
-    });
+    _ioContext.registerFileDescriptor(_socketFd);
 }
 
 void ConnectedSocket::connect(Endpoint &endpoint)
@@ -73,9 +69,9 @@ void ConnectedSocket::write(const ConstBuffer &buffer, Callback handler) const
 }
 
 void ConnectedSocket::asyncReadSome(MutableBuffer outputBuffer,
-    Callback handler)
+    Callback handler) const
 {
-    _handlers.emplace([this, outputBuffer, handler]() {
+    _ioContext.postRead(_socketFd, [this, outputBuffer, handler]() {
         const ssize_t result = read(_socketFd, outputBuffer.data,
             outputBuffer.size);
 
