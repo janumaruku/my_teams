@@ -8,6 +8,7 @@
 #ifndef MYFTP_BUFFER_HPP
 #define MYFTP_BUFFER_HPP
 
+#include <cstring>
 #include <string>
 #include <vector>
 
@@ -60,6 +61,15 @@ struct MutableBuffer {
 };
 
 ConstBuffer buffer(const std::string &str) noexcept;
+
+template <typename PodType>
+ConstBuffer buffer(const PodType *buff)
+{
+    return ConstBuffer {
+        .data = buff,
+        .size = strlen(buff)
+    };
+}
 } // ftp
 
 #endif //MYFTP_BUFFER_HPP
