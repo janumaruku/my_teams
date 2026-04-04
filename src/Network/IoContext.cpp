@@ -72,8 +72,22 @@ void IOContext::run()
 
         std::size_t itt = 0;
         while (itt < _pollFds.size()) {
-            if (_pollFds[itt].revents & POLLIN) {
-                _notifiers[_pollFds[itt].fd]();
+            const int fd = _pollFds[itt].fd;
+            if (_pollFds[itt].revents & (POLLHUP | POLLERR | POLLNVAL)) {
+                _pollFds.erase(_pollFds.begin() + itt);
+                continue;
+            }
+
+            if (_pollFds[itt].revents & (POLLIN | POLLOUT)) {
+                if (_pendingOperations.contains(fd) && !_pendingOperations.
+                    at(fd).empty()) {
+                    const auto [opType, handler] = _pendingOperations.at(fd).
+                        front();
+                    _pendingOperations.at(fd).pop();
+                    handler();
+                    updateEventType(fd);
+                } else
+                    _notifiers[_pollFds[itt].fd]();
             }
 
             ++itt;

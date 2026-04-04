@@ -40,8 +40,6 @@ public:
     void postWrite(const int &fileDescriptor,
         const OnFileDescriptorReady &handler);
 
-    void updateEventType(const int &fileDescriptor);
-
     void run();
 
     void unregisterNotifier(const int &socketFd);
@@ -50,6 +48,8 @@ private:
     std::vector<pollfd> _pollFds;
     std::unordered_map<int, OnFileDescriptorReady> _notifiers;
     std::unordered_map<int, std::queue<PendingOperation> > _pendingOperations;
+
+    void updateEventType(const int &fileDescriptor);
 };
 } // ftp
 

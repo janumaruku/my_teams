@@ -22,7 +22,11 @@ CLIENT_OBJ			=	$(CLIENT_SRC:%.cpp=$(BUILD_DIR)/%.o)
 
 LIBS = $(UTILS) $(DESIGN_PATTERN) $(NETWORK)
 
-all: $(SERVER) $(CLIENT)
+all: server client
+
+server: $(SERVER)
+
+client: $(CLIENT)
 
 $(SERVER): $(LIBS) $(SERVER_OBJ)
 	$(CXX) $(SERVER_OBJ) -o $@ $(LDFLAGS)
@@ -55,7 +59,7 @@ fclean: clean
 re: fclean all
 
 debug: CXXFLAGS += -g3 -DDEBUG
-debug: re
+debug: all
 
 tests_run:
 	@echo "No test Makefile target configured yet."

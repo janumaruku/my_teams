@@ -19,7 +19,7 @@ ConnectedSocket::ConnectedSocket(IOContext &ioContext): _socketFd{
 {
     if (_socketFd == -1)
         throw std::runtime_error("Socket creation failed");
-    _logger.start(ULogLevel::DEBUG) << "Connected socket created" << utils::END;
+    _logger.start(ULogLevel::DEBUG_LEVEL) << "Connected socket created" << utils::END;
 
     ioContext.registerNotifier(_socketFd, [this]() {
         handleAsyncOperation();
@@ -30,7 +30,7 @@ ConnectedSocket::ConnectedSocket(IOContext &ioContext, const int &clientFd,
     Endpoint &&endpoint): _socketFd{clientFd}, _endpoint{std::move(endpoint)},
     _ioContext{ioContext}
 {
-    _logger.start(ULogLevel::DEBUG) << "Connected socket created" << utils::END;
+    _logger.start(ULogLevel::DEBUG_LEVEL) << "Connected socket created" << utils::END;
 
     ioContext.registerNotifier(_socketFd, [this]() {
         handleAsyncOperation();
@@ -94,8 +94,6 @@ IOContext &ConnectedSocket::getIOContext() const noexcept
 
 void ConnectedSocket::handleAsyncOperation()
 {
-    if (_dummy == 0)
-        ++_dummy;
     if (_handlers.empty())
         return;
 

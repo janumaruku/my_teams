@@ -18,7 +18,7 @@ public:
     enum class Level: std::uint8_t {
         ERROR,
         WARNING,
-        DEBUG,
+        DEBUG_LEVEL,
         INFO,
     };
 

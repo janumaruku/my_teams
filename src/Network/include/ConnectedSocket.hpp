@@ -44,7 +44,6 @@ public:
     [[nodiscard]] IOContext &getIOContext() const noexcept;
 
 private:
-    int _dummy    = 0;
     int _socketFd = -1;
     Endpoint _endpoint;
     IOContext &_ioContext;
