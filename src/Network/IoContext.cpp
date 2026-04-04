@@ -11,15 +11,57 @@
 #include <system_error>
 
 namespace network {
+void IOContext::registerFileDescriptor(const int &fileDescriptor)
+{
+    _pollFds.push_back({
+        .fd = fileDescriptor,
+        .events = POLLIN,
+        .revents = 0,
+    });
+}
+
 void IOContext::registerNotifier(const int &fileDescriptor,
     const OnFileDescriptorReady &notifier)
 {
+    const auto itt = std::ranges::find_if(_pollFds,
+        [fileDescriptor](const pollfd item) {
+            return item.fd == fileDescriptor;
+        });
+    if (itt != _pollFds.end())
+        return;
+
     _pollFds.push_back({
-        .fd      = fileDescriptor,
-        .events  = POLLIN,
+        .fd = fileDescriptor,
+        .events = POLLIN,
         .revents = 0,
     });
     _notifiers[fileDescriptor] = notifier;
+}
+
+void IOContext::postRead(const int &fileDescriptor,
+    const OnFileDescriptorReady &handler)
+{
+    _pendingOperations[fileDescriptor].emplace(OpType::READ, handler);
+    updateEventType(fileDescriptor);
+}
+
+void IOContext::postWrite(const int &fileDescriptor,
+    const OnFileDescriptorReady &handler)
+{
+    _pendingOperations[fileDescriptor].emplace(OpType::WRITE, handler);
+    updateEventType(fileDescriptor);
+}
+
+void IOContext::updateEventType(const int &fileDescriptor)
+{
+    if (_pendingOperations.contains(fileDescriptor) &&
+        !_pendingOperations.at(fileDescriptor).empty()) {
+        const OpType opType = _pendingOperations.at(fileDescriptor).front().
+            first;
+        _pollFds.at(fileDescriptor).events = opType == OpType::READ
+            ? POLLIN
+            : POLLOUT;
+    }
 }
 
 void IOContext::run()
