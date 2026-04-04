@@ -48,6 +48,18 @@ private:
     void *_data;
     std::size_t _size;
 };
+
+struct ConstBuffer {
+    const void *data;
+    std::size_t size;
+};
+
+struct MutableBuffer {
+    void *data;
+    std::size_t size;
+};
+
+ConstBuffer buffer(const std::string &str) noexcept;
 } // ftp
 
 #endif //MYFTP_BUFFER_HPP

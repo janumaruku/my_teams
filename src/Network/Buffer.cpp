@@ -30,4 +30,12 @@ std::size_t Buffer::size() const noexcept
 {
     return _size;
 }
+
+ConstBuffer buffer(const std::string &str) noexcept
+{
+    return ConstBuffer {
+        .data = str.data(),
+        .size = str.size()
+    };
+}
 } // ftp
