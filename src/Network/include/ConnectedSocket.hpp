@@ -37,7 +37,7 @@ public:
 
     void close() const;
 
-    void write(const Buffer &buffer, Callback handler) const;
+    void write(const ConstBuffer &buffer, Callback handler) const;
 
     void asyncReadSome(MutableBuffer outputBuffer, Callback handler);
 

@@ -21,7 +21,7 @@ void acceptClient(network::Acceptor &acceptor)
             } else {
                 clients.push_back(sock);
                 sock->write(
-                    network::Buffer{"Wellcome !!!"}, [](auto, auto) {});
+                    network::buffer("Wellcome !!!"), [](auto, auto) {});
                 acceptClient(acceptor);
             }
         });
