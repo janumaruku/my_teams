@@ -58,6 +58,8 @@ struct ConstBuffer {
 struct MutableBuffer {
     void *data;
     std::size_t size;
+
+    operator ConstBuffer() const;
 };
 
 ConstBuffer buffer(const std::string &str) noexcept;

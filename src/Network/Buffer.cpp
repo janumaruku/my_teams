@@ -31,6 +31,14 @@ std::size_t Buffer::size() const noexcept
     return _size;
 }
 
+MutableBuffer::operator ConstBuffer() const
+{
+    return ConstBuffer {
+        .data = this->data,
+        .size = this->size
+    };
+}
+
 ConstBuffer buffer(const std::string &str) noexcept
 {
     return ConstBuffer {
