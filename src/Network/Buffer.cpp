@@ -38,4 +38,12 @@ ConstBuffer buffer(const std::string &str) noexcept
         .size = str.size()
     };
 }
+
+MutableBuffer buffer(std::string &str, const std::size_t &size)
+{
+    return MutableBuffer {
+        .data = str.data(),
+        .size = size
+    };
+}
 } // ftp
