@@ -17,7 +17,7 @@ void acceptClient(network::Acceptor &acceptor)
                 std::cerr << err.message() << std::endl;
                 acceptClient(acceptor);
             } else {
-                sock->syncWrite(
+                sock->write(
                     network::Buffer{"Wellcome !!!"}, [](auto, auto) {});
                 acceptClient(acceptor);
             }

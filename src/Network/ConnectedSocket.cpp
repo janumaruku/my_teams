@@ -62,9 +62,9 @@ void ConnectedSocket::close() const
     _ioContext.unregisterNotifier(_socketFd);
 }
 
-void ConnectedSocket::syncWrite(const Buffer &buffer, Callback handler) const
+void ConnectedSocket::write(const Buffer &buffer, Callback handler) const
 {
-    auto result = write(_socketFd, buffer.data(), buffer.size());
+    auto result = ::write(_socketFd, buffer.data(), buffer.size());
 
     if (result == -1)
         handler(FtpErrorCode::CS_WRITE_ERROR, 0);
