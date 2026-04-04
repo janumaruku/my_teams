@@ -37,9 +37,12 @@ public:
 
     void close() const;
 
-    void write(const ConstBuffer &buffer, Callback handler) const;
+    void write(const ConstBuffer &buffer, const Callback &handler) const;
 
-    void asyncReadSome(MutableBuffer outputBuffer, Callback handler) const;
+    void asyncReadSome(MutableBuffer outputBuffer,
+        const Callback &handler) const;
+
+    void asyncWrite(const ConstBuffer &buffer, const Callback &handler) const;
 
     [[nodiscard]] IOContext &getIOContext() const noexcept;
 

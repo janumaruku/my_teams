@@ -20,7 +20,7 @@ void acceptClient(network::Acceptor &acceptor)
                 acceptClient(acceptor);
             } else {
                 clients.push_back(sock);
-                sock->write(
+                sock->asyncWrite(
                     network::buffer("Wellcome !!!"), [](auto, auto) {});
                 acceptClient(acceptor);
             }
