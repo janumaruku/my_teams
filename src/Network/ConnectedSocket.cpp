@@ -55,7 +55,6 @@ const Endpoint &ConnectedSocket::remoteEndpoint() const noexcept
 void ConnectedSocket::close() const
 {
     ::close(_socketFd);
-    _ioContext.unregisterNotifier(_socketFd);
 }
 
 void ConnectedSocket::write(const ConstBuffer &buffer, Callback handler) const
@@ -86,16 +85,5 @@ void ConnectedSocket::asyncReadSome(MutableBuffer outputBuffer,
 IOContext &ConnectedSocket::getIOContext() const noexcept
 {
     return _ioContext;
-}
-
-void ConnectedSocket::handleAsyncOperation()
-{
-    if (_handlers.empty())
-        return;
-
-    const PendingOperation handler = _handlers.front();
-    _handlers.pop();
-
-    handler();
 }
 } // ftp

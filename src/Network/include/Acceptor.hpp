@@ -38,8 +38,6 @@ private:
     utils::Logger _logger{"ACCEPTOR", ULogLevel::INFO, true};
     IOContext &_ioContext;
 
-    void handleNewConnection();
-
     static FtpErrorCode getAcceptorErrorCode(const int &error);
 
     [[nodiscard]] std::shared_ptr<ConnectedSocket> acceptClient() const;

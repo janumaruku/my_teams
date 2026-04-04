@@ -20,24 +20,6 @@ void IOContext::registerFileDescriptor(const int &fileDescriptor)
     });
 }
 
-void IOContext::registerNotifier(const int &fileDescriptor,
-    const OnFileDescriptorReady &notifier)
-{
-    const auto itt = std::ranges::find_if(_pollFds,
-        [fileDescriptor](const pollfd item) {
-            return item.fd == fileDescriptor;
-        });
-    if (itt != _pollFds.end())
-        return;
-
-    _pollFds.push_back({
-        .fd = fileDescriptor,
-        .events = POLLIN,
-        .revents = 0,
-    });
-    _notifiers[fileDescriptor] = notifier;
-}
-
 void IOContext::postRead(const int &fileDescriptor,
     const OnFileDescriptorReady &handler)
 {
@@ -98,22 +80,6 @@ void IOContext::run()
 
             ++itt;
         }
-    }
-}
-
-void IOContext::unregisterNotifier(const int &socketFd)
-{
-    const auto pollFd = std::ranges::find_if(_pollFds,
-        [&socketFd](const pollfd &fd) {
-            return fd.fd == socketFd;
-        });
-
-    if (pollFd != _pollFds.end())
-        _pollFds.erase(pollFd);
-
-    const auto notifier = _notifiers.find(socketFd);
-    if (notifier != _notifiers.end()) {
-        _notifiers.erase(notifier);
     }
 }
 } // ftp

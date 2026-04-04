@@ -31,9 +31,6 @@ public:
 
     void registerFileDescriptor(const int &fileDescriptor);
 
-    void registerNotifier(const int &fileDescriptor,
-        const OnFileDescriptorReady &notifier);
-
     void postRead(const int &fileDescriptor,
         const OnFileDescriptorReady &handler);
 
@@ -42,11 +39,8 @@ public:
 
     void run();
 
-    void unregisterNotifier(const int &socketFd);
-
 private:
     std::vector<pollfd> _pollFds;
-    std::unordered_map<int, OnFileDescriptorReady> _notifiers;
     std::unordered_map<int, std::queue<PendingOperation> > _pendingOperations;
 
     void updateEventType(const int &fileDescriptor);

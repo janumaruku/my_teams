@@ -49,8 +49,6 @@ private:
     IOContext &_ioContext;
     std::queue<PendingOperation> _handlers;
     utils::Logger _logger{"CONNECTED-SOCKET", ULogLevel::INFO, true};
-
-    void handleAsyncOperation();
 };
 } // ftp
 

@@ -60,25 +60,6 @@ void Acceptor::asyncAccept(const ConnectionHandler &handler)
     });
 }
 
-void Acceptor::handleNewConnection()
-{
-    if (_handlerFunction.empty())
-        return;
-    const ConnectionHandler handler = _handlerFunction.front();
-    _handlerFunction.pop();
-
-    const auto clientSocket = acceptClient();
-    if (!clientSocket) {
-        handler(getAcceptorErrorCode(errno), clientSocket);
-        return;
-    }
-
-    _logger.start(ULogLevel::DEBUG_LEVEL) << "Incoming connection" <<
-        " from " << clientSocket->remoteEndpoint().getHostname() << utils::END;
-
-    handler(std::error_code{}, clientSocket);
-}
-
 FtpErrorCode Acceptor::getAcceptorErrorCode(const int &error)
 {
     static const std::unordered_map<int, FtpErrorCode> acceptorErrorCodes = {
