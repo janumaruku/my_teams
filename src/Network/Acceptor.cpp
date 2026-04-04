@@ -15,8 +15,8 @@
 #include "IoContext.hpp"
 
 namespace network {
-Acceptor::Acceptor(IOContext &ioContext, Endpoint &&endpoint):
-    _endpoint(std::move(endpoint)), _socket(ioContext),
+Acceptor::Acceptor(IOContext &ioContext, Endpoint &&endpoint): _endpoint(
+        std::move(endpoint)), _socket(ioContext),
     _ioContext{ioContext}
 {
     const auto &address = _endpoint.getAddress();
@@ -31,9 +31,10 @@ Acceptor::Acceptor(IOContext &ioContext, Endpoint &&endpoint):
     _logger.start(ULogLevel::DEBUG_LEVEL) << "Listening on port " << _endpoint.
         getPort() << utils::END;
 
-    _ioContext.registerNotifier(_socket.getFd(), [this]() {
-        handleNewConnection();
-    });
+    // _ioContext.registerNotifier(_socket.getFd(), [this]() {
+    //     handleNewConnection();
+    // });
+    _ioContext.registerFileDescriptor(_socket.getFd());
 }
 
 int Acceptor::getSocketFd() const noexcept
@@ -43,7 +44,20 @@ int Acceptor::getSocketFd() const noexcept
 
 void Acceptor::asyncAccept(const ConnectionHandler &handler)
 {
-    _handlerFunction.emplace(handler);
+    // _handlerFunction.emplace(handler);
+    _ioContext.postRead(_socket.getFd(), [this, handler] {
+        const auto clientSocket = acceptClient();
+        if (!clientSocket) {
+            handler(getAcceptorErrorCode(errno), clientSocket);
+            return;
+        }
+
+        _logger.start(ULogLevel::DEBUG_LEVEL) << "Incoming connection" <<
+            " from " << clientSocket->remoteEndpoint().getHostname() <<
+            utils::END;
+
+        handler(std::error_code{}, clientSocket);
+    });
 }
 
 void Acceptor::handleNewConnection()
@@ -91,7 +105,7 @@ FtpErrorCode Acceptor::getAcceptorErrorCode(const int &error)
 std::shared_ptr<ConnectedSocket> Acceptor::acceptClient() const
 {
     sockaddr_in address{};
-    socklen_t size     = sizeof(address);
+    socklen_t size = sizeof(address);
     const int clientFd = accept(_socket.getFd(),
         reinterpret_cast<sockaddr *>(&address), &size);
 

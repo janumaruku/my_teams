@@ -58,9 +58,10 @@ void IOContext::updateEventType(const int &fileDescriptor)
         !_pendingOperations.at(fileDescriptor).empty()) {
         const OpType opType = _pendingOperations.at(fileDescriptor).front().
             first;
-        auto itt = std::ranges::find_if(_pollFds, [fileDescriptor](const pollfd &pollFd) {
-            return pollFd.fd == fileDescriptor;
-        });
+        auto itt = std::ranges::find_if(_pollFds,
+            [fileDescriptor](const pollfd &pollFd) {
+                return pollFd.fd == fileDescriptor;
+            });
 
         if (itt == _pollFds.end())
             return;
@@ -85,16 +86,14 @@ void IOContext::run()
                 continue;
             }
 
-            if (_pollFds[itt].revents & (POLLIN | POLLOUT)) {
-                if (_pendingOperations.contains(fd) && !_pendingOperations.
-                    at(fd).empty()) {
-                    const auto [opType, handler] = _pendingOperations.at(fd).
-                        front();
-                    _pendingOperations.at(fd).pop();
-                    handler();
-                    updateEventType(fd);
-                } else
-                    _notifiers[_pollFds[itt].fd]();
+            if (_pollFds[itt].revents & (POLLIN | POLLOUT) && (
+                _pendingOperations.contains(fd) && !_pendingOperations.
+                at(fd).empty())) {
+                const auto [opType, handler] = _pendingOperations.at(fd).
+                    front();
+                _pendingOperations.at(fd).pop();
+                handler();
+                updateEventType(fd);
             }
 
             ++itt;
