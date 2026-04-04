@@ -72,12 +72,12 @@ void ConnectedSocket::syncWrite(const Buffer &buffer, Callback handler) const
         handler(std::error_code{}, result);
 }
 
-void ConnectedSocket::asyncReadSome(Buffer outputBuffer,
+void ConnectedSocket::asyncReadSome(MutableBuffer outputBuffer,
     Callback handler)
 {
     _handlers.emplace([this, outputBuffer, handler]() {
-        const ssize_t result = read(_socketFd, outputBuffer.data(),
-            outputBuffer.size());
+        const ssize_t result = read(_socketFd, outputBuffer.data,
+            outputBuffer.size);
 
         if (result == -1)
             handler(FtpErrorCode::CS_READ_ERROR, 0);
