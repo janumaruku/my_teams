@@ -41,12 +41,19 @@ public:
 
     void run();
 
+    void stop() noexcept;
+
 private:
     std::vector<pollfd> _pollFds;
     std::unordered_map<int, std::queue<PendingOperation> > _pendingOperations;
+    bool _stop = false;
 
     void updateEventType(const int &fileDescriptor);
+
+    void handleReadyFileDescriptors();
+
+    void triggerHandler(const int &itt);
 };
-} // ftp
+}
 
 #endif //MYFTP_IOCONTEXT_HPP

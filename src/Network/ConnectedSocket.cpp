@@ -55,6 +55,7 @@ const Endpoint &ConnectedSocket::remoteEndpoint() const noexcept
 void ConnectedSocket::close() const
 {
     ::close(_socketFd);
+    _ioContext.unregisterFileDescriptor(_socketFd);
 }
 
 void ConnectedSocket::write(const ConstBuffer &buffer, Callback handler) const
