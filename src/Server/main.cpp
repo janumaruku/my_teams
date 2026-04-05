@@ -7,6 +7,7 @@
 
 #include "Acceptor.hpp"
 #include "IoContext.hpp"
+#include "Server.hpp"
 
 std::vector<std::shared_ptr<network::ConnectedSocket> > clients;
 
@@ -30,9 +31,12 @@ void acceptClient(network::Acceptor &acceptor)
 
 int main()
 {
-    network::IOContext ioContext;
-    network::Acceptor acceptor{ioContext, network::Endpoint{15000}};
-    acceptClient(acceptor);
+    // network::IOContext ioContext;
+    // network::Acceptor acceptor{ioContext, network::Endpoint{15000}};
+    // acceptClient(acceptor);
+    //
+    // ioContext.run();
+    my_teams::server::Server server{10000};
 
-    ioContext.run();
+    server.run();
 }

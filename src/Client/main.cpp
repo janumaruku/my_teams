@@ -12,7 +12,7 @@ int main()
 {
     network::IOContext ioContext;
     network::ConnectedSocket sock{ioContext};
-    network::Endpoint endpoint{15000, "127.0.0.1"};
+    network::Endpoint endpoint{10000, "127.0.0.1"};
     std::string buffer;
     buffer.resize(1024);
 
