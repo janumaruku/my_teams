@@ -18,11 +18,12 @@ int main()
 
     sock.connect(endpoint);
 
-    sock.asyncReadSome(network::Buffer{buffer}, [&buffer](auto, const std::size_t &len) {
-        buffer.resize(len);
-        std::cout << "Received from server ..." << std::endl;
-        std::cout << buffer << std::endl;
-    });
+    sock.asyncReadSome(network::buffer(buffer, buffer.size()),
+        [&buffer](auto, const std::size_t &len) {
+            buffer.resize(len);
+            std::cout << "Received from server ..." << std::endl;
+            std::cout << buffer << std::endl;
+        });
 
     ioContext.run();
 

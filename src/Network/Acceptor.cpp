@@ -15,25 +15,23 @@
 #include "IoContext.hpp"
 
 namespace network {
-Acceptor::Acceptor(IOContext &ioContext, Endpoint &&endpoint):
-    _endpoint(std::move(endpoint)), _socket(ioContext),
+Acceptor::Acceptor(IOContext &ioContext, Endpoint &&endpoint): _endpoint(
+        std::move(endpoint)), _socket(ioContext),
     _ioContext{ioContext}
 {
     const auto &address = _endpoint.getAddress();
     if (bind(_socket.getFd(), reinterpret_cast<const sockaddr *>(&address),
         sizeof(address)) == -1)
         throw std::runtime_error{"bind() failed"};
-    _logger.start(ULogLevel::DEBUG) << "Acceptor bound to address"
+    _logger.start(ULogLevel::DEBUG_LEVEL) << "Acceptor bound to address"
         << utils::END;
 
     if (listen(_socket.getFd(), SOMAXCONN) == -1)
         throw std::runtime_error{"listen() failed"};
-    _logger.start(ULogLevel::DEBUG) << "Listening on port " << _endpoint.
+    _logger.start(ULogLevel::DEBUG_LEVEL) << "Listening on port " << _endpoint.
         getPort() << utils::END;
 
-    _ioContext.registerNotifier(_socket.getFd(), [this]() {
-        handleNewConnection();
-    });
+    _ioContext.registerFileDescriptor(_socket.getFd());
 }
 
 int Acceptor::getSocketFd() const noexcept
@@ -43,26 +41,19 @@ int Acceptor::getSocketFd() const noexcept
 
 void Acceptor::asyncAccept(const ConnectionHandler &handler)
 {
-    _handlerFunction.emplace(handler);
-}
+    _ioContext.postRead(_socket.getFd(), [this, handler] {
+        const auto clientSocket = acceptClient();
+        if (!clientSocket) {
+            handler(getAcceptorErrorCode(errno), clientSocket);
+            return;
+        }
 
-void Acceptor::handleNewConnection()
-{
-    if (_handlerFunction.empty())
-        return;
-    const ConnectionHandler handler = _handlerFunction.front();
-    _handlerFunction.pop();
+        _logger.start(ULogLevel::DEBUG_LEVEL) << "Incoming connection" <<
+            " from " << clientSocket->remoteEndpoint().getHostname() <<
+            utils::END;
 
-    const auto clientSocket = acceptClient();
-    if (!clientSocket) {
-        handler(getAcceptorErrorCode(errno), clientSocket);
-        return;
-    }
-
-    _logger.start(ULogLevel::DEBUG) << "Incoming connection" <<
-        " from " << clientSocket->remoteEndpoint().getHostname() << utils::END;
-
-    handler(std::error_code{}, clientSocket);
+        handler(std::error_code{}, clientSocket);
+    });
 }
 
 FtpErrorCode Acceptor::getAcceptorErrorCode(const int &error)
@@ -91,7 +82,7 @@ FtpErrorCode Acceptor::getAcceptorErrorCode(const int &error)
 std::shared_ptr<ConnectedSocket> Acceptor::acceptClient() const
 {
     sockaddr_in address{};
-    socklen_t size     = sizeof(address);
+    socklen_t size = sizeof(address);
     const int clientFd = accept(_socket.getFd(),
         reinterpret_cast<sockaddr *>(&address), &size);
 

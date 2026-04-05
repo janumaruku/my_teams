@@ -8,46 +8,53 @@
 #ifndef MYFTP_BUFFER_HPP
 #define MYFTP_BUFFER_HPP
 
+#include <cstring>
 #include <string>
 #include <vector>
 
 namespace network {
-class Buffer {
-public:
-    explicit Buffer(const std::string &buffer);
-
-    explicit Buffer(std::string &&buffer);
-
-    explicit Buffer(char *buffer, const std::size_t &size);
-
-    template <typename PodType>
-    explicit Buffer(std::vector<PodType> &buffer): _data{buffer.data()},
-        _size{buffer.capacity()}
-    {}
-
-    template <typename PodType>
-    explicit Buffer(std::vector<PodType> &&buffer): _data{buffer.data()},
-        _size{buffer.capacity()}
-    {}
-
-    template <typename PodType, std::size_t size>
-    explicit Buffer(std::array<PodType, size> &buffer): _data{buffer.data()},
-        _size{size}
-    {}
-
-    template <typename PodType, std::size_t size>
-    explicit Buffer(std::array<PodType, size> &&buffer): _data{buffer.data()},
-        _size{size}
-    {}
-
-    [[nodiscard]] void *data() const noexcept;
-
-    [[nodiscard]] std::size_t size() const noexcept;
-
-private:
-    void *_data;
-    std::size_t _size;
+struct ConstBuffer {
+    const void *data;
+    std::size_t size;
 };
+
+struct MutableBuffer {
+    void *data;
+    std::size_t size;
+
+    operator ConstBuffer() const;
+};
+
+ConstBuffer buffer(const std::string &str) noexcept;
+
+MutableBuffer buffer(std::string &str, const std::size_t &size);
+
+template <typename PodType>
+ConstBuffer buffer(const PodType *buff)
+{
+    return ConstBuffer {
+        .data = buff,
+        .size = strlen(buff)
+    };
+}
+
+template <typename PodType>
+MutableBuffer buffer(std::vector<PodType> &vec)
+{
+    return MutableBuffer {
+        .data = vec.data(),
+        .size = vec.size()
+    };
+}
+
+template <typename PodType>
+ConstBuffer buffer(const std::vector<PodType> &vec)
+{
+    return ConstBuffer {
+        .data = vec.data(),
+        .size = vec.size()
+    };
+}
 } // ftp
 
 #endif //MYFTP_BUFFER_HPP

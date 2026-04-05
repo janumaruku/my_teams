@@ -11,15 +11,47 @@
 #include <system_error>
 
 namespace network {
-void IOContext::registerNotifier(const int &fileDescriptor,
-    const OnFileDescriptorReady &notifier)
+void IOContext::registerFileDescriptor(const int &fileDescriptor)
 {
     _pollFds.push_back({
-        .fd      = fileDescriptor,
-        .events  = POLLIN,
+        .fd = fileDescriptor,
+        .events = POLLIN,
         .revents = 0,
     });
-    _notifiers[fileDescriptor] = notifier;
+}
+
+void IOContext::postRead(const int &fileDescriptor,
+    const OnFileDescriptorReady &handler)
+{
+    _pendingOperations[fileDescriptor].emplace(OpType::READ, handler);
+    updateEventType(fileDescriptor);
+}
+
+void IOContext::postWrite(const int &fileDescriptor,
+    const OnFileDescriptorReady &handler)
+{
+    _pendingOperations[fileDescriptor].emplace(OpType::WRITE, handler);
+    updateEventType(fileDescriptor);
+}
+
+void IOContext::updateEventType(const int &fileDescriptor)
+{
+    if (_pendingOperations.contains(fileDescriptor) &&
+        !_pendingOperations.at(fileDescriptor).empty()) {
+        const OpType opType = _pendingOperations.at(fileDescriptor).front().
+            first;
+        auto itt = std::ranges::find_if(_pollFds,
+            [fileDescriptor](const pollfd &pollFd) {
+                return pollFd.fd == fileDescriptor;
+            });
+
+        if (itt == _pollFds.end())
+            return;
+
+        itt->events = opType == OpType::READ
+            ? POLLIN
+            : POLLOUT;
+    }
 }
 
 void IOContext::run()
@@ -30,28 +62,24 @@ void IOContext::run()
 
         std::size_t itt = 0;
         while (itt < _pollFds.size()) {
-            if (_pollFds[itt].revents & POLLIN) {
-                _notifiers[_pollFds[itt].fd]();
+            const int fd = _pollFds[itt].fd;
+            if (_pollFds[itt].revents & (POLLHUP | POLLERR | POLLNVAL)) {
+                _pollFds.erase(_pollFds.begin() + itt);
+                continue;
+            }
+
+            if (_pollFds[itt].revents & (POLLIN | POLLOUT) && (
+                _pendingOperations.contains(fd) && !_pendingOperations.
+                at(fd).empty())) {
+                const auto [opType, handler] = _pendingOperations.at(fd).
+                    front();
+                _pendingOperations.at(fd).pop();
+                handler();
+                updateEventType(fd);
             }
 
             ++itt;
         }
-    }
-}
-
-void IOContext::unregisterNotifier(const int &socketFd)
-{
-    const auto pollFd = std::ranges::find_if(_pollFds,
-        [&socketFd](const pollfd &fd) {
-            return fd.fd == socketFd;
-        });
-
-    if (pollFd != _pollFds.end())
-        _pollFds.erase(pollFd);
-
-    const auto notifier = _notifiers.find(socketFd);
-    if (notifier != _notifiers.end()) {
-        _notifiers.erase(notifier);
     }
 }
 } // ftp

@@ -60,7 +60,7 @@ void Logger::setLevelColor(const Level &level) const
     case Level::INFO:
         *_stream << CYAN;
         break;
-    case Level::DEBUG:
+    case Level::DEBUG_LEVEL:
         *_stream << YELLOW;
         break;
     case Level::ERROR:
@@ -80,7 +80,7 @@ void Logger::chooseOutputStream(const Level &level)
     case Level::INFO:
         _stream = &std::cout;
         break;
-    case Level::DEBUG:
+    case Level::DEBUG_LEVEL:
         _stream = &std::clog;
         break;
     case Level::ERROR:

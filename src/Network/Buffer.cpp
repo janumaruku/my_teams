@@ -8,26 +8,19 @@
 #include "Buffer.hpp"
 
 namespace network {
-Buffer::Buffer(const std::string &buffer): _data{
-        const_cast<void *>(static_cast<const void *>(buffer.data()))},
-    _size{buffer.size()}
-{}
-
-Buffer::Buffer(std::string &&buffer): _data{buffer.data()},
-    _size{buffer.size()}
-{}
-
-Buffer::Buffer(char *buffer, const std::size_t &size): _data{buffer},
-    _size{size}
-{}
-
-void *Buffer::data() const noexcept
+ConstBuffer buffer(const std::string &str) noexcept
 {
-    return _data;
+    return ConstBuffer {
+        .data = str.data(),
+        .size = str.size()
+    };
 }
 
-std::size_t Buffer::size() const noexcept
+MutableBuffer buffer(std::string &str, const std::size_t &size)
 {
-    return _size;
+    return MutableBuffer {
+        .data = str.data(),
+        .size = size
+    };
 }
 } // ftp

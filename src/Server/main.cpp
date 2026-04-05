@@ -8,6 +8,8 @@
 #include "Acceptor.hpp"
 #include "IoContext.hpp"
 
+std::vector<std::shared_ptr<network::ConnectedSocket>> clients;
+
 void acceptClient(network::Acceptor &acceptor)
 {
     acceptor.asyncAccept(
@@ -17,8 +19,9 @@ void acceptClient(network::Acceptor &acceptor)
                 std::cerr << err.message() << std::endl;
                 acceptClient(acceptor);
             } else {
-                sock->syncWrite(
-                    network::Buffer{"Wellcome !!!"}, [](auto, auto) {});
+                clients.push_back(sock);
+                sock->write(
+                    network::buffer("Wellcome !!!"), [](auto, auto) {});
                 acceptClient(acceptor);
             }
         });

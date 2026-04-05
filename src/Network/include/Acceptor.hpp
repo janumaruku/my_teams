@@ -34,13 +34,9 @@ public:
 private:
     Endpoint _endpoint;
     ListeningSocket _socket;
-    // std::size_t _maxConnection   = 2;
-    // std::size_t _connectionCount = 0;
     std::queue<ConnectionHandler> _handlerFunction;
     utils::Logger _logger{"ACCEPTOR", ULogLevel::INFO, true};
     IOContext &_ioContext;
-
-    void handleNewConnection();
 
     static FtpErrorCode getAcceptorErrorCode(const int &error);
 
