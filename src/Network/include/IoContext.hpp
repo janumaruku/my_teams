@@ -17,7 +17,7 @@
 
 namespace network {
 class IOContext {
-    enum class OpType: uint_8 {
+    enum class OpType: uint8_t {
         READ,
         WRITE
     };
