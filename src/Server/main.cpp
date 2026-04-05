@@ -9,33 +9,8 @@
 #include "IoContext.hpp"
 #include "Server.hpp"
 
-std::vector<std::shared_ptr<network::ConnectedSocket> > clients;
-
-void acceptClient(network::Acceptor &acceptor)
-{
-    acceptor.asyncAccept(
-        [&acceptor](const std::error_code &err,
-        const std::shared_ptr<network::ConnectedSocket> &sock) {
-            if (err) {
-                std::cerr << err.message() << std::endl;
-                acceptClient(acceptor);
-            } else {
-                clients.push_back(sock);
-                sock->asyncWrite(
-                    network::buffer("Wellcome !!!"), [](auto, auto) {
-                    });
-                acceptClient(acceptor);
-            }
-        });
-}
-
 int main()
 {
-    // network::IOContext ioContext;
-    // network::Acceptor acceptor{ioContext, network::Endpoint{15000}};
-    // acceptClient(acceptor);
-    //
-    // ioContext.run();
     my_teams::server::Server server{10000};
 
     server.run();
