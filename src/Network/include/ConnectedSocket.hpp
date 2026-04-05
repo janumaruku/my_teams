@@ -53,6 +53,6 @@ private:
     std::queue<PendingOperation> _handlers;
     utils::Logger _logger{"CONNECTED-SOCKET", ULogLevel::INFO, true};
 };
-} // ftp
+}
 
 #endif //MYFTP_CONNECTEDSOCKET_HPP
