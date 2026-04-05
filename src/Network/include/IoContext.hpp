@@ -31,6 +31,8 @@ public:
 
     void registerFileDescriptor(const int &fileDescriptor);
 
+    void unregisterFileDescriptor(const int &fileDescriptor);
+
     void postRead(const int &fileDescriptor,
         const OnFileDescriptorReady &handler);
 

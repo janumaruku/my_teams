@@ -20,6 +20,20 @@ void IOContext::registerFileDescriptor(const int &fileDescriptor)
     });
 }
 
+void IOContext::unregisterFileDescriptor(const int &fileDescriptor)
+{
+    const auto itt = std::ranges::find_if(_pollFds,
+        [fileDescriptor](const pollfd &pollFd) {
+            return pollFd.fd == fileDescriptor;
+        });
+
+    if (_pendingOperations.contains(itt->fd))
+        _pendingOperations.erase(itt->fd);
+
+    if (itt != _pollFds.end())
+        _pollFds.erase(itt);
+}
+
 void IOContext::postRead(const int &fileDescriptor,
     const OnFileDescriptorReady &handler)
 {
