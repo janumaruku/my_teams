@@ -31,7 +31,9 @@ void Server::startAccept()
                 std::cout << "Connection received from " << sock->
                     remoteEndpoint().getHostname() << ":" << sock->
                     remoteEndpoint().getPort() << std::endl;
-                _clientSockets.push_back(sock);
+                _clientSessions.emplace_back(
+                    std::make_shared<ClientSession>(sock));
+                _clientSessions.back()->start();
             }
             startAccept();
         });

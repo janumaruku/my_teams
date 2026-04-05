@@ -10,7 +10,8 @@ CXXFLAGS	=	-std=c++20 \
 CPPFLAGS	=	-Isrc/Network/include \
 				-Isrc/Utils/include \
 				-Isrc/DesignPattern/include \
-				-Isrc/Server/include
+				-Isrc/Server/include \
+				-Isrc/Client/include
 
 LDFLAGS		=	-L$(BUILD_DIR)/libs\
  				-lnetwork\

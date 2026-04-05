@@ -9,6 +9,7 @@
 #define MY_TEAMS_SERVER_HPP
 
 #include "Acceptor.hpp"
+#include "ClientSession.hpp"
 #include "IoContext.hpp"
 
 namespace my_teams {
@@ -23,7 +24,7 @@ public:
 private:
     network::IOContext _ioContext;
     network::Acceptor _acceptor;
-    std::vector<std::shared_ptr<network::ConnectedSocket>> _clientSockets;
+    std::vector<std::shared_ptr<ClientSession>> _clientSessions;
 
     void startAccept();
 };
