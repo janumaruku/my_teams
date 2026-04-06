@@ -37,22 +37,22 @@ public:
 
     void close() const;
 
-    void syncWrite(const Buffer &buffer, Callback handler) const;
+    void write(const ConstBuffer &buffer, const Callback &handler) const;
 
-    void asyncReadSome(Buffer outputBuffer, Callback handler);
+    void asyncReadSome(MutableBuffer outputBuffer,
+        const Callback &handler) const;
+
+    void asyncWrite(const ConstBuffer &buffer, const Callback &handler) const;
 
     [[nodiscard]] IOContext &getIOContext() const noexcept;
 
 private:
-    int _dummy    = 0;
     int _socketFd = -1;
     Endpoint _endpoint;
     IOContext &_ioContext;
     std::queue<PendingOperation> _handlers;
     utils::Logger _logger{"CONNECTED-SOCKET", ULogLevel::INFO, true};
-
-    void handleAsyncOperation();
 };
-} // ftp
+}
 
 #endif //MYFTP_CONNECTEDSOCKET_HPP

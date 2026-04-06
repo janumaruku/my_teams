@@ -19,22 +19,20 @@ ConnectedSocket::ConnectedSocket(IOContext &ioContext): _socketFd{
 {
     if (_socketFd == -1)
         throw std::runtime_error("Socket creation failed");
-    _logger.start(ULogLevel::DEBUG) << "Connected socket created" << utils::END;
+    _logger.start(ULogLevel::DEBUG_LEVEL) << "Connected socket created" <<
+        utils::END;
 
-    ioContext.registerNotifier(_socketFd, [this]() {
-        handleAsyncOperation();
-    });
+    _ioContext.registerFileDescriptor(_socketFd);
 }
 
 ConnectedSocket::ConnectedSocket(IOContext &ioContext, const int &clientFd,
     Endpoint &&endpoint): _socketFd{clientFd}, _endpoint{std::move(endpoint)},
-    _ioContext{ioContext}
+                          _ioContext{ioContext}
 {
-    _logger.start(ULogLevel::DEBUG) << "Connected socket created" << utils::END;
+    _logger.start(ULogLevel::DEBUG_LEVEL) << "Connected socket created" <<
+        utils::END;
 
-    ioContext.registerNotifier(_socketFd, [this]() {
-        handleAsyncOperation();
-    });
+    _ioContext.registerFileDescriptor(_socketFd);
 }
 
 void ConnectedSocket::connect(Endpoint &endpoint)
@@ -59,12 +57,12 @@ const Endpoint &ConnectedSocket::remoteEndpoint() const noexcept
 void ConnectedSocket::close() const
 {
     ::close(_socketFd);
-    _ioContext.unregisterNotifier(_socketFd);
 }
 
-void ConnectedSocket::syncWrite(const Buffer &buffer, Callback handler) const
+void ConnectedSocket::write(const ConstBuffer &buffer,
+    const Callback &handler) const
 {
-    auto result = write(_socketFd, buffer.data(), buffer.size());
+    auto result = ::write(_socketFd, buffer.data, buffer.size);
 
     if (result == -1)
         handler(FtpErrorCode::CS_WRITE_ERROR, 0);
@@ -72,36 +70,35 @@ void ConnectedSocket::syncWrite(const Buffer &buffer, Callback handler) const
         handler(std::error_code{}, result);
 }
 
-void ConnectedSocket::asyncReadSome(Buffer outputBuffer,
-    Callback handler)
+void ConnectedSocket::asyncReadSome(MutableBuffer outputBuffer,
+    const Callback &handler) const
 {
-    _handlers.emplace([this, outputBuffer, handler]() {
-        const ssize_t result = read(_socketFd, outputBuffer.data(),
-            outputBuffer.size());
+    _ioContext.postRead(_socketFd, [this, outputBuffer, handler] {
+        const ssize_t result = read(_socketFd, outputBuffer.data,
+            outputBuffer.size);
 
         if (result == -1)
             handler(FtpErrorCode::CS_READ_ERROR, 0);
-        else {
+        else
             handler(std::error_code{}, result);
-        }
+    });
+}
+
+void ConnectedSocket::asyncWrite(const ConstBuffer &buffer,
+    const Callback &handler) const
+{
+    _ioContext.postWrite(_socketFd, [this, buffer, handler] {
+        const ssize_t result = ::write(_socketFd, buffer.data, buffer.size);
+
+        if (result == -1)
+            handler(FtpErrorCode::CS_WRITE_ERROR, 0);
+        else
+            handler(std::error_code{}, result);
     });
 }
 
 IOContext &ConnectedSocket::getIOContext() const noexcept
 {
     return _ioContext;
-}
-
-void ConnectedSocket::handleAsyncOperation()
-{
-    if (_dummy == 0)
-        ++_dummy;
-    if (_handlers.empty())
-        return;
-
-    const PendingOperation handler = _handlers.front();
-    _handlers.pop();
-
-    handler();
 }
 } // ftp

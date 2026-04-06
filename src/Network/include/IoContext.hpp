@@ -17,21 +17,33 @@
 
 namespace network {
 class IOContext {
+    enum class OpType: uint8_t {
+        READ,
+        WRITE
+    };
+
 public:
     using OnFileDescriptorReady = std::function<void()>;
 
+    using PendingOperation = std::pair<OpType, OnFileDescriptorReady>;
+
     IOContext() = default;
 
-    void registerNotifier(const int &fileDescriptor,
-        const OnFileDescriptorReady &notifier);
+    void registerFileDescriptor(const int &fileDescriptor);
+
+    void postRead(const int &fileDescriptor,
+        const OnFileDescriptorReady &handler);
+
+    void postWrite(const int &fileDescriptor,
+        const OnFileDescriptorReady &handler);
 
     void run();
 
-    void unregisterNotifier(const int &socketFd);
-
 private:
     std::vector<pollfd> _pollFds;
-    std::unordered_map<int, OnFileDescriptorReady> _notifiers;
+    std::unordered_map<int, std::queue<PendingOperation> > _pendingOperations;
+
+    void updateEventType(const int &fileDescriptor);
 };
 } // ftp
 
