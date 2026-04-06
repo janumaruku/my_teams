@@ -245,6 +245,7 @@ jobs:
 
           if grep "error:" analysis.log; then
             exit 84
+          fi
 
           exit 0
 
