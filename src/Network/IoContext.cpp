@@ -8,6 +8,7 @@
 #include "IoContext.hpp"
 
 #include <algorithm>
+#include <ranges>
 #include <system_error>
 
 namespace network {
@@ -18,6 +19,20 @@ void IOContext::registerFileDescriptor(const int &fileDescriptor)
         .events = POLLIN,
         .revents = 0,
     });
+}
+
+void IOContext::unregisterFileDescriptor(const int &fileDescriptor)
+{
+    const auto itt = std::ranges::find_if(_pollFds,
+        [fileDescriptor](const pollfd &pollFd) {
+            return pollFd.fd == fileDescriptor;
+        });
+
+    if (_pendingOperations.contains(itt->fd))
+        _pendingOperations.erase(itt->fd);
+
+    if (itt != _pollFds.end())
+        _pollFds.erase(itt);
 }
 
 void IOContext::postRead(const int &fileDescriptor,
@@ -54,32 +69,54 @@ void IOContext::updateEventType(const int &fileDescriptor)
     }
 }
 
+void IOContext::handleReadyFileDescriptors()
+{
+    std::size_t itt = 0;
+
+    while (itt < _pollFds.size()) {
+        if (_pollFds[itt].revents & (POLLHUP | POLLERR | POLLNVAL)) {
+            _pendingOperations.erase(_pollFds[itt].fd);
+            _pollFds.erase(_pollFds.begin() + itt);
+            continue;
+        }
+
+        triggerHandler(itt);
+
+        if (_stop && _pollFds.empty())
+            break;
+
+        ++itt;
+    }
+}
+
+void IOContext::triggerHandler(const int &itt)
+{
+    const int fd = _pollFds[itt].fd;
+
+    if (_pollFds[itt].revents & (POLLIN | POLLOUT) && (
+        _pendingOperations.contains(fd) && !_pendingOperations.
+        at(fd).empty())) {
+        const auto [opType, handler] = _pendingOperations.at(fd).
+            front();
+        _pendingOperations.at(fd).pop();
+
+        handler();
+        updateEventType(fd);
+    }
+}
+
 void IOContext::run()
 {
     while (true) {
         if (poll(_pollFds.data(), _pollFds.size(), 10) == -1)
             throw std::system_error(std::make_error_code(std::errc::timed_out));
 
-        std::size_t itt = 0;
-        while (itt < _pollFds.size()) {
-            const int fd = _pollFds[itt].fd;
-            if (_pollFds[itt].revents & (POLLHUP | POLLERR | POLLNVAL)) {
-                _pollFds.erase(_pollFds.begin() + itt);
-                continue;
-            }
-
-            if (_pollFds[itt].revents & (POLLIN | POLLOUT) && (
-                _pendingOperations.contains(fd) && !_pendingOperations.
-                at(fd).empty())) {
-                const auto [opType, handler] = _pendingOperations.at(fd).
-                    front();
-                _pendingOperations.at(fd).pop();
-                handler();
-                updateEventType(fd);
-            }
-
-            ++itt;
-        }
+        handleReadyFileDescriptors();
     }
 }
-} // ftp
+
+void IOContext::stop() noexcept
+{
+    _stop = true;
+}
+}
