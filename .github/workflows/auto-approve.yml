@@ -5,6 +5,8 @@ on:
     workflows: ["Branch Merge Policy", "Continuous Integration"]
     types: [completed]
 
+  workflow_dispatch:
+
 jobs:
   auto-approve:
     runs-on: ubuntu-latest
