@@ -10,6 +10,8 @@
 
 #include "IoContext.hpp"
 
+constexpr int EXIT_EPITECH = 84;
+
 namespace my_teams::client {
 
 class Client {
