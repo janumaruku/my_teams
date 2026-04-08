@@ -26,11 +26,11 @@ public:
 
     virtual ~Shell() = default;
 
-    Shell();
+    Shell() noexcept;
 
-    explicit Shell(const Client &client, std::string name, std::string prompt); 
-    explicit Shell(std::string name, std::string prompt);
-    explicit Shell(std::string prompt);
+    explicit Shell(const Client &client, std::string name, std::string prompt) noexcept;
+    explicit Shell(std::string name, std::string prompt) noexcept;
+    explicit Shell(std::string prompt) noexcept;
 
     void run();
 
@@ -39,8 +39,8 @@ protected:
     std::string _prompt;
     ShellCommandFactory _shellCommandFactory;
     std::unique_ptr<Client> _client;
-
     bool executeCommand(const std::vector<std::string> &cmd);
+    void registerCommands();
 };
 
 namespace ShellUtils {
