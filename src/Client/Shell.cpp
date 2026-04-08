@@ -25,6 +25,7 @@ Shell::Shell() noexcept :
     _client(nullptr)
 {
     _shellCommandFactory.registerCreator<shell::ShellExit>(EXIT_PROMPT);
+    registerCommands();
 }
 
 Shell::Shell(std::string name, std::string prompt) noexcept :
@@ -34,6 +35,7 @@ Shell::Shell(std::string name, std::string prompt) noexcept :
 
 {
     _shellCommandFactory.registerCreator<shell::ShellExit>(EXIT_PROMPT);
+    registerCommands();
 }
 
 Shell::Shell(const Client &client, std::string name, std::string prompt) noexcept : 
@@ -42,6 +44,7 @@ Shell::Shell(const Client &client, std::string name, std::string prompt) noexcep
     _client(std::make_unique<Client>(client))
 {
     _shellCommandFactory.registerCreator<shell::ShellExit>(EXIT_PROMPT);
+    registerCommands();
 }
 
 bool Shell::executeCommand(const std::vector<std::string> &cmd)
@@ -52,6 +55,10 @@ bool Shell::executeCommand(const std::vector<std::string> &cmd)
     } catch (const std::exception &e) {
         throw;
     }
+}
+
+void Shell::registerCommands()
+{
 }
 
 void Shell::run()
