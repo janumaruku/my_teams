@@ -5,8 +5,8 @@
 ** ShellExit
 */
 
-#ifndef NANOTEKSPICE_SHELLCMDEXCEPT_HPP
-#define NANOTEKSPICE_SHELLCMDEXCEPT_HPP
+#ifndef MYTEAMS_SHELLCMDEXCEPT_HPP
+#define MYTEAMS_SHELLCMDEXCEPT_HPP
 #include <exception>
 #include <string>
 #include <utility>
@@ -24,4 +24,4 @@ private:
 };
 }
 
-#endif //NANNANOTEKSPICE_SHELLCMDEXCEPT_HPP
+#endif //MYTEAMS_SHELLCMDEXCEPT_HPP
