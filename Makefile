@@ -67,4 +67,4 @@ tests_run:
 run: $(SERVER)
 	@./$(SERVER) $(ARGS)
 
-.PHONY: all clean fclean re debug tests_run run
+.PHONY: all clean fclean re debug tests_run run client server
