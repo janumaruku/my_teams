@@ -8,11 +8,17 @@
 #ifndef MY_TEAMS_SHELL_HPP
 #define MY_TEAMS_SHELL_HPP
 
+#include <string>
 #include "FactoryTemplate.hpp"
 #include "IShellCommand.hpp"
 #include "Client.hpp"
 
 namespace my_teams::client {
+
+constexpr std::string EXIT_PROMPT = "exit";
+constexpr std::string BASE_NAME = "default_shell";
+constexpr std::string BASE_PROMPT= "> ";
+
 
 class Shell {
 public:
@@ -22,7 +28,7 @@ public:
 
     Shell();
 
-    explicit Shell(std::string name, std::string prompt, Client client);
+    explicit Shell(const Client &client, std::string name, std::string prompt); 
     explicit Shell(std::string name, std::string prompt);
     explicit Shell(std::string prompt);
 
@@ -32,7 +38,7 @@ protected:
     std::string _name;
     std::string _prompt;
     ShellCommandFactory _shellCommandFactory;
-    Client _client;
+    std::unique_ptr<Client> _client;
 
     virtual bool executeCommand(const std::vector<std::string> &cmd);
 };
