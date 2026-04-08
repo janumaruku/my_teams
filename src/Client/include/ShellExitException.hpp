@@ -20,4 +20,4 @@ public:
 };
 }
 
-#endif //NANOTEKSPICE_SHELLEXIT_HPP
+#endif //MYTEAMS_SHELLEXIT_HPP

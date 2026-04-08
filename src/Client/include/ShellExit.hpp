@@ -5,8 +5,8 @@
 ** ShellExit
 */
 
-#ifndef NANOTEKSPICE_SHELLEXIT_HPP
-#define NANOTEKSPICE_SHELLEXIT_HPP
+#ifndef MYTEAMS_SHELLEXIT_HPP
+#define MYTEAMS_SHELLEXIT_HPP
 
 #include <memory>
 #include "IShellCommand.hpp"
@@ -32,4 +32,4 @@ public:
 
 // #include "../src/ShellExit.tpp"
 
-#endif //NANOTEKSPICE_SHELLEXIT_HPP
+#endif //MYTEAMS_SHELLEXIT_HPP
