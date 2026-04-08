@@ -47,7 +47,7 @@ namespace ShellUtils {
 
 bool isEmptyLine(const std::string &line) noexcept;
 
-std::vector<std::string> split(const std::string &line, const char delim);
+std::vector<std::string> split(const std::string &line, const char &delim);
 
 }
 }
