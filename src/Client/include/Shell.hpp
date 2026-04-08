@@ -40,7 +40,7 @@ protected:
     ShellCommandFactory _shellCommandFactory;
     std::unique_ptr<Client> _client;
 
-    virtual bool executeCommand(const std::vector<std::string> &cmd);
+    bool executeCommand(const std::vector<std::string> &cmd);
 };
 
 namespace ShellUtils {
