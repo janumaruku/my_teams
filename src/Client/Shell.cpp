@@ -5,8 +5,10 @@
 ** 
 */
 
+#include <stdexcept>
 #include <string>
 #include <memory>
+#include <vector>
 #include "Shell.hpp"
 #include "ShellExit.hpp"
 #include "ShellExitException.hpp"
@@ -17,7 +19,7 @@ namespace my_teams::client {
 
 // using base parameters would be better to avoid duplication but the compiler refuses to move constexpr, which is normal
 
-Shell::Shell() :
+Shell::Shell() noexcept :
     _name(BASE_NAME),
     _prompt(BASE_PROMPT),
     _client(nullptr)
@@ -25,7 +27,7 @@ Shell::Shell() :
     _shellCommandFactory.registerCreator<shell::ShellExit>(EXIT_PROMPT);
 }
 
-Shell::Shell(std::string name, std::string prompt) :
+Shell::Shell(std::string name, std::string prompt) noexcept :
      _name(std::move(name)),
     _prompt(std::move(prompt)),
     _client(nullptr)
@@ -34,7 +36,7 @@ Shell::Shell(std::string name, std::string prompt) :
     _shellCommandFactory.registerCreator<shell::ShellExit>(EXIT_PROMPT);
 }
 
-Shell::Shell(const Client &client, std::string name, std::string prompt) : 
+Shell::Shell(const Client &client, std::string name, std::string prompt) noexcept : 
     _name(std::move(name)),
     _prompt(std::move(prompt)),
     _client(std::make_unique<Client>(client))
@@ -71,6 +73,8 @@ void Shell::run()
             return;
         } catch (const shell::ShellCommandException) {
             throw;
+        } catch (const std::runtime_error) {
+            continue;
         }
     }
 }
