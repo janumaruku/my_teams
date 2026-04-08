@@ -11,7 +11,6 @@
 #include <string>
 #include "FactoryTemplate.hpp"
 #include "IShellCommand.hpp"
-#include "Client.hpp"
 
 namespace my_teams::client {
 
@@ -19,18 +18,18 @@ constexpr std::string EXIT_PROMPT = "exit";
 constexpr std::string BASE_NAME = "default_shell";
 constexpr std::string BASE_PROMPT= "> ";
 
-
 class Shell {
 public:
+    using ExternCommandFactory = designPattern::FactoryTemplate<shell::IShellCommand, std::string>;
     using ShellCommandFactory  = designPattern::FactoryTemplate<shell::IShellCommand, std::string>;
+
+    Shell();
 
     virtual ~Shell() = default;
 
-    Shell() noexcept;
+    explicit Shell(std::string name, std::string prompt);
 
-    explicit Shell(const Client &client, std::string name, std::string prompt) noexcept;
-    explicit Shell(std::string name, std::string prompt) noexcept;
-    explicit Shell(std::string prompt) noexcept;
+    explicit Shell(std::string prompt);
 
     void run();
 
@@ -38,11 +37,9 @@ protected:
     std::string _name;
     std::string _prompt;
     ShellCommandFactory _shellCommandFactory;
-    std::unique_ptr<Client> _client;
-    bool executeCommand(const std::vector<std::string> &cmd);
-    void registerCommands();
-};
 
+    virtual bool executeCommand(const std::vector<std::string> &cmd);
+};
 namespace ShellUtils {
 
 bool isEmptyLine(const std::string &line) noexcept;

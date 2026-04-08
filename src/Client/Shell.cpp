@@ -19,32 +19,17 @@ namespace my_teams::client {
 
 // using base parameters would be better to avoid duplication but the compiler refuses to move constexpr, which is normal
 
-Shell::Shell() noexcept :
-    _name(BASE_NAME),
-    _prompt(BASE_PROMPT),
-    _client(nullptr)
+Shell::Shell() : _name(BASE_NAME), _prompt(BASE_PROMPT)
 {
     _shellCommandFactory.registerCreator<shell::ShellExit>(EXIT_PROMPT);
-    registerCommands();
 }
 
-Shell::Shell(std::string name, std::string prompt) noexcept :
+Shell::Shell(std::string name, std::string prompt) :
      _name(std::move(name)),
-    _prompt(std::move(prompt)),
-    _client(nullptr)
+    _prompt(std::move(prompt))
 
 {
     _shellCommandFactory.registerCreator<shell::ShellExit>(EXIT_PROMPT);
-    registerCommands();
-}
-
-Shell::Shell(const Client &client, std::string name, std::string prompt) noexcept : 
-    _name(std::move(name)),
-    _prompt(std::move(prompt)),
-    _client(std::make_unique<Client>(client))
-{
-    _shellCommandFactory.registerCreator<shell::ShellExit>(EXIT_PROMPT);
-    registerCommands();
 }
 
 bool Shell::executeCommand(const std::vector<std::string> &cmd)
@@ -55,10 +40,6 @@ bool Shell::executeCommand(const std::vector<std::string> &cmd)
     } catch (const std::exception &e) {
         throw;
     }
-}
-
-void Shell::registerCommands()
-{
 }
 
 void Shell::run()
