@@ -10,9 +10,12 @@
 
 #include <vector>
 #include <string>
-#include "Shell.hpp"
 
-namespace my_teams::client::shell {
+namespace my_teams::client {
+
+class Shell;
+
+namespace shell {
 
 class IShellCommand {
 public:
@@ -28,5 +31,6 @@ public:
         std::vector<std::string> cmd) = 0;
 };
 
+}
 }
 #endif // !ISHELL_COMMAND_HPP
