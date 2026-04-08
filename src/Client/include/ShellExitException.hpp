@@ -5,8 +5,8 @@
 ** ShellExit
 */
 
-#ifndef _SHELLEXITEXCEPT_HPP
-#define _SHELLEXITEXCEPT_HPP
+#ifndef SHELLEXITEXCEPT_HPP
+#define SHELLEXITEXCEPT_HPP
 
 #include <exception>
 
