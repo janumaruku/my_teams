@@ -8,25 +8,18 @@
 #ifndef NANOTEKSPICE_SHELLEXIT_HPP
 #define NANOTEKSPICE_SHELLEXIT_HPP
 
+#include <exception>
 #include <memory>
 #include "IShellCommand.hpp"
 #include "Shell.hpp"
 
 namespace my_teams::client::shell {
 
-class ShellExit: public IShellCommand {
+class ShellExitException: public std::exception {
 public:
-    ShellExit() = default;
-
-    ~ShellExit() override = default;
-
-    bool operator()(Shell &shell,
-        std::vector<std::string> cmd);
-
-    bool execute(Shell &shell,
-        std::vector<std::string> cmd);
-
-    static std::unique_ptr<IShellCommand> create();
+    [[nodiscard]] const char *what() const noexcept override {
+        return "";
+    }
 };
 }
 
