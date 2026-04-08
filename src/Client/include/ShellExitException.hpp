@@ -5,13 +5,10 @@
 ** ShellExit
 */
 
-#ifndef NANOTEKSPICE_SHELLEXIT_HPP
-#define NANOTEKSPICE_SHELLEXIT_HPP
+#ifndef _SHELLEXITEXCEPT_HPP
+#define _SHELLEXITEXCEPT_HPP
 
 #include <exception>
-#include <memory>
-#include "IShellCommand.hpp"
-#include "Shell.hpp"
 
 namespace my_teams::client::shell {
 
@@ -22,7 +19,5 @@ public:
     }
 };
 }
-
-// #include "../src/ShellExit.tpp"
 
 #endif //NANOTEKSPICE_SHELLEXIT_HPP
