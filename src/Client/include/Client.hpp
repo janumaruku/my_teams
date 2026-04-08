@@ -10,8 +10,7 @@
 
 #include "IoContext.hpp"
 
-namespace my_teams {
-namespace client {
+namespace my_teams::client {
 
 class Client {
 public:
@@ -29,7 +28,6 @@ private:
     void handleRead();
 };
 
-} // client
-} // my_teams
+}
 
 #endif //MY_TEAMS_CLIENT_HPP
