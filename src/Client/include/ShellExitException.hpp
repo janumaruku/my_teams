@@ -12,7 +12,8 @@
 #include "IShellCommand.hpp"
 #include "Shell.hpp"
 
-namespace myteams::client::shell {
+namespace my_teams::client::shell {
+
 class ShellExit: public IShellCommand {
 public:
     ShellExit() = default;

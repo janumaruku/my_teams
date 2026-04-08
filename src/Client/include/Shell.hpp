@@ -10,12 +10,13 @@
 
 #include "../DesignPattern/FactoryTemplate.hpp"
 #include "IShellCommand.hpp"
+#include "Client.hpp"
 
-namespace myteams::client::shell {
+namespace my_teams::client {
 
 class Shell {
 public:
-    using ShellCommandFactory  = FactoryTemplate<IShellCommand, std::string>;
+    using ShellCommandFactory  = designPattern::FactoryTemplate<shell::IShellCommand, std::string>;
 
     virtual ~Shell() = default;
 
@@ -31,6 +32,7 @@ protected:
     std::string _name;
     std::string _prompt;
     ShellCommandFactory _shellCommandFactory;
+    Client _client;
 
     virtual bool executeCommand(const std::vector<std::string> &cmd);
 };
