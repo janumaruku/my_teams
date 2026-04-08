@@ -10,6 +10,7 @@
 #include <iostream>
 #include "Client.hpp"
 #include "Shell.hpp"
+#include "ShellCommandException.hpp"
 #include "ConnectedSocket.hpp"
 #include "IoContext.hpp"
 
@@ -20,7 +21,7 @@ int main()
     
     try {
         shell.run();
-    } catch (const std::exception e) {
+    } catch (const my_teams::client::shell::ShellCommandException e) {
         std::cout << e.what() << std::endl;
         return EXIT_EPITECH;
     }
