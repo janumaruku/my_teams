@@ -41,7 +41,17 @@ Shell::Shell(const Client &client, std::string name, std::string prompt) :
 {
     _shellCommandFactory.registerCreator<shell::ShellExit>(EXIT_PROMPT);
 }
-    
+
+bool Shell::executeCommand(const std::vector<std::string> &cmd)
+{
+    try {
+        const auto command = _shellCommandFactory.create(cmd[0]);
+        return command->execute(*this, cmd);
+    } catch (const std::exception &e) {
+        throw;
+    }
+}
+
 void Shell::run()
 {
     std::string line;
