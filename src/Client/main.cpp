@@ -5,15 +5,24 @@
 ** main
 */
 
+#include <cstdlib>
+#include <exception>
+#include <iostream>
 #include "Client.hpp"
+#include "Shell.hpp"
 #include "ConnectedSocket.hpp"
 #include "IoContext.hpp"
 
 int main()
 {
     my_teams::client::Client client{10000, "127.0.0.1"};
-
-    client.start();
-
-    return 0;
+    my_teams::client::Shell shell(client, "my_teams_cli_shell", my_teams::client::BASE_PROMPT);
+    
+    try {
+        shell.run();
+    } catch (const std::exception e) {
+        std::cout << e.what() << std::endl;
+        return EXIT_EPITECH;
+    }
+    return EXIT_SUCCESS;
 }
