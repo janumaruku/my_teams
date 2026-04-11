@@ -1,0 +1,48 @@
+name: Jira - On Push
+
+on:
+  push:
+    branches-ignore:
+      - main
+      - dev
+
+jobs:
+  update-issue:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Extract issue key from branch
+        id: branch
+        run: |
+          BRANCH="${GITHUB_REF#refs/heads/}"
+          ISSUE=$(echo "$BRANCH" | grep -oE '[A-Z]+-[0-9]+' | head -n1 || true)
+          echo "issue=$ISSUE" >> $GITHUB_OUTPUT
+
+      - name: Extract issue key from commit
+        id: commit
+        run: |
+          ISSUE=$(echo "${{ github.event.head_commit.message }}" | grep -oE '[A-Z]+-[0-9]+' | head -n1 || true)
+          echo "issue=$ISSUE" >> $GITHUB_OUTPUT
+
+      - name: Decide issue key
+        id: final
+        run: |
+          ISSUE="${{ steps.branch.outputs.issue }}"
+          if [ -z "$ISSUE" ]; then
+            ISSUE="${{ steps.commit.outputs.issue }}"
+          fi
+          echo "issue=$ISSUE" >> $GITHUB_OUTPUT
+
+      - name: Move to In Progress
+        env:
+          JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+        run: |
+          ISSUE="${{ steps.final.outputs.issue }}"
+          [ -z "$ISSUE" ] && exit 0
+          chmod +x .github/scripts/jira-transition.sh
+          .github/scripts/jira-transition.sh "$ISSUE" "In Progress"
