@@ -53,15 +53,23 @@ public:
 
     void run();
 
+    void get(const std::string &path, Handler handler);
+
 private:
     IOContext _ioContext{};
     Acceptor _acceptor;
     std::unordered_map<std::shared_ptr<ConnectedSocket>, TClientState> _clients;
     std::string _readBuffer;
+    std::string _transmission;
+    RadixTree _get;
 
     void startAccept();
 
     void startClient(const std::shared_ptr<ConnectedSocket> &sock);
+
+    void handleTransmission();
+
+    void handleRead(const size_t &bytes);
 
     void clientRead(const std::shared_ptr<ConnectedSocket> &sock);
 
@@ -72,5 +80,5 @@ private:
 
 #endif // MY_TEAMS_ROUTER_HPP
 
-#include "../Router.tpp"
 #include "../RadixTree.tpp"
+#include "../Router.tpp"
