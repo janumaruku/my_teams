@@ -44,6 +44,7 @@ jobs:
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
         run: |
           ISSUE="${{ steps.final.outputs.issue }}"
+          echo "Base URL length: ${#JIRA_BASE_URL}"
           [ -z "$ISSUE" ] && exit 0
           chmod +x .github/scripts/jira-transition.sh
           .github/scripts/jira-transition.sh "$ISSUE" "In Progress"

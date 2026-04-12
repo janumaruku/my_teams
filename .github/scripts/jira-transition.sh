@@ -24,6 +24,9 @@ done
 
 AUTH_HEADER="Authorization: Basic $(printf '%s:%s' "$JIRA_EMAIL" "$JIRA_API_TOKEN" | base64)"
 
+# Remove trailing slash from base URL if present
+JIRA_BASE_URL="${JIRA_BASE_URL%/}"
+
 echo "Processing $ISSUE_KEY → $TARGET_STATUS"
 
 # Get available transitions
