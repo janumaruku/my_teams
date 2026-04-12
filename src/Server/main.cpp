@@ -7,11 +7,12 @@
 
 #include "Acceptor.hpp"
 #include "IoContext.hpp"
+#include "Router.hpp"
 #include "Server.hpp"
 
 int main()
 {
-    my_teams::server::Server server{10000};
+    network::Router<int> router{10000};
 
-    server.run();
+    router.run();
 }
