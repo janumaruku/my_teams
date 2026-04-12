@@ -51,8 +51,8 @@ void Router<TClientState>::startClient(
 template <typename TClientState>
 void Router<TClientState>::handleTransmission()
 {
-    // const nlohmann::json stream = nlohmann::json::parse(_transmission);
-    std::cout << _transmission << std::endl;
+    const nlohmann::json stream = nlohmann::json::parse(_transmission);
+    std::cout << std::setw(4) << stream << std::endl;
     _transmission.clear();
 }
 
@@ -65,7 +65,6 @@ void Router<TClientState>::handleRead(const size_t &bytes)
             _readBuffer.end());
         _transmission.pop_back();
         _transmission.pop_back();
-        _transmission.push_back('\n');
         handleTransmission();
     }
 }
@@ -74,17 +73,15 @@ template <typename TClientState>
 void Router<TClientState>::clientRead(
     const std::shared_ptr<ConnectedSocket> &sock)
 {
-    auto readBuffer = std::make_shared<std::string>(1024, '\0');
-    
-    sock->asyncReadSome(buffer(*readBuffer, readBuffer->size()),
-        [this, sock, readBuffer](
+    _readBuffer.resize(1024);
+    sock->asyncReadSome(buffer(_readBuffer, _readBuffer.size()),
+        [this, sock](
         const std::error_code &err, const std::size_t &bytes) {
             if (err) {
                 std::cerr << err.message() << std::endl;
                 return;
             }
-            readBuffer->resize(bytes);
-            std::cout << *readBuffer << std::endl;
+            handleRead(bytes);
             clientWrite(sock);
         });
 }
@@ -93,7 +90,21 @@ template <typename TClientState>
 void Router<TClientState>::clientWrite(
     const std::shared_ptr<ConnectedSocket> &sock)
 {
-    sock->asyncWrite(buffer("Hello!!!"),
+    nlohmann::json response;
+    response["status_code"]    = 200;
+    response["status_message"] = "Status OK";
+    response["body"]           = {
+        {
+            {"id", "uuid1"},
+            {"name", "Janumaruku"}
+        },
+        {
+            {"id", "uuid2"},
+            {"name", "Philips"}
+        }
+    };
+    _writeBuffer = response.dump(2);
+    sock->asyncWrite(buffer(_writeBuffer),
         [this, sock](
         const std::error_code &err, const std::size_t & /*bytes*/) {
             if (err) {

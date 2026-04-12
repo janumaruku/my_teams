@@ -60,6 +60,7 @@ private:
     Acceptor _acceptor;
     std::unordered_map<std::shared_ptr<ConnectedSocket>, TClientState> _clients;
     std::string _readBuffer;
+    std::string _writeBuffer;
     std::string _transmission;
     RadixTree _get;
 
