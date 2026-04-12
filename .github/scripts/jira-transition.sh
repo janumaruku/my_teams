@@ -64,4 +64,4 @@ if [[ "$HTTP_CODE" -ne 204 ]]; then
   exit 1
 fi
 
-echo "Transitioned $ISSUE_KEY → $TARGET_STATUS"
+echo "::notice::Transitioned $ISSUE_KEY → $TARGET_STATUS"
