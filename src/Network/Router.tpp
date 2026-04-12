@@ -97,10 +97,6 @@ void Router<TClientState>::clientWrite(
         {
             {"id", "uuid1"},
             {"name", "Janumaruku"}
-        },
-        {
-            {"id", "uuid2"},
-            {"name", "Philips"}
         }
     };
     _writeBuffer = response.dump(2);
