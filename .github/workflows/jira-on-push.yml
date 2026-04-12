@@ -34,6 +34,7 @@ jobs:
           if [ -z "$ISSUE" ]; then
             ISSUE="${{ steps.commit.outputs.issue }}"
           fi
+          echo "::notice::Issue key: $ISSUE"
           echo "issue=$ISSUE" >> $GITHUB_OUTPUT
 
       - name: Move to In Progress
