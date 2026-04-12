@@ -15,4 +15,6 @@ int main()
     network::Router<int> router{10000};
 
     router.run();
+
+    return 0;
 }

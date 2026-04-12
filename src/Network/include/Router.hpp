@@ -28,12 +28,23 @@ class Router {
     class RadixTree {
     public:
         struct Node {
+            Node();
+
+            explicit Node(const std::string &nodeWord,
+                Node *nodeParent = nullptr);
+
             std::string word;
             Node *parent;
-            std::pair<std::string, Node *> param;
-            std::unordered_map<std::string, Node *> children;
+            std::string param;
+            std::unique_ptr<Node> paramNode;
+            std::unordered_map<std::string, std::unique_ptr<Node>> children;
             Handler handler;
         };
+
+        void add(const std::vector<std::string> &words, Handler handler);
+
+    private:
+        std::unordered_map<std::string, std::unique_ptr<Node>> _root;
     };
 
 public:
@@ -62,3 +73,4 @@ private:
 #endif // MY_TEAMS_ROUTER_HPP
 
 #include "../Router.tpp"
+#include "../RadixTree.tpp"
