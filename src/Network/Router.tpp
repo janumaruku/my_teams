@@ -59,7 +59,8 @@ void Router<TClientState>::handleTransmission(TClientState &/*clientState*/)
 }
 
 template <typename TClientState>
-void Router<TClientState>::handleRead(const size_t &bytes, TClientState &clientState)
+void Router<TClientState>::handleRead(const size_t &bytes,
+    TClientState &clientState)
 {
     _readBuffer.resize(bytes);
     if (_readBuffer.ends_with("\r\n")) {
