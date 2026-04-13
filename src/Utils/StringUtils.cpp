@@ -48,8 +48,6 @@ std::vector<std::string> StringUtils::split(const std::string &str,
     std::string word;
 
     while (std::getline(stream, word, delim)) {
-        if (word.at(0) == '#')
-            break;
         result.push_back(word);
     }
     return result;
