@@ -40,8 +40,8 @@ void TeamsShell::run()
     Shell::run();
 }
 
-std::unique_ptr<Client> TeamsShell::getClient() const noexcept
+Client *TeamsShell::getClient() const noexcept
 {
-    return _client;
+    return _client.get();
 }
 }

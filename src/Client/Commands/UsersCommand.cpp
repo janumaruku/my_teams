@@ -20,7 +20,8 @@ bool UsersCommand::operator()(Shell &shell,
     req["path"] = "/users";
     req["body"] = {};
     const auto &client = dynamic_cast<TeamsShell &>(shell).getClient();
-       
+ 
+    client->send(req.dump());
     return true;
 }
 

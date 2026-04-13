@@ -25,7 +25,7 @@ public:
     explicit TeamsShell(std::string name, std::string prompt);
     explicit TeamsShell(std::string prompt);
 
-    std::unique_ptr<Client> getClient() const noexcept;
+    Client *getClient() const noexcept;
 
     void run();
 

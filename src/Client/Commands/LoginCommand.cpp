@@ -5,35 +5,39 @@
 ** 
 */
 
-#include "Commands/HelpCommand.hpp"
+#include "Commands/LoginCommand.hpp"
 #include "Router.hpp"
 #include "jsonParser.hpp"
 #include "TeamsShell.hpp"
 
 namespace my_teams::client::shell {
 
-bool HelpCommand::operator()(Shell &shell,
+bool LoginCommand::operator()(Shell &shell,
     std::vector<std::string>)
 {
     nlohmann::json req;
-    req["method"] = network::Method::GET;
-    req["path"] = "/help";
-    req["body"] = {};
     const auto &client = dynamic_cast<TeamsShell &>(shell).getClient();
-  
+
+    req["method"] = network::Method::POST;
+    req["path"] = "/login";
+    req["header"] = {}
+    req["body"] = {
+			{"username", "Jean"},
+			{"password", ""}
+	};
     client->send(req.dump());
     return true;
 }
 
-bool HelpCommand::execute(Shell &shell,
+bool LoginCommand::execute(Shell &shell,
     const std::vector<std::string> cmd)
 {
     return operator ()(shell, cmd);
 }
 
-std::unique_ptr<IShellCommand> HelpCommand::create()
+std::unique_ptr<IShellCommand> LoginCommand::create()
 {
-    return std::unique_ptr<IShellCommand>(new HelpCommand());
+    return std::unique_ptr<IShellCommand>(new LoginCommand());
 }
 
 }
