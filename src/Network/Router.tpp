@@ -7,11 +7,33 @@
 
 #pragma once
 
+#include "jsonParser.hpp"
 #include "Router.hpp"
 #include "StringUtils.hpp"
-#include "jsonParser.hpp"
 
 namespace network {
+inline std::ostream &operator<<(std::ostream &stream, const Method &method)
+{
+    switch (method) {
+    case Method::GET:
+        stream << "GET";
+        break;
+    case Method::POST:
+        stream << "POST";
+        break;
+    case Method::PUT:
+        stream << "PUT";
+        break;
+    case Method::DELETE:
+        stream << "DELETE";
+        break;
+    default:
+        break;
+    }
+
+    return stream;
+}
+
 template <typename TClientState>
 void Router<TClientState>::run()
 {
@@ -20,10 +42,11 @@ void Router<TClientState>::run()
 }
 
 template <typename TClientState>
-void Router<TClientState>::get(const std::string &path, Handler handler)
+void Router<TClientState>::get(const std::string &path,
+    std::initializer_list<Handler> handlers)
 {
     const auto splitPath = utils::StringUtils::split(path, '/');
-    _get.add(splitPath, handler);
+    _get.add(splitPath, handlers);
 }
 
 template <typename TClientState>
@@ -53,8 +76,9 @@ void Router<TClientState>::handleTransmission(TClientState &/*clientState*/)
 {
     const nlohmann::json stream = nlohmann::json::parse(_transmission);
     std::cout << std::setw(4) << stream << std::endl;
-    const auto temp = stream.at("method").get<Method>();
-    std::cout << utils::RED << temp << utils::RESET<< std::endl;
+    const auto method = stream.at("method").get<Method>();
+    std::cout << utils::RED << method << utils::RESET << std::endl;
+
     _transmission.clear();
 }
 
@@ -69,6 +93,9 @@ void Router<TClientState>::handleRead(const size_t &bytes,
         _transmission.pop_back();
         _transmission.pop_back();
         handleTransmission(clientState);
+    } else {
+        _transmission.insert(_transmission.end(), _readBuffer.begin(),
+            _readBuffer.end());
     }
 }
 
@@ -85,7 +112,7 @@ void Router<TClientState>::clientRead(
                 return;
             }
             handleRead(bytes, _clients[sock]);
-            clientWrite(sock);
+            // clientWrite(sock);
         });
 }
 
@@ -102,6 +129,7 @@ void Router<TClientState>::clientWrite(
             {"name", "Janumaruku"}
         }
     };
+
     _writeBuffer = response.dump(2);
     sock->asyncWrite(buffer(_writeBuffer),
         [this, sock](
@@ -111,27 +139,5 @@ void Router<TClientState>::clientWrite(
             }
             clientRead(sock);
         });
-}
-
-inline std::ostream &operator<<(std::ostream &stream, const Method &method)
-{
-    switch (method) {
-    case Method::GET:
-        stream << "GET";
-        break;
-    case Method::POST:
-        stream << "POST";
-        break;
-    case Method::PUT:
-        stream << "PUT";
-        break;
-    case Method::DELETE:
-        stream << "DELETE";
-        break;
-    default:
-        break;
-    }
-
-    return stream;
 }
 } // namespace network
