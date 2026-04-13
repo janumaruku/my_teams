@@ -8,6 +8,7 @@
 #pragma once
 
 #include "constants.hpp"
+#include "StringUtils.hpp"
 
 namespace network {
 template <typename TClientState>
@@ -45,7 +46,7 @@ void Router<TClientState>::RadixTree::add(const std::vector<std::string> &words,
             tempNode->children[word] = std::make_unique<Node>(word);
         tempNode = tempNode->children[word].get();
     }
-    tempNode->handler.insert(tempNode->handler.end(), handlers.begin(),
+    tempNode->handlers.insert(tempNode->handlers.end(), handlers.begin(),
         handlers.end());
     tempNode->isPath = true;
 }
@@ -53,7 +54,20 @@ void Router<TClientState>::RadixTree::add(const std::vector<std::string> &words,
 template <typename TClientState>
 void Router<TClientState>::RadixTree::handle(Context &context)
 {
+    Node *node = find(utils::StringUtils::split(context.path(), '/'));
 
+    if (!node->isPath) {
+        nlohmann::json notFound;
+        notFound["status_code"] = 404;
+        notFound["status_message"] = "Not Found";
+        notFound["body"] = {
+            {"error_message", "Resource not found"}
+        };
+    } else {
+        for (auto &handler: node->handlers) {
+            handler(&context);
+        }
+    }
 }
 
 template <typename TClientState>
@@ -66,7 +80,7 @@ Router<TClientState>::RadixTree::Node *Router<TClientState>::RadixTree
     if (itt != _root.end())
         return nullptr;
 
-    Node *res = itt->secon.get();
+    Node *res = itt->second.get();
     for (std::size_t count = 1; count < words.size(); ++count) {
         if (res->children.contains(words[count]))
             res = res->children.at(words[count]).get();
