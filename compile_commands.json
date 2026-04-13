@@ -1,257 +1,12 @@
 [
   {
     "arguments": [
-      "/usr/bin/clang++",
+      "/usr/local/bin/clang++",
       "-Isrc/Network/include",
       "-Isrc/Utils/include",
       "-Isrc/DesignPattern/include",
-      "-std=c++20",
-      "-Wall",
-      "-Wextra",
-      "-Werror",
-      "-c",
-      "-o",
-      "build/src/Utils/StringUtils.o",
-      "src/Utils/StringUtils.cpp"
-    ],
-    "directory": "/home/janumaruku/epitech_project/my_teams",
-    "file": "/home/janumaruku/epitech_project/my_teams/src/Utils/StringUtils.cpp",
-    "output": "/home/janumaruku/epitech_project/my_teams/build/src/Utils/StringUtils.o"
-  },
-  {
-    "arguments": [
-      "/usr/bin/clang++",
-      "-Isrc/Network/include",
-      "-Isrc/Utils/include",
-      "-Isrc/DesignPattern/include",
-      "-std=c++20",
-      "-Wall",
-      "-Wextra",
-      "-Werror",
-      "-c",
-      "-o",
-      "build/src/Utils/Logger.o",
-      "src/Utils/Logger.cpp"
-    ],
-    "directory": "/home/janumaruku/epitech_project/my_teams",
-    "file": "/home/janumaruku/epitech_project/my_teams/src/Utils/Logger.cpp",
-    "output": "/home/janumaruku/epitech_project/my_teams/build/src/Utils/Logger.o"
-  },
-  {
-    "arguments": [
-      "/usr/bin/clang++",
-      "-Isrc/Network/include",
-      "-Isrc/Utils/include",
-      "-Isrc/DesignPattern/include",
-      "-std=c++20",
-      "-Wall",
-      "-Wextra",
-      "-Werror",
-      "-c",
-      "-o",
-      "build/src/Utils/Options.o",
-      "src/Utils/Options.cpp"
-    ],
-    "directory": "/home/janumaruku/epitech_project/my_teams",
-    "file": "/home/janumaruku/epitech_project/my_teams/src/Utils/Options.cpp",
-    "output": "/home/janumaruku/epitech_project/my_teams/build/src/Utils/Options.o"
-  },
-  {
-    "arguments": [
-      "/usr/bin/clang++",
-      "-Isrc/Network/include",
-      "-Isrc/Utils/include",
-      "-Isrc/DesignPattern/include",
-      "-std=c++20",
-      "-Wall",
-      "-Wextra",
-      "-Werror",
-      "-c",
-      "-o",
-      "build/src/Utils/OptionException.o",
-      "src/Utils/OptionException.cpp"
-    ],
-    "directory": "/home/janumaruku/epitech_project/my_teams",
-    "file": "/home/janumaruku/epitech_project/my_teams/src/Utils/OptionException.cpp",
-    "output": "/home/janumaruku/epitech_project/my_teams/build/src/Utils/OptionException.o"
-  },
-  {
-    "arguments": [
-      "/usr/bin/clang++",
-      "-Isrc/Network/include",
-      "-Isrc/Utils/include",
-      "-Isrc/DesignPattern/include",
-      "-std=c++20",
-      "-Wall",
-      "-Wextra",
-      "-Werror",
-      "-c",
-      "-o",
-      "build/src/Network/ConnectedSocket.o",
-      "src/Network/ConnectedSocket.cpp"
-    ],
-    "directory": "/home/janumaruku/epitech_project/my_teams",
-    "file": "/home/janumaruku/epitech_project/my_teams/src/Network/ConnectedSocket.cpp",
-    "output": "/home/janumaruku/epitech_project/my_teams/build/src/Network/ConnectedSocket.o"
-  },
-  {
-    "arguments": [
-      "/usr/bin/clang++",
-      "-Isrc/Network/include",
-      "-Isrc/Utils/include",
-      "-Isrc/DesignPattern/include",
-      "-std=c++20",
-      "-Wall",
-      "-Wextra",
-      "-Werror",
-      "-c",
-      "-o",
-      "build/src/Network/ListeningSocket.o",
-      "src/Network/ListeningSocket.cpp"
-    ],
-    "directory": "/home/janumaruku/epitech_project/my_teams",
-    "file": "/home/janumaruku/epitech_project/my_teams/src/Network/ListeningSocket.cpp",
-    "output": "/home/janumaruku/epitech_project/my_teams/build/src/Network/ListeningSocket.o"
-  },
-  {
-    "arguments": [
-      "/usr/bin/clang++",
-      "-Isrc/Network/include",
-      "-Isrc/Utils/include",
-      "-Isrc/DesignPattern/include",
-      "-std=c++20",
-      "-Wall",
-      "-Wextra",
-      "-Werror",
-      "-c",
-      "-o",
-      "build/src/Network/Buffer.o",
-      "src/Network/Buffer.cpp"
-    ],
-    "directory": "/home/janumaruku/epitech_project/my_teams",
-    "file": "/home/janumaruku/epitech_project/my_teams/src/Network/Buffer.cpp",
-    "output": "/home/janumaruku/epitech_project/my_teams/build/src/Network/Buffer.o"
-  },
-  {
-    "arguments": [
-      "/usr/bin/clang++",
-      "-Isrc/Network/include",
-      "-Isrc/Utils/include",
-      "-Isrc/DesignPattern/include",
-      "-std=c++20",
-      "-Wall",
-      "-Wextra",
-      "-Werror",
-      "-c",
-      "-o",
-      "build/src/Network/IoContext.o",
-      "src/Network/IoContext.cpp"
-    ],
-    "directory": "/home/janumaruku/epitech_project/my_teams",
-    "file": "/home/janumaruku/epitech_project/my_teams/src/Network/IoContext.cpp",
-    "output": "/home/janumaruku/epitech_project/my_teams/build/src/Network/IoContext.o"
-  },
-  {
-    "arguments": [
-      "/usr/bin/clang++",
-      "-Isrc/Network/include",
-      "-Isrc/Utils/include",
-      "-Isrc/DesignPattern/include",
-      "-std=c++20",
-      "-Wall",
-      "-Wextra",
-      "-Werror",
-      "-c",
-      "-o",
-      "build/src/Client/main.o",
-      "src/Client/main.cpp"
-    ],
-    "directory": "/home/janumaruku/epitech_project/my_teams",
-    "file": "/home/janumaruku/epitech_project/my_teams/src/Client/main.cpp",
-    "output": "/home/janumaruku/epitech_project/my_teams/build/src/Client/main.o"
-  },
-  {
-    "arguments": [
-      "/usr/bin/clang++",
-      "-Isrc/Network/include",
-      "-Isrc/Utils/include",
-      "-Isrc/DesignPattern/include",
-      "-std=c++20",
-      "-Wall",
-      "-Wextra",
-      "-Werror",
-      "-c",
-      "-o",
-      "build/src/DesignPattern/FactoryTemplate.o",
-      "src/DesignPattern/FactoryTemplate.cpp"
-    ],
-    "directory": "/home/janumaruku/epitech_project/my_teams",
-    "file": "/home/janumaruku/epitech_project/my_teams/src/DesignPattern/FactoryTemplate.cpp",
-    "output": "/home/janumaruku/epitech_project/my_teams/build/src/DesignPattern/FactoryTemplate.o"
-  },
-  {
-    "arguments": [
-      "/usr/bin/clang++",
-      "-Isrc/Network/include",
-      "-Isrc/Utils/include",
-      "-Isrc/DesignPattern/include",
-      "-std=c++20",
-      "-Wall",
-      "-Wextra",
-      "-Werror",
-      "-c",
-      "-o",
-      "build/src/Network/ErrorCode.o",
-      "src/Network/ErrorCode.cpp"
-    ],
-    "directory": "/home/janumaruku/epitech_project/my_teams",
-    "file": "/home/janumaruku/epitech_project/my_teams/src/Network/ErrorCode.cpp",
-    "output": "/home/janumaruku/epitech_project/my_teams/build/src/Network/ErrorCode.o"
-  },
-  {
-    "arguments": [
-      "/usr/bin/clang++",
-      "-Isrc/Network/include",
-      "-Isrc/Utils/include",
-      "-Isrc/DesignPattern/include",
-      "-std=c++20",
-      "-Wall",
-      "-Wextra",
-      "-Werror",
-      "-c",
-      "-o",
-      "build/src/Network/Endpoint.o",
-      "src/Network/Endpoint.cpp"
-    ],
-    "directory": "/home/janumaruku/epitech_project/my_teams",
-    "file": "/home/janumaruku/epitech_project/my_teams/src/Network/Endpoint.cpp",
-    "output": "/home/janumaruku/epitech_project/my_teams/build/src/Network/Endpoint.o"
-  },
-  {
-    "arguments": [
-      "/usr/bin/clang++",
-      "-Isrc/Network/include",
-      "-Isrc/Utils/include",
-      "-Isrc/DesignPattern/include",
-      "-std=c++20",
-      "-Wall",
-      "-Wextra",
-      "-Werror",
-      "-c",
-      "-o",
-      "build/src/Server/main.o",
-      "src/Server/main.cpp"
-    ],
-    "directory": "/home/janumaruku/epitech_project/my_teams",
-    "file": "/home/janumaruku/epitech_project/my_teams/src/Server/main.cpp",
-    "output": "/home/janumaruku/epitech_project/my_teams/build/src/Server/main.o"
-  },
-  {
-    "arguments": [
-      "/usr/bin/clang++",
-      "-Isrc/Network/include",
-      "-Isrc/Utils/include",
-      "-Isrc/DesignPattern/include",
+      "-Isrc/Server/include",
+      "-Isrc/Client/include",
       "-std=c++20",
       "-Wall",
       "-Wextra",
@@ -261,8 +16,407 @@
       "build/src/Network/Acceptor.o",
       "src/Network/Acceptor.cpp"
     ],
-    "directory": "/home/janumaruku/epitech_project/my_teams",
-    "file": "/home/janumaruku/epitech_project/my_teams/src/Network/Acceptor.cpp",
-    "output": "/home/janumaruku/epitech_project/my_teams/build/src/Network/Acceptor.o"
+    "directory": "/home/lyzer/delivery/Tek2/NTWK/my_teams",
+    "file": "/home/lyzer/delivery/Tek2/NTWK/my_teams/src/Network/Acceptor.cpp",
+    "output": "/home/lyzer/delivery/Tek2/NTWK/my_teams/build/src/Network/Acceptor.o"
+  },
+  {
+    "arguments": [
+      "/usr/local/bin/clang++",
+      "-Isrc/Network/include",
+      "-Isrc/Utils/include",
+      "-Isrc/DesignPattern/include",
+      "-Isrc/Server/include",
+      "-Isrc/Client/include",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "build/src/Network/ErrorCode.o",
+      "src/Network/ErrorCode.cpp"
+    ],
+    "directory": "/home/lyzer/delivery/Tek2/NTWK/my_teams",
+    "file": "/home/lyzer/delivery/Tek2/NTWK/my_teams/src/Network/ErrorCode.cpp",
+    "output": "/home/lyzer/delivery/Tek2/NTWK/my_teams/build/src/Network/ErrorCode.o"
+  },
+  {
+    "arguments": [
+      "/usr/local/bin/clang++",
+      "-Isrc/Network/include",
+      "-Isrc/Utils/include",
+      "-Isrc/DesignPattern/include",
+      "-Isrc/Server/include",
+      "-Isrc/Client/include",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "build/src/Network/Buffer.o",
+      "src/Network/Buffer.cpp"
+    ],
+    "directory": "/home/lyzer/delivery/Tek2/NTWK/my_teams",
+    "file": "/home/lyzer/delivery/Tek2/NTWK/my_teams/src/Network/Buffer.cpp",
+    "output": "/home/lyzer/delivery/Tek2/NTWK/my_teams/build/src/Network/Buffer.o"
+  },
+  {
+    "arguments": [
+      "/usr/local/bin/clang++",
+      "-Isrc/Network/include",
+      "-Isrc/Utils/include",
+      "-Isrc/DesignPattern/include",
+      "-Isrc/Server/include",
+      "-Isrc/Client/include",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "build/src/Network/Endpoint.o",
+      "src/Network/Endpoint.cpp"
+    ],
+    "directory": "/home/lyzer/delivery/Tek2/NTWK/my_teams",
+    "file": "/home/lyzer/delivery/Tek2/NTWK/my_teams/src/Network/Endpoint.cpp",
+    "output": "/home/lyzer/delivery/Tek2/NTWK/my_teams/build/src/Network/Endpoint.o"
+  },
+  {
+    "arguments": [
+      "/usr/local/bin/clang++",
+      "-Isrc/Network/include",
+      "-Isrc/Utils/include",
+      "-Isrc/DesignPattern/include",
+      "-Isrc/Server/include",
+      "-Isrc/Client/include",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "build/src/Server/ClientSession.o",
+      "src/Server/ClientSession.cpp"
+    ],
+    "directory": "/home/lyzer/delivery/Tek2/NTWK/my_teams",
+    "file": "/home/lyzer/delivery/Tek2/NTWK/my_teams/src/Server/ClientSession.cpp",
+    "output": "/home/lyzer/delivery/Tek2/NTWK/my_teams/build/src/Server/ClientSession.o"
+  },
+  {
+    "arguments": [
+      "/usr/local/bin/clang++",
+      "-Isrc/Network/include",
+      "-Isrc/Utils/include",
+      "-Isrc/DesignPattern/include",
+      "-Isrc/Server/include",
+      "-Isrc/Client/include",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "build/src/DesignPattern/FactoryTemplate.o",
+      "src/DesignPattern/FactoryTemplate.cpp"
+    ],
+    "directory": "/home/lyzer/delivery/Tek2/NTWK/my_teams",
+    "file": "/home/lyzer/delivery/Tek2/NTWK/my_teams/src/DesignPattern/FactoryTemplate.cpp",
+    "output": "/home/lyzer/delivery/Tek2/NTWK/my_teams/build/src/DesignPattern/FactoryTemplate.o"
+  },
+  {
+    "arguments": [
+      "/usr/local/bin/clang++",
+      "-Isrc/Network/include",
+      "-Isrc/Utils/include",
+      "-Isrc/DesignPattern/include",
+      "-Isrc/Server/include",
+      "-Isrc/Client/include",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "build/src/Network/ListeningSocket.o",
+      "src/Network/ListeningSocket.cpp"
+    ],
+    "directory": "/home/lyzer/delivery/Tek2/NTWK/my_teams",
+    "file": "/home/lyzer/delivery/Tek2/NTWK/my_teams/src/Network/ListeningSocket.cpp",
+    "output": "/home/lyzer/delivery/Tek2/NTWK/my_teams/build/src/Network/ListeningSocket.o"
+  },
+  {
+    "arguments": [
+      "/usr/local/bin/clang++",
+      "-Isrc/Network/include",
+      "-Isrc/Utils/include",
+      "-Isrc/DesignPattern/include",
+      "-Isrc/Server/include",
+      "-Isrc/Client/include",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "build/src/Network/ConnectedSocket.o",
+      "src/Network/ConnectedSocket.cpp"
+    ],
+    "directory": "/home/lyzer/delivery/Tek2/NTWK/my_teams",
+    "file": "/home/lyzer/delivery/Tek2/NTWK/my_teams/src/Network/ConnectedSocket.cpp",
+    "output": "/home/lyzer/delivery/Tek2/NTWK/my_teams/build/src/Network/ConnectedSocket.o"
+  },
+  {
+    "arguments": [
+      "/usr/local/bin/clang++",
+      "-Isrc/Network/include",
+      "-Isrc/Utils/include",
+      "-Isrc/DesignPattern/include",
+      "-Isrc/Server/include",
+      "-Isrc/Client/include",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "build/src/Utils/OptionException.o",
+      "src/Utils/OptionException.cpp"
+    ],
+    "directory": "/home/lyzer/delivery/Tek2/NTWK/my_teams",
+    "file": "/home/lyzer/delivery/Tek2/NTWK/my_teams/src/Utils/OptionException.cpp",
+    "output": "/home/lyzer/delivery/Tek2/NTWK/my_teams/build/src/Utils/OptionException.o"
+  },
+  {
+    "arguments": [
+      "/usr/local/bin/clang++",
+      "-Isrc/Network/include",
+      "-Isrc/Utils/include",
+      "-Isrc/DesignPattern/include",
+      "-Isrc/Server/include",
+      "-Isrc/Client/include",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "build/src/Client/main.o",
+      "src/Client/main.cpp"
+    ],
+    "directory": "/home/lyzer/delivery/Tek2/NTWK/my_teams",
+    "file": "/home/lyzer/delivery/Tek2/NTWK/my_teams/src/Client/main.cpp",
+    "output": "/home/lyzer/delivery/Tek2/NTWK/my_teams/build/src/Client/main.o"
+  },
+  {
+    "arguments": [
+      "/usr/local/bin/clang++",
+      "-Isrc/Network/include",
+      "-Isrc/Utils/include",
+      "-Isrc/DesignPattern/include",
+      "-Isrc/Server/include",
+      "-Isrc/Client/include",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "build/src/Server/main.o",
+      "src/Server/main.cpp"
+    ],
+    "directory": "/home/lyzer/delivery/Tek2/NTWK/my_teams",
+    "file": "/home/lyzer/delivery/Tek2/NTWK/my_teams/src/Server/main.cpp",
+    "output": "/home/lyzer/delivery/Tek2/NTWK/my_teams/build/src/Server/main.o"
+  },
+  {
+    "arguments": [
+      "/usr/local/bin/clang++",
+      "-Isrc/Network/include",
+      "-Isrc/Utils/include",
+      "-Isrc/DesignPattern/include",
+      "-Isrc/Server/include",
+      "-Isrc/Client/include",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "build/src/Utils/Logger.o",
+      "src/Utils/Logger.cpp"
+    ],
+    "directory": "/home/lyzer/delivery/Tek2/NTWK/my_teams",
+    "file": "/home/lyzer/delivery/Tek2/NTWK/my_teams/src/Utils/Logger.cpp",
+    "output": "/home/lyzer/delivery/Tek2/NTWK/my_teams/build/src/Utils/Logger.o"
+  },
+  {
+    "arguments": [
+      "/usr/local/bin/clang++",
+      "-Isrc/Network/include",
+      "-Isrc/Utils/include",
+      "-Isrc/DesignPattern/include",
+      "-Isrc/Server/include",
+      "-Isrc/Client/include",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "build/src/Network/IoContext.o",
+      "src/Network/IoContext.cpp"
+    ],
+    "directory": "/home/lyzer/delivery/Tek2/NTWK/my_teams",
+    "file": "/home/lyzer/delivery/Tek2/NTWK/my_teams/src/Network/IoContext.cpp",
+    "output": "/home/lyzer/delivery/Tek2/NTWK/my_teams/build/src/Network/IoContext.o"
+  },
+  {
+    "arguments": [
+      "/usr/local/bin/clang++",
+      "-Isrc/Network/include",
+      "-Isrc/Utils/include",
+      "-Isrc/DesignPattern/include",
+      "-Isrc/Server/include",
+      "-Isrc/Client/include",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "build/src/Client/ShellExit.o",
+      "src/Client/ShellExit.cpp"
+    ],
+    "directory": "/home/lyzer/delivery/Tek2/NTWK/my_teams",
+    "file": "/home/lyzer/delivery/Tek2/NTWK/my_teams/src/Client/ShellExit.cpp",
+    "output": "/home/lyzer/delivery/Tek2/NTWK/my_teams/build/src/Client/ShellExit.o"
+  },
+  {
+    "arguments": [
+      "/usr/local/bin/clang++",
+      "-Isrc/Network/include",
+      "-Isrc/Utils/include",
+      "-Isrc/DesignPattern/include",
+      "-Isrc/Server/include",
+      "-Isrc/Client/include",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "build/src/Server/Server.o",
+      "src/Server/Server.cpp"
+    ],
+    "directory": "/home/lyzer/delivery/Tek2/NTWK/my_teams",
+    "file": "/home/lyzer/delivery/Tek2/NTWK/my_teams/src/Server/Server.cpp",
+    "output": "/home/lyzer/delivery/Tek2/NTWK/my_teams/build/src/Server/Server.o"
+  },
+  {
+    "arguments": [
+      "/usr/local/bin/clang++",
+      "-Isrc/Network/include",
+      "-Isrc/Utils/include",
+      "-Isrc/DesignPattern/include",
+      "-Isrc/Server/include",
+      "-Isrc/Client/include",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "build/src/Client/Shell.o",
+      "src/Client/Shell.cpp"
+    ],
+    "directory": "/home/lyzer/delivery/Tek2/NTWK/my_teams",
+    "file": "/home/lyzer/delivery/Tek2/NTWK/my_teams/src/Client/Shell.cpp",
+    "output": "/home/lyzer/delivery/Tek2/NTWK/my_teams/build/src/Client/Shell.o"
+  },
+  {
+    "arguments": [
+      "/usr/local/bin/clang++",
+      "-Isrc/Network/include",
+      "-Isrc/Utils/include",
+      "-Isrc/DesignPattern/include",
+      "-Isrc/Server/include",
+      "-Isrc/Client/include",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "build/src/Utils/Options.o",
+      "src/Utils/Options.cpp"
+    ],
+    "directory": "/home/lyzer/delivery/Tek2/NTWK/my_teams",
+    "file": "/home/lyzer/delivery/Tek2/NTWK/my_teams/src/Utils/Options.cpp",
+    "output": "/home/lyzer/delivery/Tek2/NTWK/my_teams/build/src/Utils/Options.o"
+  },
+  {
+    "arguments": [
+      "/usr/local/bin/clang++",
+      "-Isrc/Network/include",
+      "-Isrc/Utils/include",
+      "-Isrc/DesignPattern/include",
+      "-Isrc/Server/include",
+      "-Isrc/Client/include",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "build/src/Utils/StringUtils.o",
+      "src/Utils/StringUtils.cpp"
+    ],
+    "directory": "/home/lyzer/delivery/Tek2/NTWK/my_teams",
+    "file": "/home/lyzer/delivery/Tek2/NTWK/my_teams/src/Utils/StringUtils.cpp",
+    "output": "/home/lyzer/delivery/Tek2/NTWK/my_teams/build/src/Utils/StringUtils.o"
+  },
+  {
+    "arguments": [
+      "/usr/local/bin/clang++",
+      "-Isrc/Network/include",
+      "-Isrc/Utils/include",
+      "-Isrc/DesignPattern/include",
+      "-Isrc/Server/include",
+      "-Isrc/Client/include",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "build/src/Client/Client.o",
+      "src/Client/Client.cpp"
+    ],
+    "directory": "/home/lyzer/delivery/Tek2/NTWK/my_teams",
+    "file": "/home/lyzer/delivery/Tek2/NTWK/my_teams/src/Client/Client.cpp",
+    "output": "/home/lyzer/delivery/Tek2/NTWK/my_teams/build/src/Client/Client.o"
+  },
+  {
+    "arguments": [
+      "/usr/local/bin/clang++",
+      "-Isrc/Network/include",
+      "-Isrc/Utils/include",
+      "-Isrc/DesignPattern/include",
+      "-Isrc/Server/include",
+      "-Isrc/Client/include",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "build/src/Client/ShellUtils.o",
+      "src/Client/ShellUtils.cpp"
+    ],
+    "directory": "/home/lyzer/delivery/Tek2/NTWK/my_teams",
+    "file": "/home/lyzer/delivery/Tek2/NTWK/my_teams/src/Client/ShellUtils.cpp",
+    "output": "/home/lyzer/delivery/Tek2/NTWK/my_teams/build/src/Client/ShellUtils.o"
   }
 ]

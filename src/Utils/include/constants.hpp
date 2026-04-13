@@ -5,8 +5,8 @@
 ** constants
 */
 
-#ifndef NANOTEKSPICE_CONSTANTS_HPP
-#define NANOTEKSPICE_CONSTANTS_HPP
+#ifndef MYTEAMS_CONSTANTS_HPP
+#define MYTEAMS_CONSTANTS_HPP
 
 #include <string>
 
@@ -20,4 +20,4 @@ constexpr std::string MAGENTA = "\033[35m";
 constexpr std::string CYAN    = "\033[96m";
 }
 
-#endif //NANOTEKSPICE_CONSTANTS_HPP
+#endif //MYTEAMS_CONSTANTS_HPP

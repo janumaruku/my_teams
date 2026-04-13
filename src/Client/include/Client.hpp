@@ -10,8 +10,9 @@
 
 #include "IoContext.hpp"
 
-namespace my_teams {
-namespace client {
+constexpr int EXIT_EPITECH = 84;
+
+namespace my_teams::client {
 
 class Client {
 public:
@@ -29,7 +30,6 @@ private:
     void handleRead();
 };
 
-} // client
-} // my_teams
+}
 
 #endif //MY_TEAMS_CLIENT_HPP

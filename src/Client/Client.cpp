@@ -7,9 +7,9 @@
 
 #include "Client.hpp"
 
-namespace my_teams {
-namespace client {
-Client::Client(const int &port, const std::string &ipAddress): _socket{
+namespace my_teams::client {
+
+Client::Client(const int &port, const std::string &ipAddress): _socket {
     _ioContext}
 {
     network::Endpoint endPoint{port, ipAddress};
@@ -56,5 +56,4 @@ void Client::handleRead()
             }
         });
 }
-} // client
 } // my_teams
