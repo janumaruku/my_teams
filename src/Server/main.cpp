@@ -14,7 +14,7 @@ int main()
 {
     network::Router<bool> router{10000};
 
-    router.get("/home", [](auto){});
+    router.get("/home", {[](auto){}});
 
     router.run();
 

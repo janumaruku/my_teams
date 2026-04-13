@@ -21,7 +21,7 @@ Router<TClientState>::RadixTree::Node::Node(const std::string &nodeWord,
 
 template <typename TClientState>
 void Router<TClientState>::RadixTree::add(const std::vector<std::string> &words,
-    Handler handler)
+    std::initializer_list<Handler> handlers)
 {
     if (words.empty())
         return;
@@ -45,6 +45,37 @@ void Router<TClientState>::RadixTree::add(const std::vector<std::string> &words,
             tempNode->children[word] = std::make_unique<Node>(word);
         tempNode = tempNode->children[word].get();
     }
-    tempNode->handler = std::move(handler);
+    tempNode->handler.insert(tempNode->handler.end(), handlers.begin(),
+        handlers.end());
+    tempNode->isPath = true;
+}
+
+template <typename TClientState>
+void Router<TClientState>::RadixTree::handle(Context &context)
+{
+
+}
+
+template <typename TClientState>
+Router<TClientState>::RadixTree::Node *Router<TClientState>::RadixTree
+::find(const std::vector<std::string> &words)
+{
+    const auto itt = std::ranges::find_if(_root, [words](const auto &elem) {
+       return words[0] == elem.first;
+    });
+    if (itt != _root.end())
+        return nullptr;
+
+    Node *res = itt->secon.get();
+    for (std::size_t count = 1; count < words.size(); ++count) {
+        if (res->children.contains(words[count]))
+            res = res->children.at(words[count]).get();
+        else if (res->paramNode)
+            res = res->paramNode.get();
+        else
+            return nullptr;
+    }
+
+    return  res;
 }
 }
