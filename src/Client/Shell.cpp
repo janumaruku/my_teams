@@ -10,9 +10,9 @@
 #include <memory>
 #include <vector>
 #include "Shell.hpp"
-#include "ShellExit.hpp"
-#include "ShellExitException.hpp"
-#include "ShellCommandException.hpp"
+#include "Commands/ShellExit.hpp"
+#include "Commands/ShellExitException.hpp"
+#include "Commands/ShellCommandException.hpp"
 #include "Client.hpp"
 
 namespace my_teams::client {

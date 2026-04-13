@@ -11,7 +11,7 @@
 #include "Client.hpp"
 #include "Shell.hpp"
 #include "TeamsShell.hpp"
-#include "ShellCommandException.hpp"
+#include "Commands/ShellCommandException.hpp"
 #include "ConnectedSocket.hpp"
 #include "IoContext.hpp"
 
