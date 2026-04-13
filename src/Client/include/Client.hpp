@@ -18,6 +18,7 @@ class Client {
 public:
     explicit Client(const int &port, const std::string &ipAddress);
 
+    void send(const std::string &);
     void start();
 
 private:

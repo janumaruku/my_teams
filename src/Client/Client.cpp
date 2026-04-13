@@ -6,6 +6,7 @@
 */
 
 #include "Client.hpp"
+#include <memory>
 
 namespace my_teams::client {
 
