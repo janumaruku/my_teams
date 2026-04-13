@@ -28,6 +28,8 @@ class Router {
     public:
         Context() = default;
 
+        std::string path() const noexcept;
+
     private:
         nlohmann::json _request;
         std::unordered_map<std::string, std::string> _params;
@@ -47,15 +49,21 @@ class Router {
             std::string word;
             Node *parent;
             std::string param;
-            std::unique_ptr<Node> paramNode;
+            std::unique_ptr<Node> paramNode = nullptr;
             std::unordered_map<std::string, std::unique_ptr<Node>> children;
-            Handler handler;
+            std::vector<Handler> handler;
+            bool isPath = false;
         };
 
-        void add(const std::vector<std::string> &words, Handler handler);
+        void add(const std::vector<std::string> &words,
+            std::initializer_list<Handler> handlers);
+
+        void handle(Context &context);
 
     private:
         std::unordered_map<std::string, std::unique_ptr<Node>> _root;
+
+        Node *find(const std::vector<std::string> &words);
     };
 
 public:
@@ -64,7 +72,7 @@ public:
 
     void run();
 
-    void get(const std::string &path, Handler handler);
+    void get(const std::string &path, std::initializer_list<Handler> handlers);
 
 private:
     IOContext _ioContext{};

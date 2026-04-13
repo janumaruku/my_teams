@@ -26,13 +26,15 @@ void Client::start()
 
 void Client::handleWrite()
 {
-    _socket.asyncWrite(network::buffer("Thanks!!!"),
+    const std::string message = "One love";
+    // message += "\r\n";
+    _socket.asyncWrite(network::buffer(message),
         [this](const std::error_code &err, auto) {
             if (err) {
                 std::cerr << err.message() << std::endl;
                 handleWrite();
             } else {
-                std::cout << "Message sent successfuly" << std::endl;
+                std::cout << "Message sent successfully" << std::endl;
                 handleRead();
             }
         });
