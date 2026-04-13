@@ -49,15 +49,17 @@ void Router<TClientState>::startClient(
 }
 
 template <typename TClientState>
-void Router<TClientState>::handleTransmission()
+void Router<TClientState>::handleTransmission(TClientState &/*clientState*/)
 {
     const nlohmann::json stream = nlohmann::json::parse(_transmission);
     std::cout << std::setw(4) << stream << std::endl;
+    const auto temp = stream.at("method").get<Method>();
+    std::cout << utils::RED << temp << utils::RESET<< std::endl;
     _transmission.clear();
 }
 
 template <typename TClientState>
-void Router<TClientState>::handleRead(const size_t &bytes)
+void Router<TClientState>::handleRead(const size_t &bytes, TClientState &clientState)
 {
     _readBuffer.resize(bytes);
     if (_readBuffer.ends_with("\r\n")) {
@@ -65,7 +67,7 @@ void Router<TClientState>::handleRead(const size_t &bytes)
             _readBuffer.end());
         _transmission.pop_back();
         _transmission.pop_back();
-        handleTransmission();
+        handleTransmission(clientState);
     }
 }
 
@@ -81,7 +83,7 @@ void Router<TClientState>::clientRead(
                 std::cerr << err.message() << std::endl;
                 return;
             }
-            handleRead(bytes);
+            handleRead(bytes, _clients[sock]);
             clientWrite(sock);
         });
 }
@@ -108,5 +110,27 @@ void Router<TClientState>::clientWrite(
             }
             clientRead(sock);
         });
+}
+
+inline std::ostream &operator<<(std::ostream &stream, const Method &method)
+{
+    switch (method) {
+    case Method::GET:
+        stream << "GET";
+        break;
+    case Method::POST:
+        stream << "POST";
+        break;
+    case Method::PUT:
+        stream << "PUT";
+        break;
+    case Method::DELETE:
+        stream << "DELETE";
+        break;
+    default:
+        break;
+    }
+
+    return stream;
 }
 } // namespace network

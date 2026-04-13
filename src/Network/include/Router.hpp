@@ -10,8 +10,18 @@
 
 #include "Acceptor.hpp"
 #include "IoContext.hpp"
+#include "jsonParser.hpp"
 
 namespace network {
+enum class Method: uint8_t {
+    GET,
+    POST,
+    PUT,
+    DELETE
+};
+
+std::ostream &operator<<(std::ostream &stream, const Method &method);
+
 template <typename TClientState>
 class Router {
     class Context {
@@ -19,8 +29,9 @@ class Router {
         Context() = default;
 
     private:
+        nlohmann::json _request;
         std::unordered_map<std::string, std::string> _params;
-        TClientState _state;
+        TClientState &_state;
     };
 
     using Handler = std::function<void(Context *)>;
@@ -68,9 +79,9 @@ private:
 
     void startClient(const std::shared_ptr<ConnectedSocket> &sock);
 
-    void handleTransmission();
+    void handleTransmission(TClientState &clientState);
 
-    void handleRead(const size_t &bytes);
+    void handleRead(const size_t &bytes, TClientState &clientState);
 
     void clientRead(const std::shared_ptr<ConnectedSocket> &sock);
 
