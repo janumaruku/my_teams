@@ -20,20 +20,33 @@ enum class Method: uint8_t {
     DELETE
 };
 
+enum class StatusCode: uint8_t {
+    STATUS_OK = 200,
+};
+
+const std::unordered_map<StatusCode, std::string> STATUES = {
+    {StatusCode::STATUS_OK, "Status OK"}
+};
+
 std::ostream &operator<<(std::ostream &stream, const Method &method);
 
 template <typename TClientState>
 class Router {
     class Context {
     public:
-        Context() = default;
+        Context(nlohmann::json request, TClientState &state,
+            ConnectedSocket *socket);
 
-        std::string path() const noexcept;
+        std::string path() const;
+
+        void abortWithStatus(const StatusCode &code);
 
     private:
         nlohmann::json _request;
+        nlohmann::json _response;
         std::unordered_map<std::string, std::string> _params;
         TClientState &_state;
+        ConnectedSocket *_socket;
     };
 
     using Handler = std::function<void(Context *)>;
@@ -51,7 +64,7 @@ class Router {
             std::string param;
             std::unique_ptr<Node> paramNode = nullptr;
             std::unordered_map<std::string, std::unique_ptr<Node>> children;
-            std::vector<Handler> handler;
+            std::vector<Handler> handlers;
             bool isPath = false;
         };
 
@@ -87,9 +100,10 @@ private:
 
     void startClient(const std::shared_ptr<ConnectedSocket> &sock);
 
-    void handleTransmission(TClientState &clientState);
+    void handleTransmission(ConnectedSocket *socket, TClientState &clientState);
 
-    void handleRead(const size_t &bytes, TClientState &clientState);
+    void handleRead(const size_t &bytes, ConnectedSocket *socket,
+        TClientState &clientState);
 
     void clientRead(const std::shared_ptr<ConnectedSocket> &sock);
 
@@ -100,5 +114,6 @@ private:
 
 #endif // MY_TEAMS_ROUTER_HPP
 
+#include "../Context.tpp"
 #include "../RadixTree.tpp"
 #include "../Router.tpp"
