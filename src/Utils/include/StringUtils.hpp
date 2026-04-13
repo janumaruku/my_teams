@@ -5,8 +5,8 @@
 ** StringUtils
 */
 
-#ifndef NANOTEKSPICE_STRINGUTILS_HPP
-#define NANOTEKSPICE_STRINGUTILS_HPP
+#ifndef MYTEAMS_STRINGUTILS_HPP
+#define MYTEAMS_STRINGUTILS_HPP
 
 #include <string>
 #include <vector>
@@ -33,4 +33,4 @@ public:
 };
 } // utils
 
-#endif //NANOTEKSPICE_STRINGUTILS_HPP
+#endif //MYTEAMS_STRINGUTILS_HPP
