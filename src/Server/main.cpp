@@ -14,9 +14,10 @@ int main()
 {
     network::Router<bool> router{10000};
 
-    router.get("/home", {[](auto){}});
+    router.get("/home", {[](network::Router<bool>::Context *ctx) {
+        ctx->abortWithStatus(network::StatusCode::STATUS_OK);
+    }});
 
     router.run();
-
     return 0;
 }
