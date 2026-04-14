@@ -7,6 +7,8 @@
 
 #include "TeamsShell.hpp"
 #include "Commands/HelpCommand.hpp"
+#include "Commands/LoginCommand.hpp"
+#include "Commands/UsersCommand.hpp"
 #include "Shell.hpp"
 
 namespace my_teams::client {
@@ -22,6 +24,8 @@ TeamsShell::TeamsShell(Client &client, std::string name,
 void TeamsShell::registerCommands()
 {
     _shellCommandFactory.registerCreator<shell::HelpCommand>("/help");
+    _shellCommandFactory.registerCreator<shell::LoginCommand>("/login");
+    _shellCommandFactory.registerCreator<shell::UsersCommand>("/users");
 }
 
 void TeamsShell::run()
