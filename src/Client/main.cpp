@@ -26,7 +26,7 @@ int main(int ac, char **av)
     
     try {
         shell.run();
-    } catch (const my_teams::client::shell::ShellCommandException e) {
+    } catch (const std::exception e) {
         std::cout << e.what() << std::endl;
         return EXIT_EPITECH;
     }
