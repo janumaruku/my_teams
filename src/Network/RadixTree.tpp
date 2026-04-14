@@ -54,15 +54,24 @@ void Router<TClientState>::RadixTree::add(const std::vector<std::string> &words,
 template <typename TClientState>
 void Router<TClientState>::RadixTree::handle(Context &context)
 {
-    Node *node = find(utils::StringUtils::split(context.path(), '/'));
+    auto path = context.path();
+    Node *node;
+    if (path.empty() || path[0] != '/') {
+        node = nullptr;
+    } else {
+        node = find(utils::StringUtils::split(&path[1], '/'));
+    }
 
-    if (!node->isPath) {
+    if (node == nullptr)
+        std::clog << utils::MAGENTA << "Not Found" << utils::RESET << std::endl;
+    if (node == nullptr || !node->isPath) {
         nlohmann::json notFound;
         notFound["status_code"] = 404;
         notFound["status_message"] = "Not Found";
         notFound["body"] = {
             {"error_message", "Resource not found"}
         };
+        context.abortWithStatus(StatusCode::NOT_FOUND);
     } else {
         for (auto &handler: node->handlers) {
             handler(&context);
@@ -77,8 +86,10 @@ Router<TClientState>::RadixTree::Node *Router<TClientState>::RadixTree
     const auto itt = std::ranges::find_if(_root, [words](const auto &elem) {
        return words[0] == elem.first;
     });
-    if (itt != _root.end())
+    if (itt == _root.end()) {
+        std::clog << utils::MAGENTA << "find::" << words[0] << " Not found" << utils::RESET << std::endl;
         return nullptr;
+    }
 
     Node *res = itt->second.get();
     for (std::size_t count = 1; count < words.size(); ++count) {
