@@ -46,6 +46,8 @@ public:
 
         void abortWithStatus(const StatusCode &code);
 
+        void jsonp(const StatusCode &code, const nlohmann::json &body);
+
         const nlohmann::json &response() const noexcept;
 
     private:
