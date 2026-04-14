@@ -8,7 +8,10 @@
 #include "Commands/UsersCommand.hpp"
 #include "Router.hpp"
 #include "jsonParser.hpp"
+#include "Serializer.hpp"
 #include "TeamsShell.hpp"
+
+using json = nlohmann::json;
 
 namespace my_teams::client::shell {
 
@@ -19,9 +22,13 @@ bool UsersCommand::operator()(Shell &shell,
     req["method"] = network::Method::GET;
     req["path"] = "/users";
     req["body"] = {};
-    const auto &client = dynamic_cast<TeamsShell &>(shell).getClient();
+    auto &client = dynamic_cast<TeamsShell &>(shell).getClient();
  
     client.send(req.dump(), [](auto, auto){});
+
+    const std::string json_string = client.receive();
+    Response response = json::parse(json_string);
+
     return true;
 }
 
