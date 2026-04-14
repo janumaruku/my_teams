@@ -21,17 +21,15 @@ public:
 
     TeamsShell();
 
-    explicit TeamsShell(const Client &client, std::string name, std::string prompt);
-    explicit TeamsShell(std::string name, std::string prompt);
-    explicit TeamsShell(std::string prompt);
+    explicit TeamsShell(Client &client, std::string name, std::string prompt);
 
-    Client *getClient() const noexcept;
+    Client &getClient() const noexcept;
 
     void run();
 
 private:
-    std::unique_ptr<Client> _client;
-    void registerCommands();
+   Client &_client;
+   void registerCommands();
 };
 
 }
