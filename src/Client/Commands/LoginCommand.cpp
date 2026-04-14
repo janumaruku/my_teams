@@ -20,7 +20,7 @@ bool LoginCommand::operator()(Shell &shell,
 
     req["method"] = network::Method::POST;
     req["path"] = "/login";
-    req["header"] = {}
+    req["header"] = {};
     req["body"] = {
 			{"username", "Jean"},
 			{"password", ""}
