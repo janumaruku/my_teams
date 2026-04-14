@@ -128,7 +128,6 @@ void Router<TClientState>::clientRead(
                     return sock == elem.first.get();
                 });
             handleRead(bytes, sock, temp->second);
-            // clientWrite(sock);
         });
 }
 
