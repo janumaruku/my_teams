@@ -8,25 +8,19 @@
 #ifndef MY_TEAMS_SERVER_HPP
 #define MY_TEAMS_SERVER_HPP
 
-#include "Acceptor.hpp"
-#include "ClientSession.hpp"
-#include "IoContext.hpp"
+#include "Router.hpp"
 
 namespace my_teams {
 namespace server {
 
 class Server {
 public:
-    explicit Server(const int &port, const std::string &ipAddress = "");
+    explicit Server(const int &port);
 
     void run();
 
 private:
-    network::IOContext _ioContext;
-    network::Acceptor _acceptor;
-    std::vector<std::shared_ptr<ClientSession>> _clientSessions;
-
-    void startAccept();
+    network::Router<bool> _router;
 };
 
 } // server

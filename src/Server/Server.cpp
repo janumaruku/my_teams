@@ -9,34 +9,16 @@
 
 namespace my_teams {
 namespace server {
-Server::Server(const int &port, const std::string &ipAddress): _acceptor(
-    _ioContext, network::Endpoint{port, ipAddress})
-{
-}
+Server::Server(const int &port): _router{port}
+{}
 
 void Server::run()
 {
-    startAccept();
+    _router.get("/help", {[](network::Router<bool>::Context *ctx) {
+        ctx->jsonp(network::StatusCode::STATUS_OK, "Help message");
+    }});
 
-    _ioContext.run();
-}
-
-void Server::startAccept()
-{
-    _acceptor.asyncAccept([this](const std::error_code &err,
-        const std::shared_ptr<network::ConnectedSocket> &sock) {
-            if (err) {
-                std::cerr << err.message() << std::endl;
-            } else {
-                std::cout << "Connection received from " << sock->
-                    remoteEndpoint().getHostname() << ":" << sock->
-                    remoteEndpoint().getPort() << std::endl;
-                _clientSessions.emplace_back(
-                    std::make_shared<ClientSession>(sock));
-                _clientSessions.back()->start();
-            }
-            startAccept();
-        });
+    _router.run();
 }
 } // server
 } // my_teams
