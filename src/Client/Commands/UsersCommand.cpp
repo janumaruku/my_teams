@@ -21,7 +21,7 @@ bool UsersCommand::operator()(Shell &shell,
     req["body"] = {};
     const auto &client = dynamic_cast<TeamsShell &>(shell).getClient();
  
-    client.send(req.dump(), {});
+    client.send(req.dump(), [](auto, auto){});
     return true;
 }
 
