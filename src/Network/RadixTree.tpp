@@ -62,15 +62,7 @@ void Router<TClientState>::RadixTree::handle(Context &context)
         node = find(utils::StringUtils::split(&path[1], '/'));
     }
 
-    if (node == nullptr)
-        std::clog << utils::MAGENTA << "Not Found" << utils::RESET << std::endl;
     if (node == nullptr || !node->isPath) {
-        nlohmann::json notFound;
-        notFound["status_code"] = 404;
-        notFound["status_message"] = "Not Found";
-        notFound["body"] = {
-            {"error_message", "Resource not found"}
-        };
         context.abortWithStatus(StatusCode::NOT_FOUND);
     } else {
         for (auto &handler: node->handlers) {
@@ -87,7 +79,6 @@ Router<TClientState>::RadixTree::Node *Router<TClientState>::RadixTree
        return words[0] == elem.first;
     });
     if (itt == _root.end()) {
-        std::clog << utils::MAGENTA << "find::" << words[0] << " Not found" << utils::RESET << std::endl;
         return nullptr;
     }
 

@@ -46,11 +46,6 @@ void Router<TClientState>::get(
 {
     auto splitPath = utils::StringUtils::split(path, '/');
     _get.add(splitPath, handlers);
-
-
-    std::clog << utils::GREEN << "Printing roots ..." << splitPath.size() << utils::RESET << std::endl;
-    for (const auto &key: std::ranges::views::keys(_get.getRoot()))
-        std::clog << utils::GREEN << key << utils::RESET << std::endl;
 }
 
 template <typename TClientState> void Router<TClientState>::startAccept()
@@ -79,9 +74,7 @@ void Router<TClientState>::handleTransmission(
     ConnectedSocket *socket, TClientState &clientState)
 {
     const nlohmann::json stream = nlohmann::json::parse(_transmission);
-    std::cout << std::setw(4) << stream << std::endl;
     const auto method = stream.at("method").get<Method>();
-    std::cout << utils::RED << method << utils::RESET << std::endl;
 
     Context context{stream, clientState, socket};
     switch (method) {

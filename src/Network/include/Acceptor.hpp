@@ -35,7 +35,7 @@ private:
     Endpoint _endpoint;
     ListeningSocket _socket;
     std::queue<ConnectionHandler> _handlerFunction;
-    utils::Logger _logger{"ACCEPTOR", ULogLevel::INFO, true};
+    // utils::Logger _logger{"ACCEPTOR", ULogLevel::INFO, true};
     IOContext &_ioContext;
 
     static FtpErrorCode getAcceptorErrorCode(const int &error);

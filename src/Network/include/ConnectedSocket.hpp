@@ -53,7 +53,7 @@ private:
     Endpoint _endpoint;
     IOContext &_ioContext;
     std::queue<PendingOperation> _handlers;
-    utils::Logger _logger{"CONNECTED-SOCKET", ULogLevel::INFO, true};
+    // utils::Logger _logger{"CONNECTED-SOCKET", ULogLevel::INFO, true};
 };
 }
 
