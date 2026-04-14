@@ -10,19 +10,53 @@
 
 #include "Acceptor.hpp"
 #include "IoContext.hpp"
+#include "jsonParser.hpp"
 
 namespace network {
+enum class Method: uint8_t {
+    GET,
+    POST,
+    PUT,
+    DELETE
+};
+
+enum class StatusCode: uint16_t {
+    STATUS_OK    = 200,
+    UNAUTHORIZED = 401,
+    NOT_FOUND    = 404
+};
+
+const std::unordered_map<StatusCode, std::string> STATUES = {
+    {StatusCode::STATUS_OK, "Status OK"},
+    {StatusCode::UNAUTHORIZED, "Unauthorised"},
+    {StatusCode::NOT_FOUND, "Not Found"}
+};
+
+std::ostream &operator<<(std::ostream &stream, const Method &method);
+
 template <typename TClientState>
 class Router {
+public:
     class Context {
     public:
-        Context() = default;
+        Context(nlohmann::json request, TClientState &state,
+            ConnectedSocket *socket);
+
+        std::string path() const;
+
+        void abortWithStatus(const StatusCode &code);
+
+        const nlohmann::json &response() const noexcept;
 
     private:
+        nlohmann::json _request;
+        nlohmann::json _response;
         std::unordered_map<std::string, std::string> _params;
-        TClientState _state;
+        TClientState &_state;
+        ConnectedSocket *_socket;
     };
 
+private:
     using Handler = std::function<void(Context *)>;
 
     class RadixTree {
@@ -36,15 +70,27 @@ class Router {
             std::string word;
             Node *parent;
             std::string param;
-            std::unique_ptr<Node> paramNode;
+            std::unique_ptr<Node> paramNode = nullptr;
             std::unordered_map<std::string, std::unique_ptr<Node>> children;
-            Handler handler;
+            std::vector<Handler> handlers;
+            bool isPath = false;
         };
 
-        void add(const std::vector<std::string> &words, Handler handler);
+        void add(const std::vector<std::string> &words,
+            std::initializer_list<Handler> handlers);
+
+        void handle(Context &context);
+
+        const std::unordered_map<std::string, std::unique_ptr<Node>> &
+        getRoot() const
+        {
+            return _root;
+        }
 
     private:
         std::unordered_map<std::string, std::unique_ptr<Node>> _root;
+
+        Node *find(const std::vector<std::string> &words);
     };
 
 public:
@@ -53,7 +99,7 @@ public:
 
     void run();
 
-    void get(const std::string &path, Handler handler);
+    void get(const std::string &path, std::initializer_list<Handler> handlers);
 
 private:
     IOContext _ioContext{};
@@ -68,18 +114,20 @@ private:
 
     void startClient(const std::shared_ptr<ConnectedSocket> &sock);
 
-    void handleTransmission();
+    void handleTransmission(ConnectedSocket *socket, TClientState &clientState);
 
-    void handleRead(const size_t &bytes);
+    void handleRead(const size_t &bytes, ConnectedSocket *socket,
+        TClientState &clientState);
 
-    void clientRead(const std::shared_ptr<ConnectedSocket> &sock);
+    void clientRead(ConnectedSocket *sock);
 
-    void clientWrite(const std::shared_ptr<ConnectedSocket> &sock);
+    void clientWrite(ConnectedSocket *sock, const std::string &message);
 };
 
 } // namespace network
 
 #endif // MY_TEAMS_ROUTER_HPP
 
+#include "../Context.tpp"
 #include "../RadixTree.tpp"
 #include "../Router.tpp"

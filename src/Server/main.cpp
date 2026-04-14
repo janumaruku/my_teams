@@ -5,23 +5,24 @@
 ** main
 */
 
+#include <string>
 #include "Acceptor.hpp"
+#include "Client.hpp"
 #include "IoContext.hpp"
 #include "Router.hpp"
 #include "Server.hpp"
 
-int main()
+int main(int ac, char **av)
 {
-    network::Router<int> router{10000};
+    if (ac < 2)
+        return EXIT_EPITECH;
+    int port = std::stoi(av[1]);
+    network::Router<bool> router{port};
 
-    router.get("/home", [](auto){});
+    router.get("/home", {[](network::Router<bool>::Context *ctx) {
+        ctx->abortWithStatus(network::StatusCode::STATUS_OK);
+    }});
 
     router.run();
-    // std::string test = "/slkdjf/slkdjf/lsdjkf";
-    // auto res = utils::StringUtils::split(test, '/');
-    //
-    // for (const auto &word: res)
-    //     std::cout << word << std::endl;
-
     return 0;
 }

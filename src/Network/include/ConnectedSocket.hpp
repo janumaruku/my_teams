@@ -39,6 +39,8 @@ public:
 
     void write(const ConstBuffer &buffer, const Callback &handler) const;
 
+    void read(MutableBuffer buffer, const Callback &handler) const;
+
     void asyncReadSome(MutableBuffer outputBuffer,
         const Callback &handler) const;
 

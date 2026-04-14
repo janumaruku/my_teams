@@ -10,7 +10,7 @@
 
 #include <string>
 #include "FactoryTemplate.hpp"
-#include "IShellCommand.hpp"
+#include "Commands/IShellCommand.hpp"
 
 namespace my_teams::client {
 

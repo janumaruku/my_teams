@@ -5,8 +5,8 @@
 ** 
 */
 
-#include "ShellExit.hpp"
-#include "ShellExitException.hpp"
+#include "Commands/ShellExit.hpp"
+#include "Commands/ShellExitException.hpp"
 #include "Shell.hpp"
 
 namespace my_teams::client::shell {

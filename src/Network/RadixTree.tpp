@@ -8,6 +8,7 @@
 #pragma once
 
 #include "constants.hpp"
+#include "StringUtils.hpp"
 
 namespace network {
 template <typename TClientState>
@@ -21,7 +22,7 @@ Router<TClientState>::RadixTree::Node::Node(const std::string &nodeWord,
 
 template <typename TClientState>
 void Router<TClientState>::RadixTree::add(const std::vector<std::string> &words,
-    Handler handler)
+    std::initializer_list<Handler> handlers)
 {
     if (words.empty())
         return;
@@ -45,6 +46,61 @@ void Router<TClientState>::RadixTree::add(const std::vector<std::string> &words,
             tempNode->children[word] = std::make_unique<Node>(word);
         tempNode = tempNode->children[word].get();
     }
-    tempNode->handler = std::move(handler);
+    tempNode->handlers.insert(tempNode->handlers.end(), handlers.begin(),
+        handlers.end());
+    tempNode->isPath = true;
+}
+
+template <typename TClientState>
+void Router<TClientState>::RadixTree::handle(Context &context)
+{
+    auto path = context.path();
+    Node *node;
+    if (path.empty() || path[0] != '/') {
+        node = nullptr;
+    } else {
+        node = find(utils::StringUtils::split(&path[1], '/'));
+    }
+
+    if (node == nullptr)
+        std::clog << utils::MAGENTA << "Not Found" << utils::RESET << std::endl;
+    if (node == nullptr || !node->isPath) {
+        nlohmann::json notFound;
+        notFound["status_code"] = 404;
+        notFound["status_message"] = "Not Found";
+        notFound["body"] = {
+            {"error_message", "Resource not found"}
+        };
+        context.abortWithStatus(StatusCode::NOT_FOUND);
+    } else {
+        for (auto &handler: node->handlers) {
+            handler(&context);
+        }
+    }
+}
+
+template <typename TClientState>
+Router<TClientState>::RadixTree::Node *Router<TClientState>::RadixTree
+::find(const std::vector<std::string> &words)
+{
+    const auto itt = std::ranges::find_if(_root, [words](const auto &elem) {
+       return words[0] == elem.first;
+    });
+    if (itt == _root.end()) {
+        std::clog << utils::MAGENTA << "find::" << words[0] << " Not found" << utils::RESET << std::endl;
+        return nullptr;
+    }
+
+    Node *res = itt->second.get();
+    for (std::size_t count = 1; count < words.size(); ++count) {
+        if (res->children.contains(words[count]))
+            res = res->children.at(words[count]).get();
+        else if (res->paramNode)
+            res = res->paramNode.get();
+        else
+            return nullptr;
+    }
+
+    return  res;
 }
 }

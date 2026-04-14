@@ -18,12 +18,18 @@ class Client {
 public:
     explicit Client(const int &port, const std::string &ipAddress);
 
-    void start();
+    void send(const std::string &,
+        const network::ConnectedSocket::Callback &handler) const;
+
+    std::string receive();
+
+    // void start();
 
 private:
     network::IOContext _ioContext;
     network::ConnectedSocket _socket;
     std::string _buffer;
+    std::string _transmission;
 
     void handleWrite();
 
