@@ -6,6 +6,7 @@
 */
 
 #include "TeamsShell.hpp"
+#include "Commands/HelpCommand.hpp"
 #include "Shell.hpp"
 
 namespace my_teams::client {
@@ -20,7 +21,7 @@ TeamsShell::TeamsShell(Client &client, std::string name,
 
 void TeamsShell::registerCommands()
 {
-    // _shellCommandFactory.registerCreator<shell::HelpCommand>(EXIT_PROMPT);
+    _shellCommandFactory.registerCreator<shell::HelpCommand>("/help");
 }
 
 void TeamsShell::run()
