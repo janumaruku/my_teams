@@ -44,29 +44,34 @@ template <typename TClientState>
 void Router<TClientState>::get(
     const std::string &path, std::initializer_list<Handler> handlers)
 {
-    const auto splitPath = utils::StringUtils::split(path, '/');
+    auto splitPath = utils::StringUtils::split(path, '/');
     _get.add(splitPath, handlers);
+
+
+    std::clog << utils::GREEN << "Printing roots ..." << splitPath.size() << utils::RESET << std::endl;
+    for (const auto &key: std::ranges::views::keys(_get.getRoot()))
+        std::clog << utils::GREEN << key << utils::RESET << std::endl;
 }
 
 template <typename TClientState> void Router<TClientState>::startAccept()
 {
     _acceptor.asyncAccept([this](const std::error_code &err,
-                              const std::shared_ptr<ConnectedSocket> &sock) {
-        if (err) {
-            std::cerr << err.message() << std::endl;
-        } else {
-            _clients[sock] = {};
-            startClient(sock);
-        }
-        startAccept();
-    });
+        const std::shared_ptr<ConnectedSocket> &sock) {
+            if (err) {
+                std::cerr << err.message() << std::endl;
+            } else {
+                _clients[sock] = {};
+                startClient(sock);
+            }
+            startAccept();
+        });
 }
 
 template <typename TClientState>
 void Router<TClientState>::startClient(
     const std::shared_ptr<ConnectedSocket> &sock)
 {
-    clientRead(sock);
+    clientRead(sock.get());
 }
 
 template <typename TClientState>
@@ -85,6 +90,7 @@ void Router<TClientState>::handleTransmission(
     default:
         break;
     }
+    clientWrite(socket, context.response().dump());
 
     _transmission.clear();
 }
@@ -108,7 +114,7 @@ void Router<TClientState>::handleRead(
 
 template <typename TClientState>
 void Router<TClientState>::clientRead(
-    const std::shared_ptr<ConnectedSocket> &sock)
+    ConnectedSocket *sock)
 {
     _readBuffer.resize(1024);
     sock->asyncReadSome(buffer(_readBuffer, _readBuffer.size()),
@@ -117,24 +123,23 @@ void Router<TClientState>::clientRead(
                 std::cerr << err.message() << std::endl;
                 return;
             }
-            handleRead(bytes, sock.get(), _clients[sock]);
+            const auto &temp = std::ranges::find_if(_clients,
+                [sock](const auto &elem) {
+                    return sock == elem.first.get();
+                });
+            handleRead(bytes, sock, temp->second);
             // clientWrite(sock);
         });
 }
 
 template <typename TClientState>
 void Router<TClientState>::clientWrite(
-    const std::shared_ptr<ConnectedSocket> &sock)
+    ConnectedSocket *sock, const std::string &message)
 {
-    nlohmann::json response;
-    response["status_code"]    = 200;
-    response["status_message"] = "Status OK";
-    response["body"]           = {{{"id", "uuid1"}, {"name", "Janumaruku"}}};
-
-    _writeBuffer = response.dump(2);
+    _writeBuffer = message + "\r\n";
     sock->asyncWrite(buffer(_writeBuffer),
         [this, sock](
-            const std::error_code &err, const std::size_t & /*bytes*/) {
+        const std::error_code &err, const std::size_t & /*bytes*/) {
             if (err) {
                 std::cerr << err.message() << std::endl;
             }

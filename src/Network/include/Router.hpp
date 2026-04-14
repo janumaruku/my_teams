@@ -20,18 +20,23 @@ enum class Method: uint8_t {
     DELETE
 };
 
-enum class StatusCode: uint8_t {
-    STATUS_OK = 200,
+enum class StatusCode: uint16_t {
+    STATUS_OK    = 200,
+    UNAUTHORIZED = 401,
+    NOT_FOUND    = 404
 };
 
 const std::unordered_map<StatusCode, std::string> STATUES = {
-    {StatusCode::STATUS_OK, "Status OK"}
+    {StatusCode::STATUS_OK, "Status OK"},
+    {StatusCode::UNAUTHORIZED, "Unauthorised"},
+    {StatusCode::NOT_FOUND, "Not Found"}
 };
 
 std::ostream &operator<<(std::ostream &stream, const Method &method);
 
 template <typename TClientState>
 class Router {
+public:
     class Context {
     public:
         Context(nlohmann::json request, TClientState &state,
@@ -41,6 +46,8 @@ class Router {
 
         void abortWithStatus(const StatusCode &code);
 
+        const nlohmann::json &response() const noexcept;
+
     private:
         nlohmann::json _request;
         nlohmann::json _response;
@@ -49,6 +56,7 @@ class Router {
         ConnectedSocket *_socket;
     };
 
+private:
     using Handler = std::function<void(Context *)>;
 
     class RadixTree {
@@ -72,6 +80,12 @@ class Router {
             std::initializer_list<Handler> handlers);
 
         void handle(Context &context);
+
+        const std::unordered_map<std::string, std::unique_ptr<Node>> &
+        getRoot() const
+        {
+            return _root;
+        }
 
     private:
         std::unordered_map<std::string, std::unique_ptr<Node>> _root;
@@ -105,9 +119,9 @@ private:
     void handleRead(const size_t &bytes, ConnectedSocket *socket,
         TClientState &clientState);
 
-    void clientRead(const std::shared_ptr<ConnectedSocket> &sock);
+    void clientRead(ConnectedSocket *sock);
 
-    void clientWrite(const std::shared_ptr<ConnectedSocket> &sock);
+    void clientWrite(ConnectedSocket *sock, const std::string &message);
 };
 
 } // namespace network
