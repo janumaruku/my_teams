@@ -30,4 +30,10 @@ void Router<TClientState>::Context::abortWithStatus(const StatusCode &code)
     _response["status_message"] = STATUES.at(code);
     _response["body"]           = {};
 }
+
+template <typename TClientState>
+const nlohmann::json & Router<TClientState>::Context::response() const noexcept
+{
+    return _response;
+}
 } // namespace network
