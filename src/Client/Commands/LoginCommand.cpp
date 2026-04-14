@@ -25,7 +25,7 @@ bool LoginCommand::operator()(Shell &shell,
 			{"username", "Jean"},
 			{"password", ""}
 	};
-    client->send(req.dump());
+    client->send(req.dump(), {});
     return true;
 }
 

@@ -10,22 +10,23 @@
 
 namespace my_teams::client {
 
-TeamsShell::TeamsShell() :
-Shell::Shell(BASE_NAME, BASE_PROMPT),
+TeamsShell::TeamsShell():
+    Shell::Shell(BASE_NAME, BASE_PROMPT),
     _client(nullptr)
 {
     registerCommands();
 }
 
-TeamsShell::TeamsShell(std::string name, std::string prompt) :
-     Shell::Shell(std::move(name), std::move(prompt)),
+TeamsShell::TeamsShell(std::string name, std::string prompt):
+    Shell::Shell(std::move(name), std::move(prompt)),
     _client(nullptr)
 
 {
     registerCommands();
 }
 
-TeamsShell::TeamsShell(const Client &client, std::string name, std::string prompt) :
+TeamsShell::TeamsShell(const Client &client, std::string name,
+    std::string prompt):
     Shell::Shell(std::move(name), std::move(prompt)),
     _client(std::make_unique<Client>(client))
 {
@@ -33,7 +34,9 @@ TeamsShell::TeamsShell(const Client &client, std::string name, std::string promp
 }
 
 void TeamsShell::registerCommands()
-{}
+{
+    // _shellCommandFactory.registerCreator<shell::HelpCommand>(EXIT_PROMPT);
+}
 
 void TeamsShell::run()
 {
