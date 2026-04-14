@@ -44,12 +44,14 @@ std::vector<std::string> StringUtils::split(const std::string &str,
     const char &delim)
 {
     std::vector<std::string> result;
-    std::stringstream stream{str};
     std::string word;
 
+    std::string temStr = str;
+    while (temStr.front() == delim)
+        temStr.erase(0, 1);
+    std::stringstream stream{temStr};
+
     while (std::getline(stream, word, delim)) {
-        if (word.at(0) == '#')
-            break;
         result.push_back(word);
     }
     return result;

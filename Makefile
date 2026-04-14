@@ -59,7 +59,7 @@ fclean: clean
 re: fclean all
 
 debug: CXXFLAGS += -g3 -DDEBUG
-debug: all
+debug: re
 
 tests_run:
 	@echo "No test Makefile target configured yet."
@@ -67,4 +67,4 @@ tests_run:
 run: $(SERVER)
 	@./$(SERVER) $(ARGS)
 
-.PHONY: all clean fclean re debug tests_run run
+.PHONY: all clean fclean re debug tests_run run client server

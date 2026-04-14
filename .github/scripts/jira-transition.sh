@@ -22,7 +22,12 @@ for var in JIRA_EMAIL JIRA_API_TOKEN JIRA_BASE_URL; do
   fi
 done
 
-AUTH_HEADER="Authorization: Basic $(printf '%s:%s' "$JIRA_EMAIL" "$JIRA_API_TOKEN" | base64)"
+AUTH_HEADER="$(printf '%s:%s' "$JIRA_EMAIL" "$JIRA_API_TOKEN")"
+
+# Remove trailing slash from base URL if present
+JIRA_BASE_URL="${JIRA_BASE_URL%/}"
+
+echo "URL: $JIRA_BASE_URL"
 
 echo "Processing $ISSUE_KEY → $TARGET_STATUS"
 
@@ -31,7 +36,7 @@ BODY=$(mktemp)
 trap 'rm -f "$BODY"' EXIT
 
 HTTP_CODE=$(curl -s -o "$BODY" -w "%{http_code}" \
-  -H "$AUTH_HEADER" \
+  -u "$AUTH_HEADER" \
   -H "Content-Type: application/json" \
   "$JIRA_BASE_URL/rest/api/3/issue/$ISSUE_KEY/transitions")
 
@@ -54,7 +59,7 @@ fi
 # Execute transition
 HTTP_CODE=$(curl -s -o "$BODY" -w "%{http_code}" \
   -X POST \
-  -H "$AUTH_HEADER" \
+  -u "$AUTH_HEADER" \
   -H "Content-Type: application/json" \
   --data "{\"transition\":{\"id\":\"$TRANSITION_ID\"}}" \
   "$JIRA_BASE_URL/rest/api/3/issue/$ISSUE_KEY/transitions")
@@ -64,4 +69,4 @@ if [[ "$HTTP_CODE" -ne 204 ]]; then
   exit 1
 fi
 
-echo "Transitioned $ISSUE_KEY → $TARGET_STATUS"
+echo "::notice::Transitioned $ISSUE_KEY → $TARGET_STATUS"
