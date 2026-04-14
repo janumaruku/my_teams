@@ -5,8 +5,8 @@
 ** 
 */
 
-#ifndef MYTEAMS_HELP_HPP
-#define MYTEAMS_HELP_HPP
+#ifndef MYTEAMS_LOGIN_HPP
+#define MYTEAMS_LOGIN_HPP
 
 #include <memory>
 #include "IShellCommand.hpp"
