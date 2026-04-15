@@ -18,6 +18,8 @@ CPPFLAGS	=	-Isrc/Network/include \
 LDFLAGS		=	-L$(BUILD_DIR)/libs\
  				-lnetwork\
  				-ldesign-pattern\
- 				-lutils
+ 				-lutils \
+				-Llibs/myteams \
+				-lmyteams
 
 RM			=	rm -f

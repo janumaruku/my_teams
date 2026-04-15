@@ -9,9 +9,7 @@
 #define MYTEAMS_LOGGING_CLIENT_HPP
 
 extern "C" {
-
 #include "logging_client.h"
-
 }
 
 #endif
