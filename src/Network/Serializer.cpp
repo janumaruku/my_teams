@@ -41,7 +41,7 @@ void adl_serializer<Response>::to_json(json &j, const Response &rep)
 void adl_serializer<Response>::from_json(const json &j, Response &rep)
 {
     try {
-        rep.statusCode    = j.at("status_code").get<int>();
+        rep.statusCode    = j.at("status_code").get<network::StatusCode>();
         rep.statusMessage = j.at("status_message").get<std::string>();
         rep.body          = j.at("body").get<json>();
     } catch (std::exception &e) {
