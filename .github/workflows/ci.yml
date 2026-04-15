@@ -129,6 +129,7 @@ jobs:
           # Check if ONLY ./libs/myteams/libmyteams.so is present
           if [ "$files" = "./libs/myteams/libmyteams.so" ]; then
             echo "Only libmyteams.so has errors → ignoring"
+            echo "JOB_FAILS=false" >> $GITHUB_ENV
             exit 0
           fi
           
