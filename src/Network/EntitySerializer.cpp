@@ -20,7 +20,7 @@ void adl_serializer<Timestamp>::from_json(const json &j, Timestamp &t)
     t = Timestamp(std::chrono::milliseconds(j.get<int64_t>()));
 }
 
-void adl_serializer<User>::to_json(json &j, User &u)
+void adl_serializer<User>::to_json(json &j, const User &u)
 {
     j["uuid"]       = u.uuid;
     j["name"]       = u.name;
@@ -42,7 +42,7 @@ void adl_serializer<User>::from_json(const json &j, User &u)
 }
 
 
-void adl_serializer<Message>::to_json(json &j, Message &m)
+void adl_serializer<Message>::to_json(json &j, const Message &m)
 {
     j["uuid"]        = m.uuid;
     j["receiver_id"] = m.recieverId;
@@ -67,7 +67,7 @@ void adl_serializer<Message>::from_json(const json &j, Message &m)
 	}
 }
 
-void adl_serializer<Team>::to_json(json &j, Team &t)
+void adl_serializer<Team>::to_json(json &j, const Team &t)
 {
     j["uuid"]        = t.uuid;
     j["name"]        = t.name;
@@ -91,7 +91,7 @@ void adl_serializer<Team>::from_json(const json &j, Team &t)
 	}
 }
 
-void adl_serializer<Channel>::to_json(json &j, Channel &c)
+void adl_serializer<Channel>::to_json(json &j, const Channel &c)
 {
     j["uuid"]        = c.uuid;
     j["name"]        = c.name;
@@ -117,7 +117,7 @@ void adl_serializer<Channel>::from_json(const json &j, Channel &c)
 	}
 }
 
-void adl_serializer<Thread>::to_json(json &j, Thread &t)
+void adl_serializer<Thread>::to_json(json &j, const Thread &t)
 {
     j["uuid"]       = t.uuid;
     j["title"]      = t.title;
@@ -143,7 +143,7 @@ void adl_serializer<Thread>::from_json(const json &j, Thread &t)
 	}
 }
 
-void adl_serializer<Subscription>::to_json(json &j, Subscription &s)
+void adl_serializer<Subscription>::to_json(json &j, const Subscription &s)
 {
     j["uuid"]       = s.uuid;
     j["team_id"]    = s.teamId;
@@ -165,7 +165,7 @@ void adl_serializer<Subscription>::from_json(const json &j, Subscription &s)
 	}
 }
 
-void adl_serializer<Comment>::to_json(json &j, Comment &c)
+void adl_serializer<Comment>::to_json(json &j, const Comment &c)
 {
     j["uuid"]       = c.uuid;
     j["message"]    = c.message;
