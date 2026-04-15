@@ -7,6 +7,7 @@
 
 #include "TeamsShell.hpp"
 #include "Commands/HelpCommand.hpp"
+#include "Client.hpp"
 #include "Commands/LoginCommand.hpp"
 #include "Commands/UsersCommand.hpp"
 #include "Shell.hpp"

@@ -8,6 +8,7 @@
 #include "Commands/LoginCommand.hpp"
 #include "Router.hpp"
 #include "jsonParser.hpp"
+#include "Serializer.hpp"
 #include "TeamsShell.hpp"
 
 namespace my_teams::client::shell {
@@ -16,7 +17,7 @@ bool LoginCommand::operator()(Shell &shell,
     std::vector<std::string>)
 {
     nlohmann::json req;
-    const auto &client = dynamic_cast<TeamsShell &>(shell).getClient();
+    auto &client = dynamic_cast<TeamsShell &>(shell).getClient();
 
     req["method"] = network::Method::POST;
     req["path"] = "/login";
@@ -26,6 +27,9 @@ bool LoginCommand::operator()(Shell &shell,
 			{"password", ""}
 	};
     client.send(req.dump(), [](auto, auto){});
+
+    const std::string jsonString = client.receive();
+    Response response = nlohmann::json::parse(jsonString);
     return true;
 }
 

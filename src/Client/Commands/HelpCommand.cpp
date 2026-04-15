@@ -8,7 +8,9 @@
 #include <functional>
 #include "Commands/HelpCommand.hpp"
 #include "Router.hpp"
+#include "Serializer.hpp"
 #include "jsonParser.hpp"
+#include "Client.hpp"
 #include "TeamsShell.hpp"
 
 namespace my_teams::client::shell {
@@ -21,9 +23,12 @@ bool HelpCommand::operator()(Shell &shell,
     req["method"] = network::Method::GET;
     req["path"] = "/help";
     req["body"] = {};
-    const auto &client = dynamic_cast<TeamsShell &>(shell).getClient();
-  
+    auto &client = dynamic_cast<TeamsShell &>(shell).getClient();
+
     client.send(req.dump(), [](auto, auto){});
+    
+    const std::string jsonString = client.receive();
+    Response response = nlohmann::json::parse(jsonString);
     return true;
 }
 
