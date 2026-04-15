@@ -5,6 +5,7 @@
 ** 
 */
 
+#include "logging_client.h"
 #include "Commands/LoginCommand.hpp"
 #include "Router.hpp"
 #include "jsonParser.hpp"
@@ -14,7 +15,7 @@
 namespace my_teams::client::shell {
 
 bool LoginCommand::operator()(Shell &shell,
-    std::vector<std::string>)
+    std::vector<std::string> args)
 {
     nlohmann::json req;
     auto &client = dynamic_cast<TeamsShell &>(shell).getClient();
@@ -23,13 +24,22 @@ bool LoginCommand::operator()(Shell &shell,
     req["path"] = "/login";
     req["header"] = {};
     req["body"] = {
-			{"username", "Jean"},
+			{"username", args.at(0)},
 			{"password", ""}
 	};
     client.send(req.dump(), [](auto, auto){});
 
     const std::string jsonString = client.receive();
     Response response = nlohmann::json::parse(jsonString);
+
+    if (response.statusCode != network::StatusCode::STATUS_OK) {
+        std::cout << response.body.at("error_message") << std::endl;
+        return false;
+    }
+
+    User user = response.body;
+
+    client_event_logged_in(user.uuid.c_str(), user.name.c_str());
     return true;
 }
 
