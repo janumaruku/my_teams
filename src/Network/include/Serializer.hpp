@@ -9,7 +9,6 @@
 #define MY_TEAMS_SERIALIZER_HPP
 
 #include "jsonParser.hpp"
-#include "Router.hpp"
 #include "../../Types/Types.hpp"
 
 namespace network {
