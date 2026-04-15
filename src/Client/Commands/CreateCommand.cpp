@@ -1,0 +1,46 @@
+/*
+** EPITECH PROJECT, 2026
+** NTWK
+** File description:
+** 
+*/
+
+#include "LoggingClient.hpp"
+#include "Commands/CreateCommand.hpp"
+#include "Router.hpp"
+#include "Serializer.hpp"
+#include "jsonParser.hpp"
+#include "Client.hpp"
+#include "TeamsShell.hpp"
+
+namespace my_teams::client::shell {
+
+bool CreateCommand::operator()(Shell &shell,
+    std::vector<std::string>)
+{
+    std::cout << "Is helping" << std::endl;
+    nlohmann::json req;
+    req["method"] = network::Method::GET;
+    req["path"] = "/home/help";
+    req["body"] = {};
+    auto &client = dynamic_cast<TeamsShell &>(shell).getClient();
+
+    client.send(req.dump(), [](auto, auto){});
+    
+    const std::string jsonString = client.receive();
+    Response response = nlohmann::json::parse(jsonString);
+    return true;
+}
+
+bool CreateCommand::execute(Shell &shell,
+    const std::vector<std::string> cmd)
+{
+    return operator ()(shell, cmd);
+}
+
+std::unique_ptr<IShellCommand> CreateCommand::create()
+{
+    return std::unique_ptr<IShellCommand>(new CreateCommand());
+}
+
+}
