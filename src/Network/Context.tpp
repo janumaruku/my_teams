@@ -116,4 +116,10 @@ const Request & Router<TClientState>::Context::getRequest() const noexcept
 {
     return _request;
 }
+
+template <typename TClientState>
+void Router<TClientState>::Context::error(const std::exception &err) noexcept
+{
+    _errors.emplace_back(err);
+}
 } // namespace network

@@ -59,6 +59,8 @@ public:
 
         const Request &getRequest() const noexcept;
 
+        void error(const std::exception &err) noexcept;
+
     private:
         Request _request;
         Response _response;
@@ -68,6 +70,7 @@ public:
         std::vector<Handler> _middlewares;
         std::vector<Handler> _handlers;
         std::vector<Handler>::iterator _currentHandler;
+        std::vector<std::exception> _errors;
     };
 
 private:
