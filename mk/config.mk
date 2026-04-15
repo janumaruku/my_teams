@@ -12,7 +12,8 @@ CPPFLAGS	=	-Isrc/Network/include \
 				-Isrc/DesignPattern/include \
 				-Isrc/Server/include \
 				-Isrc/Client/include \
-				-Isrc/Types
+				-Isrc/Types			\
+				-Ilibs/myteams
 
 LDFLAGS		=	-L$(BUILD_DIR)/libs\
  				-lnetwork\
