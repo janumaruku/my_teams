@@ -29,7 +29,7 @@ bool UsersCommand::operator()(Shell &shell,
     const std::string jsonString = client.receive();
     Response response = nlohmann::json::parse(jsonString);
 
-    if (response.statusCode == network::StatusCode::UNAUTHORIZED) {
+    if (response.statusCode != network::StatusCode::STATUS_OK) {
         std::cout << response.body.at("error_message") << std::endl;
         return false;
     }
