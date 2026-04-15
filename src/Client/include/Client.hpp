@@ -9,6 +9,7 @@
 #define MY_TEAMS_CLIENT_HPP
 
 #include "IoContext.hpp"
+#include "stdint.h"
 
 constexpr int EXIT_EPITECH = 84;
 
@@ -23,7 +24,12 @@ public:
 
     std::string receive();
 
-    // void start();
+    enum CommandContextType : uint8_t {
+        USER = 0,
+        TEAM,
+        CHANNEL,
+        THREAD
+    };
 
 private:
     network::IOContext _ioContext;
@@ -34,6 +40,12 @@ private:
     void handleWrite();
 
     void handleRead();
+    CommandContextType _context;
+
+    std::string _userId;
+    std::string _teamId;
+    std::string _channelId;
+    std::string _threadId;
 };
 
 }
