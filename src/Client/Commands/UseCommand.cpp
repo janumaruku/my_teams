@@ -6,7 +6,7 @@
 */
 
 #include <functional>
-#include "Commands/UnsubscribeCommand.hpp"
+#include "Commands/UseCommand.hpp"
 #include "Router.hpp"
 #include "Serializer.hpp"
 #include "jsonParser.hpp"
@@ -15,7 +15,7 @@
 
 namespace my_teams::client::shell {
 
-bool UnsubscribeCommand::operator()(Shell &shell,
+bool UseCommand::operator()(Shell &shell,
     std::vector<std::string>)
 {
     std::cout << "Is helping" << std::endl;
@@ -32,15 +32,15 @@ bool UnsubscribeCommand::operator()(Shell &shell,
     return true;
 }
 
-bool UnsubscribeCommand::execute(Shell &shell,
+bool UseCommand::execute(Shell &shell,
     const std::vector<std::string> cmd)
 {
     return operator ()(shell, cmd);
 }
 
-std::unique_ptr<IShellCommand> UnsubscribeCommand::create()
+std::unique_ptr<IShellCommand> UseCommand::create()
 {
-    return std::unique_ptr<IShellCommand>(new UnsubscribeCommand());
+    return std::unique_ptr<IShellCommand>(new UseCommand());
 }
 
 }

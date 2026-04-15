@@ -9,6 +9,7 @@
 #include "Commands/UnsubscribeCommand.hpp"
 #include "Router.hpp"
 #include "Serializer.hpp"
+
 #include "jsonParser.hpp"
 #include "Client.hpp"
 #include "TeamsShell.hpp"
