@@ -45,7 +45,31 @@ void Router<TClientState>::get(
     const std::string &path, std::initializer_list<Handler> handlers)
 {
     auto splitPath = utils::StringUtils::split(path, '/');
-    _get.add(splitPath, handlers);
+    _routes.add(splitPath, Method::GET, handlers);
+}
+
+template <typename TClientState>
+void Router<TClientState>::post(const std::string &path,
+    std::initializer_list<Handler> handlers)
+{
+    auto splitPath = utils::StringUtils::split(path, '/');
+    _routes.add(splitPath, Method::POST, handlers);
+}
+
+template <typename TClientState>
+void Router<TClientState>::put(const std::string &path,
+    std::initializer_list<Handler> handlers)
+{
+    auto splitPath = utils::StringUtils::split(path, '/');
+    _routes.add(splitPath, Method::PUT, handlers);
+}
+
+template <typename TClientState>
+void Router<TClientState>::delet(const std::string &path,
+    std::initializer_list<Handler> handlers)
+{
+    auto splitPath = utils::StringUtils::split(path, '/');
+    _routes.add(splitPath, Method::DELETE, handlers);
 }
 
 template <typename TClientState> void Router<TClientState>::startAccept()
@@ -74,18 +98,14 @@ void Router<TClientState>::handleTransmission(
     ConnectedSocket *socket, TClientState &clientState)
 {
     const nlohmann::json stream = nlohmann::json::parse(_transmission);
-    const auto method           = stream.at("method").get<Method>();
+
+    std::cout << std::setw(2) << stream << std::endl;
 
     Context context{stream, clientState, socket};
-    switch (method) {
-    case Method::GET:
-        _get.handle(context);
-    default:
-        break;
-    }
+    const StatusCode status = _routes.handle(context);
 
-    if (!context.hasHandlers())
-        context.next();
+    if (status != StatusCode::STATUS_OK)
+        context.abortWithStatus(status);
     else
         context.abortWithStatus(StatusCode::NOT_FOUND);
 

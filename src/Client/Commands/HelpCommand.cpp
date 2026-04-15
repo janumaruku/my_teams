@@ -19,7 +19,7 @@ bool HelpCommand::operator()(Shell &shell,
     std::vector<std::string>)
 {
     nlohmann::json req;
-    req["method"] = network::Method::GET;
+    req["method"] = network::Method::POST;
     req["path"] = "/help";
     req["body"] = {};
     auto &client = dynamic_cast<TeamsShell &>(shell).getClient();

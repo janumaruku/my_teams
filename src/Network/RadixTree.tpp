@@ -22,7 +22,7 @@ Router<TClientState>::RadixTree::Node::Node(const std::string &nodeWord,
 
 template <typename TClientState>
 void Router<TClientState>::RadixTree::add(const std::vector<std::string> &words,
-    std::initializer_list<Handler> handlers)
+    const Method &method, std::initializer_list<Handler> handlers)
 {
     if (words.empty())
         return;
@@ -46,13 +46,22 @@ void Router<TClientState>::RadixTree::add(const std::vector<std::string> &words,
             tempNode->children[word] = std::make_unique<Node>(word);
         tempNode = tempNode->children[word].get();
     }
+    const auto foundMethod = std::ranges::find(tempNode->methods, method);
+    if (tempNode->isPath && foundMethod != tempNode->methods.end()) {
+        std::cerr << utils::YELLOW << "Path " << std::quoted(
+                "/" + utils::StringUtils::toString(words, '/')) <<
+            " already registered" << utils::RESET
+            << std::endl;
+        return;
+    }
     tempNode->handlers.insert(tempNode->handlers.end(), handlers.begin(),
         handlers.end());
     tempNode->isPath = true;
+    tempNode->methods.emplace_back(method);
 }
 
 template <typename TClientState>
-void Router<TClientState>::RadixTree::handle(Context &context)
+StatusCode Router<TClientState>::RadixTree::handle(Context &context)
 {
     auto path = context.path();
     Node *node;
@@ -66,11 +75,16 @@ void Router<TClientState>::RadixTree::handle(Context &context)
     }
 
     if (node == nullptr || !node->isPath)
-        return;
+        return StatusCode::NOT_FOUND;
+    if (std::ranges::find(node->methods, context.getRequest().method) == node->
+        methods.end())
+        return StatusCode::METHOD_NOT_ALLOWED;
 
     context.addMiddlewares(middlewares);
     context.addHandlers(node->handlers);
+    context.addParams(params);
 
+    return StatusCode::STATUS_OK;
 }
 
 template <typename TClientState>

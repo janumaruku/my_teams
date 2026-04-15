@@ -18,6 +18,10 @@ void Server::run()
         ctx->jsonp(network::StatusCode::STATUS_OK,
             {{"help_message", "Help message"}});
     }});
+    // _router.post("/help", {[](network::Router<bool>::Context *ctx) {
+    //     ctx->jsonp(network::StatusCode::STATUS_OK,
+    //         {{"help_message", "Help message"}});
+    // }});
 
     _router.run();
 }

@@ -11,25 +11,14 @@
 #include "Acceptor.hpp"
 #include "IoContext.hpp"
 #include "jsonParser.hpp"
+#include "Serializer.hpp"
 
 namespace network {
-enum class Method: uint8_t {
-    GET,
-    POST,
-    PUT,
-    DELETE
-};
-
-enum class StatusCode: uint16_t {
-    STATUS_OK    = 200,
-    UNAUTHORIZED = 401,
-    NOT_FOUND    = 404
-};
-
 const std::unordered_map<StatusCode, std::string> STATUES = {
     {StatusCode::STATUS_OK, "Status OK"},
     {StatusCode::UNAUTHORIZED, "Unauthorised"},
-    {StatusCode::NOT_FOUND, "Not Found"}
+    {StatusCode::NOT_FOUND, "Not Found"},
+    {StatusCode::METHOD_NOT_ALLOWED, "Methode Not Allowed"}
 };
 
 std::ostream &operator<<(std::ostream &stream, const Method &method);
@@ -42,7 +31,7 @@ public:
 
     class Context {
     public:
-        Context(nlohmann::json request, TClientState &state,
+        Context(const nlohmann::json &request, TClientState &state,
             ConnectedSocket *socket);
 
         std::string path() const;
@@ -51,7 +40,7 @@ public:
 
         void jsonp(const StatusCode &code, const nlohmann::json &body);
 
-        const nlohmann::json &response() const noexcept;
+        nlohmann::json response() const noexcept;
 
         void addMiddleware(const Handler &middleware);
 
@@ -68,9 +57,11 @@ public:
 
         bool hasHandlers() const noexcept;
 
+        const Request &getRequest() const noexcept;
+
     private:
-        nlohmann::json _request;
-        nlohmann::json _response;
+        Request _request;
+        Response _response;
         std::unordered_map<std::string, std::string> _params;
         TClientState &_state;
         ConnectedSocket *_socket;
@@ -95,12 +86,13 @@ private:
             std::unordered_map<std::string, std::unique_ptr<Node>> children;
             std::vector<Handler> handlers;
             bool isPath = false;
+            std::vector<Method> methods;
         };
 
         void add(const std::vector<std::string> &words,
-            std::initializer_list<Handler> handlers);
+            const Method &method, std::initializer_list<Handler> handlers);
 
-        void handle(Context &context);
+        StatusCode handle(Context &context);
 
         const std::unordered_map<std::string, std::unique_ptr<Node>> &
         getRoot() const
@@ -124,6 +116,13 @@ public:
 
     void get(const std::string &path, std::initializer_list<Handler> handlers);
 
+    void post(const std::string &path, std::initializer_list<Handler> handlers);
+
+    void put(const std::string &path, std::initializer_list<Handler> handlers);
+
+    void delet(const std::string &path,
+        std::initializer_list<Handler> handlers);
+
 private:
     IOContext _ioContext{};
     Acceptor _acceptor;
@@ -131,7 +130,7 @@ private:
     std::string _readBuffer;
     std::string _writeBuffer;
     std::string _transmission;
-    RadixTree _get;
+    RadixTree _routes;
 
     void startAccept();
 

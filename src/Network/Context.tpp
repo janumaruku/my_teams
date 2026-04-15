@@ -11,10 +11,13 @@
 
 namespace network {
 template <typename TClientState>
-Router<TClientState>::Context::Context(nlohmann::json request,
-    TClientState &state, ConnectedSocket *socket): _request{std::move(request)},
-    _state{state}, _socket{socket}
+Router<TClientState>::Context::Context(const nlohmann::json &request,
+    TClientState &state, ConnectedSocket *socket): _state{state},
+    _socket{socket}
 {
+    _request  = request;
+    _response = Response{};
+
     _middlewares.emplace_back([this](Context *) {
         next();
     });
@@ -23,28 +26,28 @@ Router<TClientState>::Context::Context(nlohmann::json request,
 template <typename TClientState> std::string Router<
     TClientState>::Context::path() const
 {
-    return _request.at("path").get<std::string>();
+    return _request.path;
 }
 
 template <typename TClientState>
 void Router<TClientState>::Context::abortWithStatus(const StatusCode &code)
 {
-    _response["status_code"]    = code;
-    _response["status_message"] = STATUES.at(code);
-    _response["body"]           = {};
+    _response.statusCode    = code;
+    _response.statusMessage = STATUES.at(code);
+    _response.body          = {};
 }
 
 template <typename TClientState>
 void Router<TClientState>::Context::jsonp(const StatusCode &code,
     const nlohmann::json &body)
 {
-    _response["status_code"]    = code;
-    _response["status_message"] = STATUES.at(code);
-    _response["body"]           = body;
+    _response.statusCode    = code;
+    _response.statusMessage = STATUES.at(code);
+    _response.body          = body;
 }
 
 template <typename TClientState>
-const nlohmann::json &Router<TClientState>::Context::response() const noexcept
+nlohmann::json Router<TClientState>::Context::response() const noexcept
 {
     return _response;
 }
@@ -106,5 +109,11 @@ template <typename TClientState>
 bool Router<TClientState>::Context::hasHandlers() const noexcept
 {
     return _handlers.empty();
+}
+
+template <typename TClientState>
+const Request & Router<TClientState>::Context::getRequest() const noexcept
+{
+    return _request;
 }
 } // namespace network
