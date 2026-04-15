@@ -126,6 +126,10 @@ public:
     void delet(const std::string &path,
         std::initializer_list<Handler> handlers);
 
+    void use(Handler handler);
+
+    void use(std::initializer_list<Handler> handlers);
+
 private:
     IOContext _ioContext{};
     Acceptor _acceptor;
@@ -134,6 +138,7 @@ private:
     std::string _writeBuffer;
     std::string _transmission;
     RadixTree _routes;
+    std::vector<Handler> _middlewares;
 
     void startAccept();
 

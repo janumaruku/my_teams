@@ -72,6 +72,18 @@ void Router<TClientState>::delet(const std::string &path,
     _routes.add(splitPath, Method::DELETE, handlers);
 }
 
+template <typename TClientState>
+void Router<TClientState>::use(Handler handler)
+{
+    _middlewares.emplace_back(handler);
+}
+
+template <typename TClientState>
+void Router<TClientState>::use(std::initializer_list<Handler> handlers)
+{
+    _middlewares.insert(_middlewares.end(), handlers.begin(), handlers.end());
+}
+
 template <typename TClientState> void Router<TClientState>::startAccept()
 {
     _acceptor.asyncAccept([this](const std::error_code &err,
@@ -102,12 +114,13 @@ void Router<TClientState>::handleTransmission(
     std::cout << std::setw(2) << stream << std::endl;
 
     Context context{stream, clientState, socket};
+    context.addMiddlewares(_middlewares);
     const StatusCode status = _routes.handle(context);
 
     if (status != StatusCode::STATUS_OK)
         context.abortWithStatus(status);
     else
-        context.abortWithStatus(StatusCode::NOT_FOUND);
+        context.next();
 
     clientWrite(socket, context.response().dump());
 
