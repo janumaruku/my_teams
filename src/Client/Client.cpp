@@ -6,6 +6,8 @@
 */
 
 #include "Client.hpp"
+
+#include <chrono>
 #include <memory>
 
 namespace my_teams::client {
@@ -15,7 +17,6 @@ Client::Client(const int &port, const std::string &ipAddress): _socket{
 {
     network::Endpoint endPoint{port, ipAddress};
     _socket.connect(endPoint);
-    _buffer.resize(1024);
 }
 
 void Client::send(const std::string &message,
@@ -27,9 +28,9 @@ void Client::send(const std::string &message,
 std::string Client::receive()
 {
     _transmission.clear();
+    _buffer.resize(1024);
 
-    while (!_buffer.ends_with("\r\n")) {
-         _buffer.clear();
+    while (!_transmission.ends_with("\r\n")) {
         _socket.read(network::buffer(_buffer, _buffer.size()),
             [this](const std::error_code &, const std::size_t bytes) {
                 _transmission.insert(_transmission.end(), _buffer.begin(),

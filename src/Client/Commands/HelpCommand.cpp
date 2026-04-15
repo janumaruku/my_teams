@@ -18,7 +18,6 @@ namespace my_teams::client::shell {
 bool HelpCommand::operator()(Shell &shell,
     std::vector<std::string>)
 {
-    std::cout << "Is helping" << std::endl;
     nlohmann::json req;
     req["method"] = network::Method::GET;
     req["path"] = "/help";
@@ -26,9 +25,11 @@ bool HelpCommand::operator()(Shell &shell,
     auto &client = dynamic_cast<TeamsShell &>(shell).getClient();
 
     client.send(req.dump(), [](auto, auto){});
-    
+
     const std::string jsonString = client.receive();
+    nlohmann::json jsonObject = nlohmann::json::parse(jsonString);
     Response response = nlohmann::json::parse(jsonString);
+    std::cerr << std::setw(2) << jsonObject << std::endl;
     return true;
 }
 
