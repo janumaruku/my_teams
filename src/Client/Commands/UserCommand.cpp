@@ -5,8 +5,9 @@
 ** 
 */
 
+#include <ostream>
 #include "LoggingClient.hpp"
-#include "Commands/LoginCommand.hpp"
+#include "Commands/UserCommand.hpp"
 #include "Router.hpp"
 #include "jsonParser.hpp"
 #include "Serializer.hpp"
@@ -14,19 +15,15 @@
 
 namespace my_teams::client::shell {
 
-bool LoginCommand::operator()(Shell &shell,
-    std::vector<std::string> args)
+bool UserCommand::operator()(Shell &shell,
+    std::vector<std::string> arg)
 {
     nlohmann::json req;
+    req["method"] = network::Method::GET;
+    req["path"] = "/home/users/" + arg.at(0);
+    req["body"] = {};
     auto &client = dynamic_cast<TeamsShell &>(shell).getClient();
-
-    req["method"] = network::Method::POST;
-    req["path"] = "/login";
-    req["header"] = {};
-    req["body"] = {
-			{"username", args.at(0)},
-			{"password", ""}
-	};
+ 
     client.send(req.dump(), [](auto, auto){});
 
     const std::string jsonString = client.receive();
@@ -36,22 +33,21 @@ bool LoginCommand::operator()(Shell &shell,
         std::cout << response.body.at("error_message") << std::endl;
         return false;
     }
-
     User user = response.body;
-
-    client_event_logged_in(user.uuid.c_str(), user.name.c_str());
+    client_print_user(user.uuid.c_str(), user.name.c_str(),
+        static_cast<int>(response.statusCode == network::StatusCode::STATUS_OK));
     return true;
 }
 
-bool LoginCommand::execute(Shell &shell,
+bool UserCommand::execute(Shell &shell,
     const std::vector<std::string> cmd)
 {
     return operator ()(shell, cmd);
 }
 
-std::unique_ptr<IShellCommand> LoginCommand::create()
+std::unique_ptr<IShellCommand> UserCommand::create()
 {
-    return std::unique_ptr<IShellCommand>(new LoginCommand());
+    return std::unique_ptr<IShellCommand>(new UserCommand());
 }
 
 }

@@ -45,12 +45,43 @@ void Router<TClientState>::get(
     const std::string &path, std::initializer_list<Handler> handlers)
 {
     auto splitPath = utils::StringUtils::split(path, '/');
-    _get.add(splitPath, handlers);
+    _routes.add(splitPath, Method::GET, handlers);
+}
 
+template <typename TClientState>
+void Router<TClientState>::post(const std::string &path,
+    std::initializer_list<Handler> handlers)
+{
+    auto splitPath = utils::StringUtils::split(path, '/');
+    _routes.add(splitPath, Method::POST, handlers);
+}
 
-    std::clog << utils::GREEN << "Printing roots ..." << splitPath.size() << utils::RESET << std::endl;
-    for (const auto &key: std::ranges::views::keys(_get.getRoot()))
-        std::clog << utils::GREEN << key << utils::RESET << std::endl;
+template <typename TClientState>
+void Router<TClientState>::put(const std::string &path,
+    std::initializer_list<Handler> handlers)
+{
+    auto splitPath = utils::StringUtils::split(path, '/');
+    _routes.add(splitPath, Method::PUT, handlers);
+}
+
+template <typename TClientState>
+void Router<TClientState>::delet(const std::string &path,
+    std::initializer_list<Handler> handlers)
+{
+    auto splitPath = utils::StringUtils::split(path, '/');
+    _routes.add(splitPath, Method::DELETE, handlers);
+}
+
+template <typename TClientState>
+void Router<TClientState>::use(Handler handler)
+{
+    _middlewares.emplace_back(handler);
+}
+
+template <typename TClientState>
+void Router<TClientState>::use(std::initializer_list<Handler> handlers)
+{
+    _middlewares.insert(_middlewares.end(), handlers.begin(), handlers.end());
 }
 
 template <typename TClientState> void Router<TClientState>::startAccept()
@@ -79,17 +110,18 @@ void Router<TClientState>::handleTransmission(
     ConnectedSocket *socket, TClientState &clientState)
 {
     const nlohmann::json stream = nlohmann::json::parse(_transmission);
-    std::cout << std::setw(4) << stream << std::endl;
-    const auto method = stream.at("method").get<Method>();
-    std::cout << utils::RED << method << utils::RESET << std::endl;
+
+    std::cout << std::setw(2) << stream << std::endl;
 
     Context context{stream, clientState, socket};
-    switch (method) {
-    case Method::GET:
-        _get.handle(context);
-    default:
-        break;
-    }
+    context.addMiddlewares(_middlewares);
+    const StatusCode status = _routes.handle(context);
+
+    if (status != StatusCode::STATUS_OK)
+        context.abortWithStatus(status);
+    else
+        context.next();
+
     clientWrite(socket, context.response().dump());
 
     _transmission.clear();

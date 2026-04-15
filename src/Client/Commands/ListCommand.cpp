@@ -6,8 +6,7 @@
 */
 
 #include <functional>
-#include <iostream>
-#include "Commands/HelpCommand.hpp"
+#include "Commands/ListCommand.hpp"
 #include "Router.hpp"
 #include "Serializer.hpp"
 #include "jsonParser.hpp"
@@ -16,13 +15,13 @@
 
 namespace my_teams::client::shell {
 
-bool HelpCommand::operator()(Shell &shell,
+bool ListCommand::operator()(Shell &shell,
     std::vector<std::string>)
 {
     std::cout << "Is helping" << std::endl;
     nlohmann::json req;
     req["method"] = network::Method::GET;
-    req["path"] = "/home";
+    req["path"] = "/help";
     req["body"] = {};
     auto &client = dynamic_cast<TeamsShell &>(shell).getClient();
 
@@ -30,20 +29,18 @@ bool HelpCommand::operator()(Shell &shell,
     
     const std::string jsonString = client.receive();
     Response response = nlohmann::json::parse(jsonString);
-
-    std::cout << response.body.at("message") << std::endl;
     return true;
 }
 
-bool HelpCommand::execute(Shell &shell,
+bool ListCommand::execute(Shell &shell,
     const std::vector<std::string> cmd)
 {
     return operator ()(shell, cmd);
 }
 
-std::unique_ptr<IShellCommand> HelpCommand::create()
+std::unique_ptr<IShellCommand> ListCommand::create()
 {
-    return std::unique_ptr<IShellCommand>(new HelpCommand());
+    return std::unique_ptr<IShellCommand>(new ListCommand());
 }
 
 }

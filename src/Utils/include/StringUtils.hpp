@@ -30,6 +30,9 @@ public:
     static short stos(const std::string &str);
 
     static std::string toLower(const std::string &value);
+
+    static std::string toString(const std::vector<std::string> &words,
+        const char &join);
 };
 } // utils
 

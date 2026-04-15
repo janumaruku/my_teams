@@ -108,4 +108,17 @@ std::string StringUtils::toLower(const std::string &value)
 
     return result;
 }
+
+std::string StringUtils::toString(const std::vector<std::string> &words,
+    const char &join)
+{
+    std::string res;
+
+    for (const auto &word: words)
+        res += word + join;
+
+    res.pop_back();
+
+    return res;
+}
 } // utils

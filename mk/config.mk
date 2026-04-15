@@ -11,11 +11,15 @@ CPPFLAGS	=	-Isrc/Network/include \
 				-Isrc/Utils/include \
 				-Isrc/DesignPattern/include \
 				-Isrc/Server/include \
-				-Isrc/Client/include
+				-Isrc/Client/include \
+				-Isrc/Types			\
+				-Ilibs/myteams
 
 LDFLAGS		=	-L$(BUILD_DIR)/libs\
  				-lnetwork\
  				-ldesign-pattern\
- 				-lutils
+ 				-lutils \
+				-Llibs/myteams \
+				-lmyteams
 
 RM			=	rm -f

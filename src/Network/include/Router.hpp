@@ -11,25 +11,14 @@
 #include "Acceptor.hpp"
 #include "IoContext.hpp"
 #include "jsonParser.hpp"
+#include "Serializer.hpp"
 
 namespace network {
-enum class Method: uint8_t {
-    GET,
-    POST,
-    PUT,
-    DELETE
-};
-
-enum class StatusCode: uint16_t {
-    STATUS_OK    = 200,
-    UNAUTHORIZED = 401,
-    NOT_FOUND    = 404
-};
-
 const std::unordered_map<StatusCode, std::string> STATUES = {
     {StatusCode::STATUS_OK, "Status OK"},
     {StatusCode::UNAUTHORIZED, "Unauthorised"},
-    {StatusCode::NOT_FOUND, "Not Found"}
+    {StatusCode::NOT_FOUND, "Not Found"},
+    {StatusCode::METHOD_NOT_ALLOWED, "Methode Not Allowed"}
 };
 
 std::ostream &operator<<(std::ostream &stream, const Method &method);
@@ -37,28 +26,54 @@ std::ostream &operator<<(std::ostream &stream, const Method &method);
 template <typename TClientState>
 class Router {
 public:
+    class Context;
+    using Handler = std::function<void(Context *)>;
+
     class Context {
     public:
-        Context(nlohmann::json request, TClientState &state,
+        Context(const nlohmann::json &request, TClientState &state,
             ConnectedSocket *socket);
 
         std::string path() const;
 
         void abortWithStatus(const StatusCode &code);
 
-        const nlohmann::json &response() const noexcept;
+        void jsonp(const StatusCode &code, const nlohmann::json &body);
+
+        nlohmann::json response() const noexcept;
+
+        void addMiddleware(const Handler &middleware);
+
+        void addMiddlewares(const std::vector<Handler> &middlewares);
+
+        void addHandler(const Handler &handler);
+
+        void addHandlers(const std::vector<Handler> &handlers);
+
+        void addParams(
+            const std::vector<std::pair<std::string, std::string>> &params);
+
+        void next();
+
+        bool hasHandlers() const noexcept;
+
+        const Request &getRequest() const noexcept;
+
+        void error(const std::exception &err) noexcept;
 
     private:
-        nlohmann::json _request;
-        nlohmann::json _response;
+        Request _request;
+        Response _response;
         std::unordered_map<std::string, std::string> _params;
         TClientState &_state;
         ConnectedSocket *_socket;
+        std::vector<Handler> _middlewares;
+        std::vector<Handler> _handlers;
+        std::vector<Handler>::iterator _currentHandler;
+        std::vector<std::exception> _errors;
     };
 
 private:
-    using Handler = std::function<void(Context *)>;
-
     class RadixTree {
     public:
         struct Node {
@@ -74,12 +89,13 @@ private:
             std::unordered_map<std::string, std::unique_ptr<Node>> children;
             std::vector<Handler> handlers;
             bool isPath = false;
+            std::vector<Method> methods;
         };
 
         void add(const std::vector<std::string> &words,
-            std::initializer_list<Handler> handlers);
+            const Method &method, std::initializer_list<Handler> handlers);
 
-        void handle(Context &context);
+        StatusCode handle(Context &context);
 
         const std::unordered_map<std::string, std::unique_ptr<Node>> &
         getRoot() const
@@ -90,7 +106,9 @@ private:
     private:
         std::unordered_map<std::string, std::unique_ptr<Node>> _root;
 
-        Node *find(const std::vector<std::string> &words);
+        Node *find(const std::vector<std::string> &words,
+            std::vector<Handler> &middlewares, std::
+            vector<std::pair<std::string, std::string>> &params);
     };
 
 public:
@@ -101,6 +119,17 @@ public:
 
     void get(const std::string &path, std::initializer_list<Handler> handlers);
 
+    void post(const std::string &path, std::initializer_list<Handler> handlers);
+
+    void put(const std::string &path, std::initializer_list<Handler> handlers);
+
+    void delet(const std::string &path,
+        std::initializer_list<Handler> handlers);
+
+    void use(Handler handler);
+
+    void use(std::initializer_list<Handler> handlers);
+
 private:
     IOContext _ioContext{};
     Acceptor _acceptor;
@@ -108,7 +137,8 @@ private:
     std::string _readBuffer;
     std::string _writeBuffer;
     std::string _transmission;
-    RadixTree _get;
+    RadixTree _routes;
+    std::vector<Handler> _middlewares;
 
     void startAccept();
 
