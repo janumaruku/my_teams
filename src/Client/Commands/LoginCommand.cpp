@@ -9,10 +9,7 @@
 #include "Router.hpp"
 #include "jsonParser.hpp"
 #include "Serializer.hpp"
-#include "jsonParser.hpp"
 #include "TeamsShell.hpp"
-
-using json = nlohmann::json;
 
 namespace my_teams::client::shell {
 
@@ -31,8 +28,8 @@ bool LoginCommand::operator()(Shell &shell,
 	};
     client.send(req.dump(), [](auto, auto){});
 
-    const std::string json_string = client.receive();
-    Response response = json::parse(json_string);
+    const std::string jsonString = client.receive();
+    Response response = nlohmann::json::parse(jsonString);
     return true;
 }
 
