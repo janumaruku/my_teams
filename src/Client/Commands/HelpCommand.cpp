@@ -6,6 +6,7 @@
 */
 
 #include <functional>
+#include <iostream>
 #include "Commands/HelpCommand.hpp"
 #include "Router.hpp"
 #include "Serializer.hpp"
@@ -21,7 +22,7 @@ bool HelpCommand::operator()(Shell &shell,
     std::cout << "Is helping" << std::endl;
     nlohmann::json req;
     req["method"] = network::Method::GET;
-    req["path"] = "/help";
+    req["path"] = "/home";
     req["body"] = {};
     auto &client = dynamic_cast<TeamsShell &>(shell).getClient();
 
@@ -29,6 +30,8 @@ bool HelpCommand::operator()(Shell &shell,
     
     const std::string jsonString = client.receive();
     Response response = nlohmann::json::parse(jsonString);
+
+    std::cout << response.body.at("message") << std::endl;
     return true;
 }
 
