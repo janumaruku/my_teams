@@ -19,7 +19,7 @@ public:
     UserCommand() = default;
     ~UserCommand() override = default;
 
-    bool operator()(Shell &shell, std::vector<std::string> cmd) override;
+    bool operator()(Shell &shell, std::vector<std::string> arg) override;
     bool execute(Shell &shell, std::vector<std::string> cmd) override;
 
     static std::unique_ptr<IShellCommand> create();
