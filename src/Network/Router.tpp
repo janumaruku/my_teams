@@ -74,7 +74,7 @@ void Router<TClientState>::handleTransmission(
     ConnectedSocket *socket, TClientState &clientState)
 {
     const nlohmann::json stream = nlohmann::json::parse(_transmission);
-    const auto method = stream.at("method").get<Method>();
+    const auto method           = stream.at("method").get<Method>();
 
     Context context{stream, clientState, socket};
     switch (method) {
@@ -84,7 +84,10 @@ void Router<TClientState>::handleTransmission(
         break;
     }
 
-    context.next();
+    if (!context.hasHandlers())
+        context.next();
+    else
+        context.abortWithStatus(StatusCode::NOT_FOUND);
 
     clientWrite(socket, context.response().dump());
 

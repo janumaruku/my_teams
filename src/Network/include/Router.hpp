@@ -66,6 +66,8 @@ public:
 
         void next();
 
+        bool hasHandlers() const noexcept;
+
     private:
         nlohmann::json _request;
         nlohmann::json _response;

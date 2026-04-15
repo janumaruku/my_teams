@@ -93,12 +93,18 @@ void Router<TClientState>::Context::addParams(
 template <typename TClientState>
 void Router<TClientState>::Context::next()
 {
+    ++_currentHandler;
     if (_currentHandler != _middlewares.end()) {
-        ++_currentHandler;
         (*_currentHandler)(this);
     } else {
         for (const auto &handler: _handlers)
             handler(this);
     }
+}
+
+template <typename TClientState>
+bool Router<TClientState>::Context::hasHandlers() const noexcept
+{
+    return _handlers.empty();
 }
 } // namespace network
