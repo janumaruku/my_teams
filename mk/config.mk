@@ -11,7 +11,8 @@ CPPFLAGS	=	-Isrc/Network/include \
 				-Isrc/Utils/include \
 				-Isrc/DesignPattern/include \
 				-Isrc/Server/include \
-				-Isrc/Client/include
+				-Isrc/Client/include \
+				-Isrc/Types
 
 LDFLAGS		=	-L$(BUILD_DIR)/libs\
  				-lnetwork\
