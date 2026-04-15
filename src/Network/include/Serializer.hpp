@@ -19,7 +19,7 @@ using Request = struct Request {
 };
 
 using Response = struct Response {
-    int statusCode;
+    network::StatusCode statusCode;
     std::string statusMessage;
     nlohmann::json body;
 };
