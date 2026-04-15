@@ -25,13 +25,13 @@ using Response = struct Response {
 };
 
 namespace nlohmann {
-/*
+
 template<>
 struct adl_serializer<Timestamp> {
     static void to_json(json &j, const Timestamp &t);
     static void from_json(const json &j, Timestamp &t);
 };
-*/
+
 template<>
 struct adl_serializer<Request> {
     static void to_json(json &j, const Request &r);
@@ -43,7 +43,7 @@ struct adl_serializer<Response> {
     static void to_json(json &j, const Response &r);
     static void from_json(const json &j, Response &r);
 };
-/*
+
 template<>
 struct adl_serializer<Team> {
     static void to_json(json &j, Team &t);
@@ -85,6 +85,6 @@ struct adl_serializer<Message> {
     static void to_json(json &j, Message &m);
     static void from_json(const json &j, Message &m);
 };
-*/
+
 }
 #endif

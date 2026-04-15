@@ -11,23 +11,16 @@
 #include "Serializer.hpp"
 
 namespace nlohmann {
-
-/*
-template<>
 void adl_serializer<Timestamp>::to_json(json &j, const Timestamp &t)
 {
-    // 2020/02/15 - 05:42:37
-    std::string date = std::format("{:%Y/%m/%d - %H:%M:%S}", t);
+    j = std::format("{:%Y/%m/%d - %H:%M:%S}", t);
 }
 
-template<>
 void adl_serializer<Timestamp>::from_json(const json &j, Timestamp &t)
 {
     t = Timestamp(std::chrono::milliseconds(j.get<int64_t>()));
 }
 
-
-template<>
 void adl_serializer<User>::to_json(json &j, User &u)
 {
     j["uuid"]       = u.uuid;
@@ -36,7 +29,7 @@ void adl_serializer<User>::to_json(json &j, User &u)
     j["updated_at"] = u.updatedAt;
 }
 
-template<>
+
 void adl_serializer<User>::from_json(const json &j, User &u)
 {
     try {
@@ -49,7 +42,7 @@ void adl_serializer<User>::from_json(const json &j, User &u)
 	}
 }
 
-template<>
+
 void adl_serializer<Message>::to_json(json &j, Message &m)
 {
     j["uuid"]        = m.uuid;
@@ -60,7 +53,7 @@ void adl_serializer<Message>::to_json(json &j, Message &m)
     j["updated_at"]  = m.updatedAt;
 }
 
-template<>
+
 void adl_serializer<Message>::from_json(const json &j, Message &m)
 {
     try {
@@ -75,9 +68,6 @@ void adl_serializer<Message>::from_json(const json &j, Message &m)
 	}
 }
 
-*/
-
-template<>
 void adl_serializer<Request>::to_json(json &j, const Request &req)
 {
     j["method"] = req.method;
@@ -86,7 +76,6 @@ void adl_serializer<Request>::to_json(json &j, const Request &req)
 }
 
 
-template<>
 void adl_serializer<Request>::from_json(const json &j, Request &req)
 {
     try {
@@ -98,7 +87,6 @@ void adl_serializer<Request>::from_json(const json &j, Request &req)
 	}
 }
 
-template<>
 void adl_serializer<Response>::to_json(json &j, const Response &rep)
 {
     j["status_code"]    = rep.statusCode;
@@ -106,7 +94,6 @@ void adl_serializer<Response>::to_json(json &j, const Response &rep)
     j["body"]           = rep.body;
 }
 
-template<>
 void adl_serializer<Response>::from_json(const json &j, Response &rep)
 {
     try {
@@ -118,9 +105,6 @@ void adl_serializer<Response>::from_json(const json &j, Response &rep)
 	}
 }
 
-
-/*
-template<>
 void adl_serializer<Team>::to_json(json &j, Team &t)
 {
     j["uuid"]        = t.uuid;
@@ -131,7 +115,6 @@ void adl_serializer<Team>::to_json(json &j, Team &t)
     j["updated_at"]  = t.updatedAt;
 }
 
-template<>
 void adl_serializer<Team>::from_json(const json &j, Team &t)
 {
     try {
@@ -146,7 +129,6 @@ void adl_serializer<Team>::from_json(const json &j, Team &t)
 	}
 }
 
-template<>
 void adl_serializer<Channel>::to_json(json &j, Channel &c)
 {
     j["uuid"]        = c.uuid;
@@ -158,7 +140,6 @@ void adl_serializer<Channel>::to_json(json &j, Channel &c)
     j["updated_at"]  = c.updatedAt;
 }
 
-template<>
 void adl_serializer<Channel>::from_json(const json &j, Channel &c)
 {
     try {
@@ -174,7 +155,6 @@ void adl_serializer<Channel>::from_json(const json &j, Channel &c)
 	}
 }
 
-template<>
 void adl_serializer<Thread>::to_json(json &j, Thread &t)
 {
     j["uuid"]       = t.uuid;
@@ -186,7 +166,6 @@ void adl_serializer<Thread>::to_json(json &j, Thread &t)
     j["updated_at"] = t.updatedAt;
 }
 
-template<>
 void adl_serializer<Thread>::from_json(const json &j, Thread &t)
 {
     try {
@@ -202,7 +181,6 @@ void adl_serializer<Thread>::from_json(const json &j, Thread &t)
 	}
 }
 
-template<>
 void adl_serializer<Subscription>::to_json(json &j, Subscription &s)
 {
     j["uuid"]       = s.uuid;
@@ -212,7 +190,6 @@ void adl_serializer<Subscription>::to_json(json &j, Subscription &s)
     j["updated_at"] = s.updatedAt;
 }
 
-template<>
 void adl_serializer<Subscription>::from_json(const json &j, Subscription &s)
 {
     try {
@@ -226,7 +203,6 @@ void adl_serializer<Subscription>::from_json(const json &j, Subscription &s)
 	}
 }
 
-template<>
 void adl_serializer<Comment>::to_json(json &j, Comment &c)
 {
     j["uuid"]       = c.uuid;
@@ -237,7 +213,6 @@ void adl_serializer<Comment>::to_json(json &j, Comment &c)
     j["updated_at"] = c.updatedAt;
 }
 
-template<>
 void adl_serializer<Comment>::from_json(const json &j, Comment &c)
 {
     try {
@@ -250,5 +225,5 @@ void adl_serializer<Comment>::from_json(const json &j, Comment &c)
     } catch (std::exception &e) {
 		throw;
 	}
-}*/
+}
 }

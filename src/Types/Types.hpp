@@ -16,7 +16,7 @@ constexpr unsigned int MAX_NAME_LENGTH = 32;
 constexpr unsigned int MAX_DESCRIPTION_LENGTH = 255;
 constexpr unsigned int MAX_BODY_LENGTH = 512;
 
-using Timestamp = std::chrono::steady_clock::time_point; 
+using Timestamp = std::chrono::system_clock::time_point; 
 
 using Team = struct Team {
     std::string uuid;
