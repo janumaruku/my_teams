@@ -17,6 +17,7 @@ Client::Client(const int &port, const std::string &ipAddress): _socket{
 {
     network::Endpoint endPoint{port, ipAddress};
     _socket.connect(endPoint);
+    _buffer.resize(1024);
 }
 
 void Client::send(const std::string &message,
@@ -28,7 +29,6 @@ void Client::send(const std::string &message,
 std::string Client::receive()
 {
     _transmission.clear();
-    _buffer.resize(1024);
 
     while (!_transmission.ends_with("\r\n")) {
         _socket.read(network::buffer(_buffer, _buffer.size()),
