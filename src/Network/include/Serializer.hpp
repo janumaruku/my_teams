@@ -5,12 +5,26 @@
 ** 
 */
 
-
 #ifndef MY_TEAMS_SERIALIZER_HPP
 #define MY_TEAMS_SERIALIZER_HPP
 
 #include "jsonParser.hpp"
-#include "Router.hpp"
+
+namespace network {
+enum class Method: uint8_t {
+    GET,
+    POST,
+    PUT,
+    DELETE
+};
+
+enum class StatusCode: uint16_t {
+    STATUS_OK          = 200,
+    UNAUTHORIZED       = 401,
+    NOT_FOUND          = 404,
+    METHOD_NOT_ALLOWED = 405
+};
+}
 
 using Request = struct Request {
     network::Method method;
@@ -19,24 +33,28 @@ using Request = struct Request {
 };
 
 using Response = struct Response {
-    int statusCode;
+    Response() = default;
+
+    network::StatusCode statusCode;
     std::string statusMessage;
-    nlohmann::json body;
+    nlohmann::json body = {};
 };
 
 namespace nlohmann {
 
-template<>
+template <>
 struct adl_serializer<Request> {
 
-    static void to_json(json &j, Request &r);
+    static void to_json(json &j, const Request &r);
+
     static void from_json(const json &j, Request &r);
 };
 
-template<>
+template <>
 struct adl_serializer<Response> {
 
-    static void to_json(json &j, Response &r);
+    static void to_json(json &j, const Response &r);
+
     static void from_json(const json &j, Response &r);
 };
 

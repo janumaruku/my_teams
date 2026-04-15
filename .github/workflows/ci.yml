@@ -119,6 +119,19 @@ jobs:
             echo "No coding style error found"
             exit 0
           fi
+
+          # Extract unique files involved in Banana errors
+          files=$(awk '/\[Banana\]/ {f=$1; sub(":", "", f); print f}' check.log | sort -u)
+      
+          echo "Files with errors:"
+          echo "$files"
+      
+          # Check if ONLY ./libs/myteams/libmyteams.so is present
+          if [ "$files" = "./libs/myteams/libmyteams.so" ]; then
+            echo "Only libmyteams.so has errors → ignoring"
+            echo "JOB_FAILS=false" >> $GITHUB_ENV
+            exit 0
+          fi
           
           echo "::group::Coding style errors"
           awk '

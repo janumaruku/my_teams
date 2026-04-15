@@ -22,7 +22,7 @@ Router<TClientState>::RadixTree::Node::Node(const std::string &nodeWord,
 
 template <typename TClientState>
 void Router<TClientState>::RadixTree::add(const std::vector<std::string> &words,
-    std::initializer_list<Handler> handlers)
+    const Method &method, std::initializer_list<Handler> handlers)
 {
     if (words.empty())
         return;
@@ -46,61 +46,77 @@ void Router<TClientState>::RadixTree::add(const std::vector<std::string> &words,
             tempNode->children[word] = std::make_unique<Node>(word);
         tempNode = tempNode->children[word].get();
     }
+    const auto foundMethod = std::ranges::find(tempNode->methods, method);
+    if (tempNode->isPath && foundMethod != tempNode->methods.end()) {
+        std::cerr << utils::YELLOW << "Path " << std::quoted(
+                "/" + utils::StringUtils::toString(words, '/')) <<
+            " already registered" << utils::RESET
+            << std::endl;
+        return;
+    }
     tempNode->handlers.insert(tempNode->handlers.end(), handlers.begin(),
         handlers.end());
     tempNode->isPath = true;
+    tempNode->methods.emplace_back(method);
 }
 
 template <typename TClientState>
-void Router<TClientState>::RadixTree::handle(Context &context)
+StatusCode Router<TClientState>::RadixTree::handle(Context &context)
 {
     auto path = context.path();
     Node *node;
+    std::vector<Handler> middlewares;
+    std::vector<std::pair<std::string, std::string>> params;
     if (path.empty() || path[0] != '/') {
         node = nullptr;
     } else {
-        node = find(utils::StringUtils::split(&path[1], '/'));
+        node = find(utils::StringUtils::split(&path[1], '/'), middlewares,
+            params);
     }
 
-    if (node == nullptr)
-        std::clog << utils::MAGENTA << "Not Found" << utils::RESET << std::endl;
-    if (node == nullptr || !node->isPath) {
-        nlohmann::json notFound;
-        notFound["status_code"] = 404;
-        notFound["status_message"] = "Not Found";
-        notFound["body"] = {
-            {"error_message", "Resource not found"}
-        };
-        context.abortWithStatus(StatusCode::NOT_FOUND);
-    } else {
-        for (auto &handler: node->handlers) {
-            handler(&context);
-        }
-    }
+    if (node == nullptr || !node->isPath)
+        return StatusCode::NOT_FOUND;
+    if (std::ranges::find(node->methods, context.getRequest().method) == node->
+        methods.end())
+        return StatusCode::METHOD_NOT_ALLOWED;
+
+    context.addMiddlewares(middlewares);
+    context.addHandlers(node->handlers);
+    context.addParams(params);
+
+    return StatusCode::STATUS_OK;
 }
 
 template <typename TClientState>
 Router<TClientState>::RadixTree::Node *Router<TClientState>::RadixTree
-::find(const std::vector<std::string> &words)
+::find(const std::vector<std::string> &words, std::vector<Handler> &middlewares,
+    std::
+    vector<std::pair<std::string, std::string>> &params)
 {
     const auto itt = std::ranges::find_if(_root, [words](const auto &elem) {
-       return words[0] == elem.first;
+        return words[0] == elem.first;
     });
     if (itt == _root.end()) {
-        std::clog << utils::MAGENTA << "find::" << words[0] << " Not found" << utils::RESET << std::endl;
         return nullptr;
     }
 
     Node *res = itt->second.get();
     for (std::size_t count = 1; count < words.size(); ++count) {
-        if (res->children.contains(words[count]))
+        if (res->children.contains(words[count])) {
             res = res->children.at(words[count]).get();
-        else if (res->paramNode)
+            middlewares.insert(middlewares.end(), res->handlers.begin(),
+                res->handlers.end());
+        } else if (res->paramNode) {
+            params.emplace_back(res->param, words[count]);
             res = res->paramNode.get();
-        else
+            middlewares.insert(middlewares.end(), res->handlers.begin(),
+                res->handlers.end());
+        } else {
+            middlewares.clear();
             return nullptr;
+        }
     }
 
-    return  res;
+    return res;
 }
 }

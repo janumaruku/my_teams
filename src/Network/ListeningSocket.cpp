@@ -18,10 +18,6 @@ ListeningSocket::ListeningSocket(IOContext &/*ioContext*/): _socketFd{
 {
     if (_socketFd == -1)
         throw std::runtime_error("Socket creation failed");
-    _logger.start(ULogLevel::DEBUG_LEVEL) << "Listening socket created" <<
-        utils::Logger::END;
-
-    // ioContext.registerSocket(*this);
 }
 
 ListeningSocket::ListeningSocket(IOContext &/*ioContext*/,

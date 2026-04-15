@@ -19,8 +19,6 @@ ConnectedSocket::ConnectedSocket(IOContext &ioContext):
 {
     if (_socketFd == -1)
         throw std::runtime_error("Socket creation failed");
-    _logger.start(ULogLevel::DEBUG_LEVEL)
-        << "Connected socket created" << utils::END;
 
     _ioContext.registerFileDescriptor(_socketFd);
 }
@@ -29,9 +27,6 @@ ConnectedSocket::ConnectedSocket(
     IOContext &ioContext, const int &clientFd, Endpoint &&endpoint):
     _socketFd{clientFd}, _endpoint{std::move(endpoint)}, _ioContext{ioContext}
 {
-    _logger.start(ULogLevel::DEBUG_LEVEL)
-        << "Connected socket created" << utils::END;
-
     _ioContext.registerFileDescriptor(_socketFd);
 }
 
