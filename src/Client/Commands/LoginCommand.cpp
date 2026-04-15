@@ -5,7 +5,7 @@
 ** 
 */
 
-#include "logging_client.h"
+#include "LoggingClient.hpp"
 #include "Commands/LoginCommand.hpp"
 #include "Router.hpp"
 #include "jsonParser.hpp"

@@ -5,7 +5,7 @@
 ** 
 */
 
-#include "logging_client.h"
+#include "LoggingClient.hpp"
 #include "Commands/CreateCommand.hpp"
 #include "Router.hpp"
 #include "Serializer.hpp"

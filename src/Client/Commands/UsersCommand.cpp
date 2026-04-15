@@ -5,7 +5,7 @@
 ** 
 */
 
-#include "logging_client.h"
+#include "LoggingClient.hpp"
 #include "Commands/UsersCommand.hpp"
 #include <ostream>
 #include "Router.hpp"

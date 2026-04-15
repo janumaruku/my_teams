@@ -6,7 +6,7 @@
 */
 
 #include <ostream>
-#include "logging_client.h"
+#include "LoggingClient.hpp"
 #include "Commands/UserCommand.hpp"
 #include "Router.hpp"
 #include "jsonParser.hpp"
