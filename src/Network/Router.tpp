@@ -83,6 +83,9 @@ void Router<TClientState>::handleTransmission(
     default:
         break;
     }
+
+    context.next();
+
     clientWrite(socket, context.response().dump());
 
     _transmission.clear();

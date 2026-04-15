@@ -14,7 +14,11 @@ template <typename TClientState>
 Router<TClientState>::Context::Context(nlohmann::json request,
     TClientState &state, ConnectedSocket *socket): _request{std::move(request)},
     _state{state}, _socket{socket}
-{}
+{
+    _middlewares.emplace_back([this](Context *) {
+        next();
+    });
+}
 
 template <typename TClientState> std::string Router<
     TClientState>::Context::path() const
@@ -43,5 +47,58 @@ template <typename TClientState>
 const nlohmann::json &Router<TClientState>::Context::response() const noexcept
 {
     return _response;
+}
+
+template <typename TClientState>
+void Router<TClientState>::Context::addMiddleware(const Handler &middleware)
+{
+    _middlewares.push_back(middleware);
+
+    if (!_middlewares.empty())
+        _currentHandler = _middlewares.begin();
+}
+
+template <typename TClientState>
+void Router<TClientState>::Context::addMiddlewares(
+    const std::vector<Handler> &middlewares)
+{
+    _middlewares.insert(_middlewares.end(), middlewares.begin(),
+        middlewares.end());
+
+    if (!_middlewares.empty())
+        _currentHandler = _middlewares.begin();
+}
+
+template <typename TClientState>
+void Router<TClientState>::Context::addHandler(const Handler &handler)
+{
+    _middlewares.push_back(handler);
+}
+
+template <typename TClientState>
+void Router<TClientState>::Context::addHandlers(
+    const std::vector<Handler> &handlers)
+{
+    _handlers.insert(_handlers.end(), handlers.begin(), handlers.end());
+}
+
+template <typename TClientState>
+void Router<TClientState>::Context::addParams(
+    const std::vector<std::pair<std::string, std::string>> &params)
+{
+    for (const auto &[key, value]: params)
+        _params[key] = value;
+}
+
+template <typename TClientState>
+void Router<TClientState>::Context::next()
+{
+    if (_currentHandler != _middlewares.end()) {
+        ++_currentHandler;
+        (*_currentHandler)(this);
+    } else {
+        for (const auto &handler: _handlers)
+            handler(this);
+    }
 }
 } // namespace network

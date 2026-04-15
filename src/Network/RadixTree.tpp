@@ -56,27 +56,31 @@ void Router<TClientState>::RadixTree::handle(Context &context)
 {
     auto path = context.path();
     Node *node;
+    std::vector<Handler> middlewares;
+    std::vector<std::pair<std::string, std::string>> params;
     if (path.empty() || path[0] != '/') {
         node = nullptr;
     } else {
-        node = find(utils::StringUtils::split(&path[1], '/'));
+        node = find(utils::StringUtils::split(&path[1], '/'), middlewares,
+            params);
     }
 
-    if (node == nullptr || !node->isPath) {
-        context.abortWithStatus(StatusCode::NOT_FOUND);
-    } else {
-        for (auto &handler: node->handlers) {
-            handler(&context);
-        }
-    }
+    if (node == nullptr || !node->isPath)
+        return;
+
+    context.addMiddlewares(middlewares);
+    context.addHandlers(node->handlers);
+
 }
 
 template <typename TClientState>
 Router<TClientState>::RadixTree::Node *Router<TClientState>::RadixTree
-::find(const std::vector<std::string> &words)
+::find(const std::vector<std::string> &words, std::vector<Handler> &middlewares,
+    std::
+    vector<std::pair<std::string, std::string>> &params)
 {
     const auto itt = std::ranges::find_if(_root, [words](const auto &elem) {
-       return words[0] == elem.first;
+        return words[0] == elem.first;
     });
     if (itt == _root.end()) {
         return nullptr;
@@ -84,14 +88,21 @@ Router<TClientState>::RadixTree::Node *Router<TClientState>::RadixTree
 
     Node *res = itt->second.get();
     for (std::size_t count = 1; count < words.size(); ++count) {
-        if (res->children.contains(words[count]))
+        if (res->children.contains(words[count])) {
             res = res->children.at(words[count]).get();
-        else if (res->paramNode)
+            middlewares.insert(middlewares.end(), res->handlers.begin(),
+                res->handlers.end());
+        } else if (res->paramNode) {
+            params.emplace_back(res->param, words[count]);
             res = res->paramNode.get();
-        else
+            middlewares.insert(middlewares.end(), res->handlers.begin(),
+                res->handlers.end());
+        } else {
+            middlewares.clear();
             return nullptr;
+        }
     }
 
-    return  res;
+    return res;
 }
 }

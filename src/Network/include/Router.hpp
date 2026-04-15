@@ -37,6 +37,9 @@ std::ostream &operator<<(std::ostream &stream, const Method &method);
 template <typename TClientState>
 class Router {
 public:
+    class Context;
+    using Handler = std::function<void(Context *)>;
+
     class Context {
     public:
         Context(nlohmann::json request, TClientState &state,
@@ -50,17 +53,31 @@ public:
 
         const nlohmann::json &response() const noexcept;
 
+        void addMiddleware(const Handler &middleware);
+
+        void addMiddlewares(const std::vector<Handler> &middlewares);
+
+        void addHandler(const Handler &handler);
+
+        void addHandlers(const std::vector<Handler> &handlers);
+
+        void addParams(
+            const std::vector<std::pair<std::string, std::string>> &params);
+
+        void next();
+
     private:
         nlohmann::json _request;
         nlohmann::json _response;
         std::unordered_map<std::string, std::string> _params;
         TClientState &_state;
         ConnectedSocket *_socket;
+        std::vector<Handler> _middlewares;
+        std::vector<Handler> _handlers;
+        std::vector<Handler>::iterator _currentHandler;
     };
 
 private:
-    using Handler = std::function<void(Context *)>;
-
     class RadixTree {
     public:
         struct Node {
@@ -92,7 +109,9 @@ private:
     private:
         std::unordered_map<std::string, std::unique_ptr<Node>> _root;
 
-        Node *find(const std::vector<std::string> &words);
+        Node *find(const std::vector<std::string> &words,
+            std::vector<Handler> &middlewares, std::
+            vector<std::pair<std::string, std::string>> &params);
     };
 
 public:
