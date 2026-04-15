@@ -12,6 +12,22 @@
 #include "Router.hpp"
 #include "../../Types/Types.hpp"
 
+namespace network {
+enum class Method: uint8_t {
+    GET,
+    POST,
+    PUT,
+    DELETE
+};
+
+enum class StatusCode: uint16_t {
+    STATUS_OK          = 200,
+    UNAUTHORIZED       = 401,
+    NOT_FOUND          = 404,
+    METHOD_NOT_ALLOWED = 405
+};
+}
+
 using Request = struct Request {
     network::Method method;
     std::string path;
@@ -21,8 +37,9 @@ using Request = struct Request {
 using Response = struct Response {
     network::StatusCode statusCode;
     std::string statusMessage;
-    nlohmann::json body;
+    nlohmann::json body = {};
 };
+
 
 namespace nlohmann {
 
@@ -46,45 +63,46 @@ struct adl_serializer<Response> {
 
 template<>
 struct adl_serializer<Team> {
-    static void to_json(json &j, Team &t);
+    static void to_json(json &j, const Team &t);
     static void from_json(const json &j, Team &t);
 };
 
 template<>
 struct adl_serializer<Channel> {
-    static void to_json(json &j, Channel &c);
+    static void to_json(json &j, const Channel &c);
     static void from_json(const json &j, Channel &c);
 };
 
 template<>
 struct adl_serializer<Thread> {
-    static void to_json(json &j, Thread &t);
+    static void to_json(json &j, const Thread &t);
     static void from_json(const json &j, Thread &t);
 };
 
 template<>
 struct adl_serializer<Subscription> {
-    static void to_json(json &j, Subscription &s);
+    static void to_json(json &j, const Subscription &s);
     static void from_json(const json &j, Subscription &s);
 };
 
 template<>
 struct adl_serializer<Comment> {
-    static void to_json(json &j, Comment &c);
+    static void to_json(json &j, const Comment &c);
     static void from_json(const json &j, Comment &c);
 };
 
 template<>
 struct adl_serializer<User> {
-    static void to_json(json &j, User &u);
+    static void to_json(json &j, const User &u);
     static void from_json(const json &j, User &u);
 };
 
 template<>
 struct adl_serializer<Message> {
-    static void to_json(json &j, Message &m);
+    static void to_json(json &j, const Message &m);
     static void from_json(const json &j, Message &m);
 };
 
 }
+
 #endif

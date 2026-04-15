@@ -22,6 +22,7 @@ CLIENT_OBJ			=	$(CLIENT_SRC:%.cpp=$(BUILD_DIR)/%.o)
 
 LIBS = $(UTILS) $(DESIGN_PATTERN) $(NETWORK)
 
+
 all: server client
 
 server: $(SERVER)

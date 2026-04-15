@@ -23,13 +23,9 @@ Acceptor::Acceptor(IOContext &ioContext, Endpoint &&endpoint): _endpoint(
     if (bind(_socket.getFd(), reinterpret_cast<const sockaddr *>(&address),
         sizeof(address)) == -1)
         throw std::runtime_error{"bind() failed"};
-    _logger.start(ULogLevel::DEBUG_LEVEL) << "Acceptor bound to address"
-        << utils::END;
 
     if (listen(_socket.getFd(), SOMAXCONN) == -1)
         throw std::runtime_error{"listen() failed"};
-    _logger.start(ULogLevel::DEBUG_LEVEL) << "Listening on port " << _endpoint.
-        getPort() << utils::END;
 
     _ioContext.registerFileDescriptor(_socket.getFd());
 }
@@ -47,10 +43,6 @@ void Acceptor::asyncAccept(const ConnectionHandler &handler)
             handler(getAcceptorErrorCode(errno), clientSocket);
             return;
         }
-
-        _logger.start(ULogLevel::DEBUG_LEVEL) << "Incoming connection" <<
-            " from " << clientSocket->remoteEndpoint().getHostname() <<
-            utils::END;
 
         handler(std::error_code{}, clientSocket);
     });

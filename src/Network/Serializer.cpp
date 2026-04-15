@@ -10,6 +10,8 @@
 #include <string>
 #include "Serializer.hpp"
 
+#include "include/Router.hpp"
+
 namespace nlohmann {
 
 void adl_serializer<Request>::to_json(json &j, const Request &req)
