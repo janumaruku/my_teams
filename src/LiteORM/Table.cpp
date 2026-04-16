@@ -18,11 +18,11 @@ Table::Table(const std::string &name, const std::string &filePath): _filePath{
 
 void Table::load()
 {
-    std::fstream file{_filePath};
+    std::ifstream file{_filePath};
 
     if (!file.is_open())
         throw std::runtime_error{"DB: Failed to load table"};
 
-    _json = nlohmann::json::parse(file);
+    file >> _json;
 }
 } // liteORM
