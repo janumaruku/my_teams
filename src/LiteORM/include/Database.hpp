@@ -7,6 +7,7 @@
 
 #ifndef MY_TEAMS_DATABASE_HPP
 #define MY_TEAMS_DATABASE_HPP
+
 #include <string>
 
 namespace liteORM {
