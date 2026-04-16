@@ -62,7 +62,7 @@ json:
     switch (context) {
         case TEAM: {
             Team team = response.body;
-            client_print_teams(team.uuid.c_str(), team.name.c_str(), team.description.c_str());
+            client_print_team(team.uuid.c_str(), team.name.c_str(), team.description.c_str());
             break;
         }
         case CHANNEL: {
