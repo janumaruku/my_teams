@@ -20,7 +20,7 @@ bool CreateCommand::operator()(Shell &shell,
 {
     std::cout << "Is helping" << std::endl;
     nlohmann::json req;
-    req["method"] = network::Method::GET;
+    req["method"] = network::Method::POST;
     req["path"] = "/home/help";
     req["body"] = {};
     auto &client = dynamic_cast<TeamsShell &>(shell).getClient();
