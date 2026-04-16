@@ -95,4 +95,13 @@ const CommandContextType &Client::getContext() const noexcept
 {
     return _context;
 }
+
+void Client::resetContext() noexcept
+{
+    setContext(UNDEFINED);
+    _teamId.clear();
+    _channelId.clear();
+    _threadId.clear();
+}
+
 } // my_teams

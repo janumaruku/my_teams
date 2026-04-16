@@ -19,13 +19,12 @@ bool UseCommand::operator()(Shell &shell,
 {
     auto &client = dynamic_cast<TeamsShell &>(shell).getClient();
     
+    client.resetContext(); 
     if (args.empty()) {
-        client.setContext(my_teams::client::CommandContextType::UNDEFINED);
         return true;
     }
 
     uint8_t contextIdx = 0;
-    std::cout << "Args size:" << args.size() << std::endl;
 
     for (size_t idx = 0; idx < args.size(); ++idx) {
         switch (idx) {

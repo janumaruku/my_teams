@@ -49,7 +49,9 @@ public:
     const std::string &getThreadId() const noexcept;
     void setThreadId(std::string &uuid) noexcept;
 
-private:
+    void resetContext() noexcept;
+
+    private:
 
     network::IOContext _ioContext;
     network::ConnectedSocket _socket;
