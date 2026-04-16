@@ -16,7 +16,7 @@ int main(int ac, char **av)
 {
     if (ac < 2)
         return EXIT_EPITECH;
-    setenv("LD_LIBRARY_PATH", "libs/myteams", 1);
+
     try {
         const int port = std::stoi(av[1]);
         my_teams::server::Server server{port};

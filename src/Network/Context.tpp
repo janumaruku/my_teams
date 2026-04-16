@@ -21,6 +21,8 @@ Router<TClientState>::Context::Context(const nlohmann::json &request,
     _middlewares.emplace_back([this](Context *) {
         next();
     });
+
+    _currentHandler = _middlewares.begin();
 }
 
 template <typename TClientState> std::string Router<
@@ -73,16 +75,9 @@ void Router<TClientState>::Context::addMiddlewares(
 }
 
 template <typename TClientState>
-void Router<TClientState>::Context::addHandler(const Handler &handler)
+void Router<TClientState>::Context::setHandler(const Handler &handler)
 {
-    _middlewares.push_back(handler);
-}
-
-template <typename TClientState>
-void Router<TClientState>::Context::addHandlers(
-    const std::vector<Handler> &handlers)
-{
-    _handlers.insert(_handlers.end(), handlers.begin(), handlers.end());
+    _handler = handler;
 }
 
 template <typename TClientState>
@@ -97,22 +92,20 @@ template <typename TClientState>
 void Router<TClientState>::Context::next()
 {
     ++_currentHandler;
-    if (_currentHandler != _middlewares.end()) {
+    if (_currentHandler != _middlewares.end())
         (*_currentHandler)(this);
-    } else {
-        for (const auto &handler: _handlers)
-            handler(this);
-    }
+    else
+        _handler(this);
 }
 
 template <typename TClientState>
 bool Router<TClientState>::Context::hasHandlers() const noexcept
 {
-    return _handlers.empty();
+    return _handler.empty();
 }
 
 template <typename TClientState>
-const Request & Router<TClientState>::Context::getRequest() const noexcept
+const Request &Router<TClientState>::Context::getRequest() const noexcept
 {
     return _request;
 }

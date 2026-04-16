@@ -46,9 +46,7 @@ public:
 
         void addMiddlewares(const std::vector<Handler> &middlewares);
 
-        void addHandler(const Handler &handler);
-
-        void addHandlers(const std::vector<Handler> &handlers);
+        void setHandler(const Handler &handler);
 
         void addParams(
             const std::vector<std::pair<std::string, std::string>> &params);
@@ -68,7 +66,7 @@ public:
         TClientState &_state;
         ConnectedSocket *_socket;
         std::vector<Handler> _middlewares;
-        std::vector<Handler> _handlers;
+        Handler _handler;
         std::vector<Handler>::iterator _currentHandler;
         std::vector<std::exception> _errors;
     };
@@ -76,43 +74,91 @@ public:
 private:
     class RadixTree {
     public:
+        using MethodMiddleWareMap = std::unordered_map<Method, std::vector<
+            Handler>>;
+
         struct Node {
             Node();
 
             explicit Node(const std::string &nodeWord,
                 Node *nodeParent = nullptr);
 
+            void add(const std::vector<std::string> &words,
+                const Method &method, const std::vector<Handler> middles,
+                std::initializer_list<Handler> handles);
+
+            static void print(const Node *node) noexcept;
+
+            static void printHelper(const Node *node,
+                const std::string &path) noexcept;
+
+            static void collectRoutes(const Node *node, const std::string &path,
+                std::vector<std::pair<Method, std::string>> &routes) noexcept;
+
             std::string word;
             Node *parent;
             std::string param;
             std::unique_ptr<Node> paramNode = nullptr;
             std::unordered_map<std::string, std::unique_ptr<Node>> children;
-            std::vector<Handler> handlers;
-            bool isPath = false;
+            std::unordered_map<Method, Handler> handlers;
+            MethodMiddleWareMap methodMiddlewares;
+            std::vector<Handler> sharedMiddlewares;
             std::vector<Method> methods;
         };
+
+        using RootDictionary = std::unordered_map<std::string, std::unique_ptr<
+            Node>>;
 
         void add(const std::vector<std::string> &words,
             const Method &method, std::initializer_list<Handler> handlers);
 
         StatusCode handle(Context &context);
 
-        const std::unordered_map<std::string, std::unique_ptr<Node>> &
-        getRoot() const
+        Node *find(const std::vector<std::string> &words);
+
+        const RootDictionary &getRoot() const
         {
             return _root;
         }
 
-    private:
-        std::unordered_map<std::string, std::unique_ptr<Node>> _root;
+        void printPaths() const noexcept;
 
-        Node *find(const std::vector<std::string> &words,
+    private:
+        RootDictionary _root;
+
+        Node *find(const std::vector<std::string> &words, const Method &method,
             std::vector<Handler> &middlewares, std::
             vector<std::pair<std::string, std::string>> &params);
     };
 
 public:
-    explicit Router(const int &port): _acceptor{_ioContext, Endpoint{port}}
+    class Group {
+    public:
+        explicit Group(RadixTree::Node *node);
+
+        void get(const std::string &path,
+            std::initializer_list<Handler> handlers);
+
+        void post(const std::string &path,
+            std::initializer_list<Handler> handlers);
+
+        void put(const std::string &path,
+            std::initializer_list<Handler> handlers);
+
+        void delet(const std::string &path,
+            std::initializer_list<Handler> handlers);
+
+        void use(Handler handler);
+
+        void use(std::initializer_list<Handler> middlewares);
+
+    private:
+        RadixTree::Node *_paths;
+        std::vector<Handler> _middlewares;
+    };
+
+    explicit Router(const int &port): _acceptor{_ioContext, Endpoint{port}},
+        _port{port}
     {}
 
     void run();
@@ -130,9 +176,12 @@ public:
 
     void use(std::initializer_list<Handler> handlers);
 
+    Group group(const std::string &prefix);
+
 private:
     IOContext _ioContext{};
     Acceptor _acceptor;
+    int _port;
     std::unordered_map<std::shared_ptr<ConnectedSocket>, TClientState> _clients;
     std::string _readBuffer;
     std::string _writeBuffer;
@@ -152,6 +201,8 @@ private:
     void clientRead(ConnectedSocket *sock);
 
     void clientWrite(ConnectedSocket *sock, const std::string &message);
+
+    void printPaths() const noexcept;
 };
 
 } // namespace network
@@ -159,5 +210,6 @@ private:
 #endif // MY_TEAMS_ROUTER_HPP
 
 #include "../Context.tpp"
+#include "../Group.tpp"
 #include "../RadixTree.tpp"
 #include "../Router.tpp"
