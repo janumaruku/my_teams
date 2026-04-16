@@ -47,7 +47,7 @@ void Router<TClientState>::RadixTree::Node::add(
             tempNode->children[word] = std::make_unique<Node>(word);
         tempNode = tempNode->children[word].get();
     }
-    
+
     if (tempNode->handlers.contains(method)) {
         std::cerr << utils::YELLOW << "Path " << std::quoted(
                 "/" + utils::StringUtils::toString(words, '/')) <<
@@ -55,16 +55,22 @@ void Router<TClientState>::RadixTree::Node::add(
             << std::endl;
         return;
     }
-    
-    std::vector<Handler> &methodMids = tempNode->methodMiddlewares[method];
-    methodMids.insert(methodMids.end(), middles.begin(), middles.end());
-    
-    if (handles.size() > 0) {
+
+    if (!middles.empty() && tempNode->sharedMiddlewares.empty()) {
+        tempNode->sharedMiddlewares.insert(tempNode->sharedMiddlewares.end(),
+            middles.begin(), middles.end());
+    }
+
+    if (handles.size() > 1) {
+        std::vector<Handler> &methodMids = tempNode->methodMiddlewares[method];
         methodMids.insert(methodMids.end(), handles.begin(),
             handles.begin() + handles.size() - 1);
+    }
+
+    if (handles.size() > 0) {
         tempNode->handlers[method] = *(handles.begin() + handles.size() - 1);
     }
-    
+
     tempNode->methods.emplace_back(method);
 }
 
