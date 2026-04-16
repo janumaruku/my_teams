@@ -125,8 +125,6 @@ void Router<TClientState>::handleTransmission(
 {
     const nlohmann::json stream = nlohmann::json::parse(_transmission);
 
-    std::cout << std::setw(2) << stream << std::endl;
-
     Context context{stream, clientState, socket};
     context.addMiddlewares(_middlewares);
     const StatusCode status = _routes.handle(context);
