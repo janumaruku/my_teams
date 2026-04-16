@@ -5,37 +5,64 @@
 ** 
 */
 
-#include <functional>
+#include <cstdint>
+#include <iostream>
 #include "Commands/UseCommand.hpp"
-#include "Router.hpp"
-#include "Serializer.hpp"
-#include "jsonParser.hpp"
 #include "Client.hpp"
+#include "Router.hpp"
 #include "TeamsShell.hpp"
 
 namespace my_teams::client::shell {
 
 bool UseCommand::operator()(Shell &shell,
-    std::vector<std::string>)
+    std::vector<std::string> args)
 {
-    std::cout << "Is helping" << std::endl;
-    nlohmann::json req;
-    req["method"] = network::Method::GET;
-    req["path"] = "/help";
-    req["body"] = {};
     auto &client = dynamic_cast<TeamsShell &>(shell).getClient();
-
-    client.send(req.dump(), [](auto, auto){});
     
-    const std::string jsonString = client.receive();
-    Response response = nlohmann::json::parse(jsonString);
+    //
+    for (const auto &word : args) {
+        std::cout << "Word: \"" << word << "\"" << std::endl;
+    }
+    //
+
+    for (size_t idx = 0; idx < MAX_USE_ARGS; ++idx) {
+        if (idx >= args.size() || args.at(idx).empty()) {
+            if (idx == 0)
+                client.setContext(CommandContextType::UNDEFINED);
+            return true;
+        }
+        switch (idx) {
+            case USER:
+                client.setUserId(args.at(idx));
+                client.setContext(CommandContextType::USER);
+                break;
+
+            case TEAM:
+                client.setTeamId(args.at(idx));
+                client.setContext(CommandContextType::TEAM);
+                break;
+
+            case CHANNEL:
+                client.setChannelId(args.at(idx));
+                client.setContext(CommandContextType::CHANNEL);
+                break;
+
+            case THREAD:
+                client.setThreadId(args.at(idx));
+                client.setContext(CommandContextType::THREAD);
+                break;
+            default:
+                break;
+        }
+    }
+    std::cout << "Context =" << client.getContext() << std::endl;
     return true;
 }
 
 bool UseCommand::execute(Shell &shell,
-    const std::vector<std::string> cmd)
+    const std::vector<std::string> args)
 {
-    return operator ()(shell, cmd);
+    return operator ()(shell, args);
 }
 
 std::unique_ptr<IShellCommand> UseCommand::create()
