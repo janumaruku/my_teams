@@ -10,14 +10,20 @@
 
 #include <string>
 
+#include "Table.hpp"
+
 namespace liteORM {
 
 class Database {
 public:
     explicit Database(const std::string &dbPath);
 
+    Table &table(const std::string &tableName);
+
 private:
     std::string _dbPath;
+    std::unordered_map<std::string, Table> _tables;
+    Table _tableNotFound;
 };
 
 } // liteORM

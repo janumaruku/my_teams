@@ -16,6 +16,14 @@ Table::Table(const std::string &name, const std::string &filePath): _filePath{
     load();
 }
 
+Table::Table(const std::error_code &err): _error{err}
+{}
+
+void Table::setError(const std::error_code &err)
+{
+    _error = err;
+}
+
 void Table::load()
 {
     std::ifstream file{_filePath};

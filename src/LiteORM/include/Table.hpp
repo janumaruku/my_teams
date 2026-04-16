@@ -16,10 +16,15 @@ class Table {
 public:
     explicit Table(const std::string &name, const std::string &filePath);
 
+    explicit Table(const std::error_code &err);
+
+    void setError(const std::error_code &err);
+
 private:
     std::string _filePath;
     std::string _name;
     nlohmann::json _json;
+    std::error_code _error;
 
     void load();
 };
