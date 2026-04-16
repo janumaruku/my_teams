@@ -25,7 +25,6 @@ bool CreateCommand::operator()(Shell &shell, std::vector<std::string> args)
     auto &client = dynamic_cast<TeamsShell &>(shell).getClient();
 
     req["method"] = network::Method::POST;
-    std::string path;
 
     auto context = client.getContext();
 
@@ -55,9 +54,9 @@ bool CreateCommand::operator()(Shell &shell, std::vector<std::string> args)
     return true;
 }
 
-bool CreateCommand::execute(Shell &shell, const std::vector<std::string> cmd)
+bool CreateCommand::execute(Shell &shell, const std::vector<std::string> args)
 {
-    return operator()(shell, cmd);
+    return operator()(shell, args);
 }
 
 std::unique_ptr<IShellCommand> CreateCommand::create()
