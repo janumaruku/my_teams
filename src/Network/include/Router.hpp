@@ -74,6 +74,9 @@ public:
 private:
     class RadixTree {
     public:
+        using MethodMiddleWareMap = std::unordered_map<Method, std::vector<
+            Handler>>;
+
         struct Node {
             Node();
 
@@ -86,7 +89,8 @@ private:
 
             static void print(const Node *node) noexcept;
 
-            static void printHelper(const Node *node, const std::string &path) noexcept;
+            static void printHelper(const Node *node,
+                const std::string &path) noexcept;
 
             static void collectRoutes(const Node *node, const std::string &path,
                 std::vector<std::pair<Method, std::string>> &routes) noexcept;
@@ -97,10 +101,13 @@ private:
             std::unique_ptr<Node> paramNode = nullptr;
             std::unordered_map<std::string, std::unique_ptr<Node>> children;
             std::unordered_map<Method, Handler> handlers;
-            std::unordered_map<Method, std::vector<Handler>> methodMiddlewares;
+            MethodMiddleWareMap methodMiddlewares;
             std::vector<Handler> sharedMiddlewares;
             std::vector<Method> methods;
         };
+
+        using RootDictionary = std::unordered_map<std::string, std::unique_ptr<
+            Node>>;
 
         void add(const std::vector<std::string> &words,
             const Method &method, std::initializer_list<Handler> handlers);
@@ -109,20 +116,15 @@ private:
 
         Node *find(const std::vector<std::string> &words);
 
-        const std::unordered_map<std::string, std::unique_ptr<Node>> &
-        getRoot() const
+        const RootDictionary &getRoot() const
         {
             return _root;
         }
 
-        // void getPaths(std::vector<std::string> &get,
-        //     std::vector<std::string> &post, std::vector<std::string> &put,
-        //     std::vector<std::string> &del);
-
         void printPaths() const noexcept;
 
     private:
-        std::unordered_map<std::string, std::unique_ptr<Node>> _root;
+        RootDictionary _root;
 
         Node *find(const std::vector<std::string> &words, const Method &method,
             std::vector<Handler> &middlewares, std::
@@ -137,14 +139,14 @@ public:
         void get(const std::string &path,
             std::initializer_list<Handler> handlers);
 
-        // void post(const std::string &path,
-        //     std::initializer_list<Handler> handlers);
-        //
-        // void put(const std::string &path,
-        //     std::initializer_list<Handler> handlers);
-        //
-        // void delet(const std::string &path,
-        // std::initializer_list<Handler> handlers);
+        void post(const std::string &path,
+            std::initializer_list<Handler> handlers);
+
+        void put(const std::string &path,
+            std::initializer_list<Handler> handlers);
+
+        void delet(const std::string &path,
+            std::initializer_list<Handler> handlers);
 
         void use(Handler handler);
 

@@ -31,7 +31,7 @@ void Router<TClientState>::RadixTree::Node::add(
         const auto &word = words[count];
         if (!word.empty() && word[0] == ':') {
             if (!tempNode->param.empty() && tempNode->param != word) {
-                std::cerr << utils::RED << "Param already defined in this path: " <<
+                std::cout << utils::RED << "Param already defined in this path: " <<
                     word << " | " << tempNode->param <<
                     utils::RESET << std::endl;
                 return;
@@ -49,7 +49,7 @@ void Router<TClientState>::RadixTree::Node::add(
     }
 
     if (tempNode->handlers.contains(method)) {
-        std::cerr << utils::YELLOW << "Path " << std::quoted(
+        std::cout << utils::YELLOW << "Path " << std::quoted(
                 "/" + utils::StringUtils::toString(words, '/')) <<
             " already registered for this method" << utils::RESET
             << std::endl;
