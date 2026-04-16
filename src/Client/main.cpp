@@ -5,15 +5,13 @@
 ** main
 */
 
+
 #include <cstdlib>
 #include <exception>
 #include <iostream>
 #include "Client.hpp"
 #include "Shell.hpp"
 #include "TeamsShell.hpp"
-#include "Commands/ShellCommandException.hpp"
-#include "ConnectedSocket.hpp"
-#include "IoContext.hpp"
 
 int main(int ac, char **av)
 {
