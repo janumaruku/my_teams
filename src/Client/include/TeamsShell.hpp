@@ -23,7 +23,7 @@ public:
 
     explicit TeamsShell(Client &client, std::string name, std::string prompt);
 
-    Client &getClient() const noexcept;
+    Client &getClient() noexcept;
 
     void run();
 

@@ -56,7 +56,7 @@ void TeamsShell::run()
     Shell::run();
 }
 
-Client &TeamsShell::getClient() const noexcept
+Client &TeamsShell::getClient() noexcept
 {
     return _client;
 }
