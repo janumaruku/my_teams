@@ -21,6 +21,7 @@ bool UseCommand::operator()(Shell &shell,
     
     client.resetContext(); 
     if (args.empty()) {
+        client.setContext(USER);
         return true;
     }
 
