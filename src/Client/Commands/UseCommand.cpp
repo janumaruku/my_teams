@@ -19,43 +19,35 @@ bool UseCommand::operator()(Shell &shell,
 {
     auto &client = dynamic_cast<TeamsShell &>(shell).getClient();
     
-    //
-    for (const auto &word : args) {
-        std::cout << "Word: \"" << word << "\"" << std::endl;
+    if (args.empty()) {
+        client.setContext(my_teams::client::CommandContextType::UNDEFINED);
+        return true;
     }
-    //
 
-    for (size_t idx = 0; idx < MAX_USE_ARGS; ++idx) {
-        if (idx >= args.size() || args.at(idx).empty()) {
-            if (idx == 0)
-                client.setContext(CommandContextType::UNDEFINED);
-            return true;
-        }
+    uint8_t contextIdx = 0;
+    std::cout << "Args size:" << args.size() << std::endl;
+
+    for (size_t idx = 0; idx < args.size(); ++idx) {
         switch (idx) {
-            case USER:
-                client.setUserId(args.at(idx));
-                client.setContext(CommandContextType::USER);
-                break;
-
             case TEAM:
+                std::cout << "TEAM" << std::endl;
                 client.setTeamId(args.at(idx));
-                client.setContext(CommandContextType::TEAM);
                 break;
-
             case CHANNEL:
+                std::cout << "CHANNEL" << std::endl;
                 client.setChannelId(args.at(idx));
-                client.setContext(CommandContextType::CHANNEL);
                 break;
-
             case THREAD:
+                std::cout << "THREAD" << std::endl;
                 client.setThreadId(args.at(idx));
-                client.setContext(CommandContextType::THREAD);
                 break;
             default:
+                std::cout << "NOPE" << std::endl;
                 break;
         }
+        contextIdx++;
     }
-    std::cout << "Context =" << client.getContext() << std::endl;
+    client.setContext(static_cast<CommandContextType>(contextIdx));
     return true;
 }
 
