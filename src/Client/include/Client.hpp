@@ -23,7 +23,7 @@ public:
 
     std::string receive();
 
-    // void start();
+    static void help();
 
 private:
     network::IOContext _ioContext;

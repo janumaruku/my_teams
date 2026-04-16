@@ -194,19 +194,16 @@ void Router<TClientState>::RadixTree::printPaths() const noexcept
 {
     std::vector<std::pair<Method, std::string>> routes;
 
-    // Collect all routes
     for (const auto &node : std::ranges::views::values(_root)) {
         Node::collectRoutes(node.get(), "", routes);
     }
 
-    // Sort by path first, then by method
     std::ranges::sort(routes, [](const auto &a, const auto &b) {
         if (a.second != b.second)
             return a.second < b.second;
         return a.first < b.first;
     });
 
-    // Helper to convert method to string with fixed width
     auto methodToString = [](Method m) -> std::string {
         switch (m) {
         case Method::GET:    return "GET   ";
@@ -217,7 +214,6 @@ void Router<TClientState>::RadixTree::printPaths() const noexcept
         }
     };
 
-    // Print sorted routes
     for (const auto &[method, path] : routes) {
         std::cout << "[ROUTER-DEBUG] " << methodToString(method) << " " << path << std::endl;
     }
