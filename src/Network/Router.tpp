@@ -36,6 +36,9 @@ inline std::ostream &operator<<(std::ostream &stream, const Method &method)
 
 template <typename TClientState> void Router<TClientState>::run()
 {
+    printPaths();
+    std::cout << "[ROUTER-DEBUG] Listening and serving on port "
+              << _port << " ...\n" << std::endl;
     startAccept();
     _ioContext.run();
 }
@@ -84,6 +87,17 @@ void Router<TClientState>::use(std::initializer_list<Handler> handlers)
     _middlewares.insert(_middlewares.end(), handlers.begin(), handlers.end());
 }
 
+template <typename TClientState>
+Router<TClientState>::Group Router<TClientState>::group(
+    const std::string &prefix)
+{
+    const auto words               = utils::StringUtils::split(prefix, '/');
+    typename RadixTree::Node *node = _routes.find(words);
+    Group group{node};
+
+    return group;
+}
+
 template <typename TClientState> void Router<TClientState>::startAccept()
 {
     _acceptor.asyncAccept([this](const std::error_code &err,
@@ -110,8 +124,6 @@ void Router<TClientState>::handleTransmission(
     ConnectedSocket *socket, TClientState &clientState)
 {
     const nlohmann::json stream = nlohmann::json::parse(_transmission);
-
-    std::cout << std::setw(2) << stream << std::endl;
 
     Context context{stream, clientState, socket};
     context.addMiddlewares(_middlewares);
@@ -176,5 +188,16 @@ void Router<TClientState>::clientWrite(
             }
             clientRead(sock);
         });
+}
+
+template <typename TClientState>
+void Router<TClientState>::printPaths() const noexcept
+{
+    // std::vector<std::string> get;
+    // std::vector<std::string> post;
+    // std::vector<std::string> put;
+    // std::vector<std::string> del;
+    // _routes.getPaths(get, post, put, del);
+    _routes.printPaths();
 }
 } // namespace network

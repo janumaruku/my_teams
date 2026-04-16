@@ -53,6 +53,7 @@ public:
     void resetContext() noexcept;
 
     private:
+    static void help();
 
     network::IOContext _ioContext;
     network::ConnectedSocket _socket;
