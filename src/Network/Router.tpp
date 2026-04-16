@@ -36,6 +36,7 @@ inline std::ostream &operator<<(std::ostream &stream, const Method &method)
 
 template <typename TClientState> void Router<TClientState>::run()
 {
+    printPaths();
     startAccept();
     _ioContext.run();
 }
@@ -82,6 +83,17 @@ template <typename TClientState>
 void Router<TClientState>::use(std::initializer_list<Handler> handlers)
 {
     _middlewares.insert(_middlewares.end(), handlers.begin(), handlers.end());
+}
+
+template <typename TClientState>
+Router<TClientState>::Group Router<TClientState>::group(
+    const std::string &prefix)
+{
+    const auto words               = utils::StringUtils::split(prefix, '/');
+    typename RadixTree::Node *node = _routes.find(words);
+    Group group{node};
+
+    return group;
 }
 
 template <typename TClientState> void Router<TClientState>::startAccept()
@@ -176,5 +188,16 @@ void Router<TClientState>::clientWrite(
             }
             clientRead(sock);
         });
+}
+
+template <typename TClientState>
+void Router<TClientState>::printPaths() const noexcept
+{
+    // std::vector<std::string> get;
+    // std::vector<std::string> post;
+    // std::vector<std::string> put;
+    // std::vector<std::string> del;
+    // _routes.getPaths(get, post, put, del);
+    _routes.printPaths();
 }
 } // namespace network
