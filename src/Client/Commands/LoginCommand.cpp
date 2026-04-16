@@ -18,16 +18,21 @@ namespace my_teams::client::shell {
 bool LoginCommand::operator()(Shell &shell,
     std::vector<std::string> args)
 {
+
+    if (args.empty())
+        return true;
     nlohmann::json req;
     auto &client = dynamic_cast<TeamsShell &>(shell).getClient();
 
-    client.setContext(CommandContextType::UNDEFINED);
+    std::string username = args.at(0);
+    client.setContext(CommandContextType::USER);
+    client.setUserId(username);
 
     req["method"] = network::Method::POST;
     req["path"] = "/login";
     req["header"] = {};
     req["body"] = {
-			{"username", args.at(0)},
+			{"username", username},
 			{"password", ""}
 	};
     client.send(req.dump(), [](auto, auto){});
