@@ -22,7 +22,8 @@ enum CommandContextType : uint8_t {
         TEAM = 0,
         CHANNEL,
         THREAD,
-        UNDEFINED
+        UNDEFINED,
+        USER,
 };
 
 class Client {
