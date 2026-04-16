@@ -26,7 +26,7 @@ bool UnsubscribeCommand::operator()(Shell &shell,
     req["path"] = "/home/users/" + client.getUserId() + "unsubscribe";
     req["body"] = {{"team_id", arg.at(0)}};
 
-    client.send(req.dump(), [](auto, auto){});
+    client.send(req.dump());
 
     const std::string jsonString = client.receive();
     Response response = nlohmann::json::parse(jsonString);  

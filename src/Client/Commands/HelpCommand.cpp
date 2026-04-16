@@ -26,7 +26,7 @@ bool HelpCommand::operator()(Shell &shell,
     req["body"] = {};
     auto &client = dynamic_cast<TeamsShell &>(shell).getClient();
 
-    client.send(req.dump(), [](auto, auto){});
+    client.send(req.dump());
     
     const std::string jsonString = client.receive();
     Response response = nlohmann::json::parse(jsonString);

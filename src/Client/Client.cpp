@@ -20,10 +20,9 @@ Client::Client(const int &port, const std::string &ipAddress): _socket{
     _buffer.resize(1024);
 }
 
-void Client::send(const std::string &message,
-    const network::ConnectedSocket::Callback &handler) const
+void Client::send(const std::string &message) const
 {
-    _socket.write(network::buffer(message + "\r\n"), handler);
+    _socket.write(network::buffer(message + "\r\n"), [](auto, auto) {});
 }
 
 std::string Client::receive()
@@ -53,7 +52,7 @@ const std::string &Client::getUserId() const noexcept
 
 void Client::setUserId(std::string &uuid) noexcept
 {
-    _userId = uuid;    
+    _userId = uuid;
 }
 
 const std::string &Client::getTeamId() const noexcept

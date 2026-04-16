@@ -35,7 +35,7 @@ bool LoginCommand::operator()(Shell &shell,
 			{"username", username},
 			{"password", ""}
 	};
-    client.send(req.dump(), [](auto, auto){});
+    client.send(req.dump());
 
     const std::string jsonString = client.receive();
     Response response = nlohmann::json::parse(jsonString);

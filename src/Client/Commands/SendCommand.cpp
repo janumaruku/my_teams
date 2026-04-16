@@ -26,7 +26,7 @@ bool SendCommand::operator()(Shell &shell,
     req["body"].at("send_to") = arg.at(0); 
     req["body"].at("message") = arg.at(1); 
     
-    client.send(req.dump(), [](auto, auto){});
+    client.send(req.dump());
     
     const std::string jsonString = client.receive();
     Response response = nlohmann::json::parse(jsonString);
