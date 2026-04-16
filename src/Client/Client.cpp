@@ -46,12 +46,6 @@ std::string Client::receive()
     return _transmission;
 }
 
-void Client::setContext(const CommandContextType &newContext) noexcept
-{
-    _context = newContext;
-}
-
-
 const std::string &Client::getUserId() const noexcept
 {
     return _userId;
@@ -92,7 +86,12 @@ const std::string &Client::getThreadId() const noexcept
     return _threadId;
 }
 
-CommandContextType Client::getContext() const noexcept
+void Client::setContext(CommandContextType newContext) noexcept
+{
+    _context = newContext;
+}
+
+const CommandContextType &Client::getContext() const noexcept
 {
     return _context;
 }
