@@ -93,9 +93,9 @@ private:
             std::string param;
             std::unique_ptr<Node> paramNode = nullptr;
             std::unordered_map<std::string, std::unique_ptr<Node>> children;
-            Handler handler;
-            std::vector<Handler> middlewares;
-            bool isPath = false;
+            std::unordered_map<Method, Handler> handlers;
+            std::unordered_map<Method, std::vector<Handler>> methodMiddlewares;
+            std::vector<Handler> sharedMiddlewares;
             std::vector<Method> methods;
         };
 
@@ -121,7 +121,7 @@ private:
     private:
         std::unordered_map<std::string, std::unique_ptr<Node>> _root;
 
-        Node *find(const std::vector<std::string> &words,
+        Node *find(const std::vector<std::string> &words, const Method &method,
             std::vector<Handler> &middlewares, std::
             vector<std::pair<std::string, std::string>> &params);
     };
