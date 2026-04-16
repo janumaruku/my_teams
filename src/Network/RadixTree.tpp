@@ -167,19 +167,59 @@ Router<TClientState>::RadixTree::Node *Router<TClientState>::RadixTree
     return res;
 }
 
-// template <typename TClientState>
-// void Router<TClientState>::RadixTree::getPaths(std::vector<std::string> &get,
-//     std::vector<std::string> &post, std::vector<std::string> &put,
-//     std::vector<std::string> &del)
-// {
-//
-// }
+template <typename TClientState>
+void Router<TClientState>::RadixTree::Node::collectRoutes(
+    const Node *node, const std::string &path,
+    std::vector<std::pair<Method, std::string>> &routes) noexcept
+{
+    std::string currentPath = path.empty() ? "/" + node->word : path + "/" + node->word;
+
+    if (node->word.empty())
+        currentPath = path;
+
+    // Collect all methods registered at this node
+    for (const auto &[method, handler] : node->handlers) {
+        routes.emplace_back(method, currentPath);
+    }
+
+    if (node->paramNode)
+        collectRoutes(node->paramNode.get(), currentPath, routes);
+
+    for (const auto &[key, value] : node->children)
+        collectRoutes(value.get(), currentPath, routes);
+}
 
 template <typename TClientState>
 void Router<TClientState>::RadixTree::printPaths() const noexcept
 {
-    for (const auto &node: std::ranges::views::values(_root)) {
-        Node::print(node.get());
+    std::vector<std::pair<Method, std::string>> routes;
+
+    // Collect all routes
+    for (const auto &node : std::ranges::views::values(_root)) {
+        Node::collectRoutes(node.get(), "", routes);
+    }
+
+    // Sort by path first, then by method
+    std::ranges::sort(routes, [](const auto &a, const auto &b) {
+        if (a.second != b.second)
+            return a.second < b.second;
+        return a.first < b.first;
+    });
+
+    // Helper to convert method to string with fixed width
+    auto methodToString = [](Method m) -> std::string {
+        switch (m) {
+        case Method::GET:    return "GET   ";
+        case Method::POST:   return "POST  ";
+        case Method::PUT:    return "PUT   ";
+        case Method::DELETE: return "DELETE";
+        default:             return "???   ";
+        }
+    };
+
+    // Print sorted routes
+    for (const auto &[method, path] : routes) {
+        std::cout << "[ROUTER-DEBUG] " << methodToString(method) << " " << path << std::endl;
     }
 }
 

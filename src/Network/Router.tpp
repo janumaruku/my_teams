@@ -37,6 +37,8 @@ inline std::ostream &operator<<(std::ostream &stream, const Method &method)
 template <typename TClientState> void Router<TClientState>::run()
 {
     printPaths();
+    std::cout << "[ROUTER-DEBUG] Listening and serving on port "
+              << _port << " ...\n" << std::endl;
     startAccept();
     _ioContext.run();
 }

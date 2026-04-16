@@ -88,6 +88,9 @@ private:
 
             static void printHelper(const Node *node, const std::string &path) noexcept;
 
+            static void collectRoutes(const Node *node, const std::string &path,
+                std::vector<std::pair<Method, std::string>> &routes) noexcept;
+
             std::string word;
             Node *parent;
             std::string param;
@@ -152,8 +155,8 @@ public:
         std::vector<Handler> _middlewares;
     };
 
-public:
-    explicit Router(const int &port): _acceptor{_ioContext, Endpoint{port}}
+    explicit Router(const int &port): _acceptor{_ioContext, Endpoint{port}},
+        _port{port}
     {}
 
     void run();
@@ -176,6 +179,7 @@ public:
 private:
     IOContext _ioContext{};
     Acceptor _acceptor;
+    int _port;
     std::unordered_map<std::shared_ptr<ConnectedSocket>, TClientState> _clients;
     std::string _readBuffer;
     std::string _writeBuffer;
