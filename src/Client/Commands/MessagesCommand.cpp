@@ -13,7 +13,7 @@
 #include "jsonParser.hpp"
 #include "Client.hpp"
 #include "TeamsShell.hpp"
-#include "logging_client.h"
+#include "LoggingClient.hpp"
 
 namespace my_teams::client::shell {
 

@@ -23,15 +23,16 @@ bool SendCommand::operator()(Shell &shell,
     auto &client = dynamic_cast<TeamsShell &>(shell).getClient();
     req["method"] = network::Method::POST;
     req["path"] = "/home/users/" +  client.getUserId() + "/message";
-    req["body"]["send_to"] = arg.at(0); 
-    req["body"]["message"] = arg.at(1); 
+    req["body"].at("send_to") = arg.at(0); 
+    req["body"].at("message") = arg.at(1); 
+    
     client.send(req.dump(), [](auto, auto){});
     
     const std::string jsonString = client.receive();
     Response response = nlohmann::json::parse(jsonString);
-    Message message = nlohmann::json::parse(response.body);
+    Message message = response.body.get<Message>();
 
-    client_event_private_message_received(arg.at(0).c_str(), arg.at(1).c_str());
+    client_event_private_message_received(message.senderId.c_str(), message.content.c_str());
     return true;
 }
 
