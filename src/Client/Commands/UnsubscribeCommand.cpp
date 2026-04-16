@@ -13,30 +13,31 @@
 #include "jsonParser.hpp"
 #include "Client.hpp"
 #include "TeamsShell.hpp"
+#include "logging_client.h"
 
 namespace my_teams::client::shell {
 
 bool UnsubscribeCommand::operator()(Shell &shell,
-    std::vector<std::string>)
+    std::vector<std::string> arg)
 {
-    std::cout << "Is helping" << std::endl;
     nlohmann::json req;
-    req["method"] = network::Method::DELETE;
-    req["path"] = "/help";
-    req["body"] = {};
     auto &client = dynamic_cast<TeamsShell &>(shell).getClient();
+    req["method"] = network::Method::DELETE;
+    req["path"] = "/home/users/" + client.getUserId() + "unsubscribe";
+    req["body"] = {{"team_id", arg.at(0)}};
 
     client.send(req.dump(), [](auto, auto){});
-    
+
     const std::string jsonString = client.receive();
-    Response response = nlohmann::json::parse(jsonString);
+    Response response = nlohmann::json::parse(jsonString);  
+    client_print_unsubscribed(client.getUserId().c_str(), arg.at(0).c_str());
     return true;
 }
 
 bool UnsubscribeCommand::execute(Shell &shell,
-    const std::vector<std::string> cmd)
+    const std::vector<std::string> arg)
 {
-    return operator ()(shell, cmd);
+    return operator ()(shell, arg);
 }
 
 std::unique_ptr<IShellCommand> UnsubscribeCommand::create()
