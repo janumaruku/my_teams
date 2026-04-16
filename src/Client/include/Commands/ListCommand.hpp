@@ -25,8 +25,7 @@ public:
     bool execute(Shell &shell, std::vector<std::string> cmd) override;
     
     static std::unique_ptr<IShellCommand> create();
-
-private:
+    
     static void logTeam(const Team &);
     static void listTeams(const std::vector<Team> &);
 
@@ -35,6 +34,7 @@ private:
 
     static void logThread(const Thread &);
     static void listThreads(const std::vector<Thread> &);
+    
 };
 }
 #endif
