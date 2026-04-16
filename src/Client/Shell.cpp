@@ -5,15 +5,18 @@
 ** 
 */
 
+
+#include <iostream>
 #include <stdexcept>
 #include <string>
 #include <memory>
 #include <vector>
 #include "Shell.hpp"
+#include "StringUtils.hpp"
+#include "TeamsShell.hpp"
 #include "Commands/ShellExit.hpp"
 #include "Commands/ShellExitException.hpp"
 #include "Commands/ShellCommandException.hpp"
-#include "Client.hpp"
 
 namespace my_teams::client {
 
@@ -34,9 +37,11 @@ Shell::Shell(std::string name, std::string prompt) :
 
 bool Shell::executeCommand(const std::vector<std::string> &cmd)
 {
+
     try {
-        const auto command = _shellCommandFactory.create(cmd[0]);
-        return command->execute(*this, cmd);
+        std::vector<std::string> args(cmd.begin() + 1, cmd.end());
+        const auto command = _shellCommandFactory.create(cmd.at(0));
+        return command->execute(*this, args);
     } catch (const std::exception &e) {
         throw;
     }
@@ -53,8 +58,8 @@ void Shell::run()
             return;
         }
         if (ShellUtils::isEmptyLine(line))
-            continue;
-        std::vector<std::string> cmd = ShellUtils::split(line, ' ');
+            continue;    
+        auto cmd = utils::StringUtils::splitQuoted(line);
         try {
             executeCommand(cmd);
         } catch (const shell::ShellExitException) {

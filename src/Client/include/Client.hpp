@@ -8,11 +8,22 @@
 #ifndef MY_TEAMS_CLIENT_HPP
 #define MY_TEAMS_CLIENT_HPP
 
+#include <cstdint>
+#include <map>
 #include "IoContext.hpp"
 
 constexpr int EXIT_EPITECH = 84;
 
+constexpr size_t MAX_USE_ARGS = 4;
+
 namespace my_teams::client {
+
+enum CommandContextType : uint8_t {
+        TEAM = 0,
+        CHANNEL,
+        THREAD,
+        UNDEFINED
+};
 
 class Client {
 public:
@@ -23,9 +34,25 @@ public:
 
     std::string receive();
 
-    // void start();
+    const CommandContextType &getContext() const noexcept;
+    void setContext(CommandContextType newContext) noexcept;
 
-private:
+    const std::string &getUserId() const noexcept;
+    void setUserId(std::string &uuid) noexcept;
+
+    const std::string &getTeamId() const noexcept;
+    void setTeamId(std::string &uuid) noexcept;
+
+    const std::string &getChannelId() const noexcept;
+    void setChannelId(std::string &uuid) noexcept;
+
+    const std::string &getThreadId() const noexcept;
+    void setThreadId(std::string &uuid) noexcept;
+
+    void resetContext() noexcept;
+
+    private:
+
     network::IOContext _ioContext;
     network::ConnectedSocket _socket;
     std::string _buffer;
@@ -34,6 +61,13 @@ private:
     void handleWrite();
 
     void handleRead();
+
+    CommandContextType _context;
+
+    std::string _userId;
+    std::string _teamId;
+    std::string _channelId;
+    std::string _threadId;
 };
 
 }

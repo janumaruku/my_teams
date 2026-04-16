@@ -5,6 +5,7 @@
 ** 
 */
 
+#include "Client.hpp"
 #include "LoggingClient.hpp"
 #include "Commands/LoginCommand.hpp"
 #include "Router.hpp"
@@ -19,6 +20,8 @@ bool LoginCommand::operator()(Shell &shell,
 {
     nlohmann::json req;
     auto &client = dynamic_cast<TeamsShell &>(shell).getClient();
+
+    client.setContext(CommandContextType::UNDEFINED);
 
     req["method"] = network::Method::POST;
     req["path"] = "/login";
@@ -44,9 +47,9 @@ bool LoginCommand::operator()(Shell &shell,
 }
 
 bool LoginCommand::execute(Shell &shell,
-    const std::vector<std::string> cmd)
+    const std::vector<std::string> args)
 {
-    return operator ()(shell, cmd);
+    return operator ()(shell, args);
 }
 
 std::unique_ptr<IShellCommand> LoginCommand::create()

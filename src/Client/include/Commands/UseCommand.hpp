@@ -19,8 +19,8 @@ public:
     UseCommand() = default;
     ~UseCommand() override = default;
 
-    bool operator()(Shell &shell, std::vector<std::string> cmd) override;
-    bool execute(Shell &shell, std::vector<std::string> cmd) override;
+    bool operator()(Shell &shell, std::vector<std::string> args) override;
+    bool execute(Shell &shell, std::vector<std::string> args) override;
 
     static std::unique_ptr<IShellCommand> create();
 };
