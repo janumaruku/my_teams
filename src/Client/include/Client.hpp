@@ -19,11 +19,10 @@ constexpr size_t MAX_USE_ARGS = 4;
 namespace my_teams::client {
 
 enum CommandContextType : uint8_t {
-        UNDEFINED = 0,
-        USER,
-        TEAM,
+        TEAM = 0,
         CHANNEL,
-        THREAD
+        THREAD,
+        UNDEFINED
 };
 
 class Client {
@@ -35,8 +34,8 @@ public:
 
     std::string receive();
 
-    void setContext(const CommandContextType &newContext) noexcept;
-    CommandContextType getContext() const noexcept;
+    const CommandContextType &getContext() const noexcept;
+    void setContext(CommandContextType newContext) noexcept;
 
     const std::string &getUserId() const noexcept;
     void setUserId(std::string &uuid) noexcept;
