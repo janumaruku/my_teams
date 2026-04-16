@@ -1,0 +1,29 @@
+{
+  "columns": [
+    {
+      "name": "id",
+      "type": "uuid"
+    },
+    {
+      "name": "name",
+      "type": "string"
+    },
+    {
+      "name": "description",
+      "type": "string"
+    },
+    {
+      "name": "user_id",
+      "type": "uuid"
+    },
+    {
+      "name": "created_at",
+      "type": "date"
+    },
+    {
+      "name": "updated_at",
+      "type": "date"
+    }
+  ],
+  "data": []
+}

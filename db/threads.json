@@ -1,0 +1,33 @@
+{
+  "columns": [
+    {
+      "name": "id",
+      "type": "uuid"
+    },
+    {
+      "name": "title",
+      "type": "string"
+    },
+    {
+      "name": "body",
+      "type": "string"
+    },
+    {
+      "name": "channel_id",
+      "type": "uuid"
+    },
+    {
+      "name": "user_id",
+      "type": "uuid"
+    },
+    {
+      "name": "created_at",
+      "type": "date"
+    },
+    {
+      "name": "updated_at",
+      "type": "date"
+    }
+  ],
+  "data": []
+}
