@@ -15,6 +15,7 @@ Server::Server(const int &port): _router{port}, _db{"db"}
 void Server::run()
 {
     _router.get("/home", {clientHelp(_db)});
+    _router.post("/login", {clientLogin(_db)});
 
     _router.run();
 }
@@ -26,6 +27,12 @@ Server::Handler Server::clientHelp(liteORM::Database &)
         body["message"] = "Help message";
         ctx->jsonp(network::StatusCode::STATUS_OK, body);
     };
+}
+
+Server::Handler Server::clientLogin(liteORM::Database &database)
+{
+    User user;
+    const auto err = _db.table("users").where("username", "=", ctx->getRequest).first(user);
 }
 } // server
 } // my_teams

@@ -32,6 +32,8 @@ private:
     using Handler = std::function<void(network::Router<UserState>::Context *)>;
 
     static Handler clientHelp(liteORM::Database &database);
+
+    static Handler clientLogin(liteORM::Database &database);
 };
 
 } // server
