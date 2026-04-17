@@ -18,7 +18,7 @@ namespace my_teams::client::shell {
 bool LoginCommand::operator()(Shell &shell,
     std::vector<std::string> args)
 {
-
+    std::cout << "debub" << std::endl;
     if (args.empty())
         return true;
     nlohmann::json req;
