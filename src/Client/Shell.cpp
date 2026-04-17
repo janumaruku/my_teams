@@ -59,13 +59,15 @@ void Shell::run()
         }
         if (ShellUtils::isEmptyLine(line))
             continue;    
-        auto cmd = utils::StringUtils::splitQuoted(line);
         try {
+            auto cmd = utils::StringUtils::splitQuoted(line);
             executeCommand(cmd);
         } catch (const shell::ShellExitException) {
             return;
         } catch (const shell::ShellCommandException) {
             throw;
+        } catch (const std::invalid_argument &e) {
+            continue;
         } catch (const std::runtime_error) {
             continue;
         }

@@ -18,7 +18,7 @@ public:
 
     static std::vector<std::string> split(const std::string &str) noexcept;
 
-    static std::vector<std::string> splitQuoted(const std::string &str) noexcept;
+    static std::vector<std::string> splitQuoted(const std::string &str);
 
     static std::vector<std::string> split(const std::string &str,
         const char &delim);
