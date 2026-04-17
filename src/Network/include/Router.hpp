@@ -59,6 +59,11 @@ public:
 
         void error(const std::exception &err) noexcept;
 
+        TClientState &getClientState()
+        {
+            return _state;
+        }
+
     private:
         Request _request;
         Response _response;

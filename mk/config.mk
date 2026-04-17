@@ -22,6 +22,7 @@ LDFLAGS		=	-L$(BUILD_DIR)/libs\
  				-lutils \
  				-llite-orm \
 				-Llibs/myteams \
-				-lmyteams
+				-lmyteams \
+				-luuid
 
 RM			=	rm -f

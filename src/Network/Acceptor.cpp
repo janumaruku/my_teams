@@ -44,6 +44,8 @@ void Acceptor::asyncAccept(const ConnectionHandler &handler)
             return;
         }
 
+        _logger.start(ULogLevel::INFO) << "Connection received ..." <<
+            utils::END;
         handler(std::error_code{}, clientSocket);
     });
 }
@@ -74,7 +76,7 @@ FtpErrorCode Acceptor::getAcceptorErrorCode(const int &error)
 std::shared_ptr<ConnectedSocket> Acceptor::acceptClient() const
 {
     sockaddr_in address{};
-    socklen_t size = sizeof(address);
+    socklen_t size     = sizeof(address);
     const int clientFd = accept(_socket.getFd(),
         reinterpret_cast<sockaddr *>(&address), &size);
 
