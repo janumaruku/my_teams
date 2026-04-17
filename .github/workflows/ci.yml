@@ -34,12 +34,12 @@ jobs:
           
           if [ -f Makefile ]; then
             echo "Detected Makefile"
-            make 2>&1 | tee build.log
+            make -j$(nproc) 2>&1 | tee build.log
           
           elif [ -f CMakeLists.txt ]; then
             echo "Detected CMake project"
             cmake -B build
-            cmake --build build 2>&1 | tee build.log
+            cmake --build build -j$(nproc) 2>&1 | tee build.log
           
           else
             echo "No supported build system found"
@@ -69,12 +69,12 @@ jobs:
           
           if [ -f Makefile ]; then
             echo "Detected Makefile"
-            make 2>&1
+            make -j$(nproc) 2>&1
           
           elif [ -f CMakeLists.txt ]; then
             echo "Detected CMake project"
             cmake -B build
-            cmake --build build 2>&1
+            cmake --build build -j$(nproc) 2>&1
           
           else
             echo "No supported build system found"

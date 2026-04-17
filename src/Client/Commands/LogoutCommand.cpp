@@ -24,7 +24,7 @@ bool LogoutCommand::operator()(Shell &shell,
     req["method"] = network::Method::POST;
     req["path"] = "/logout";
     req["body"] = {};
-    client.send(req.dump(), [](auto, auto){});
+    client.send(req.dump());
 
     const std::string jsonString = client.receive();
     Response response = nlohmann::json::parse(jsonString);

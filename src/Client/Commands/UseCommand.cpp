@@ -5,37 +5,56 @@
 ** 
 */
 
-#include <functional>
+#include <cstdint>
+#include <iostream>
 #include "Commands/UseCommand.hpp"
-#include "Router.hpp"
-#include "Serializer.hpp"
-#include "jsonParser.hpp"
 #include "Client.hpp"
+#include "Router.hpp"
 #include "TeamsShell.hpp"
 
 namespace my_teams::client::shell {
 
 bool UseCommand::operator()(Shell &shell,
-    std::vector<std::string>)
+    std::vector<std::string> args)
 {
-    std::cout << "Is helping" << std::endl;
-    nlohmann::json req;
-    req["method"] = network::Method::GET;
-    req["path"] = "/help";
-    req["body"] = {};
     auto &client = dynamic_cast<TeamsShell &>(shell).getClient();
-
-    client.send(req.dump(), [](auto, auto){});
     
-    const std::string jsonString = client.receive();
-    Response response = nlohmann::json::parse(jsonString);
+    client.resetContext(); 
+    if (args.empty()) {
+        client.setContext(USER);
+        return true;
+    }
+
+    uint8_t contextIdx = 0;
+
+    for (size_t idx = 0; idx < args.size(); ++idx) {
+        switch (idx) {
+            case TEAM:
+                std::cout << "TEAM" << std::endl;
+                client.setTeamId(args.at(idx));
+                break;
+            case CHANNEL:
+                std::cout << "CHANNEL" << std::endl;
+                client.setChannelId(args.at(idx));
+                break;
+            case THREAD:
+                std::cout << "THREAD" << std::endl;
+                client.setThreadId(args.at(idx));
+                break;
+            default:
+                std::cout << "NOPE" << std::endl;
+                break;
+        }
+        contextIdx++;
+    }
+    client.setContext(static_cast<CommandContextType>(contextIdx));
     return true;
 }
 
 bool UseCommand::execute(Shell &shell,
-    const std::vector<std::string> cmd)
+    const std::vector<std::string> args)
 {
-    return operator ()(shell, cmd);
+    return operator ()(shell, args);
 }
 
 std::unique_ptr<IShellCommand> UseCommand::create()

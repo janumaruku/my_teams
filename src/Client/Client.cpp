@@ -13,17 +13,16 @@
 namespace my_teams::client {
 
 Client::Client(const int &port, const std::string &ipAddress): _socket{
-    _ioContext}
+    _ioContext}, _context{UNDEFINED}
 {
     network::Endpoint endPoint{port, ipAddress};
     _socket.connect(endPoint);
     _buffer.resize(1024);
 }
 
-void Client::send(const std::string &message,
-    const network::ConnectedSocket::Callback &handler) const
+void Client::send(const std::string &message) const
 {
-    _socket.write(network::buffer(message + "\r\n"), handler);
+    _socket.write(network::buffer(message + "\r\n"), [](auto, auto) {});
 }
 
 std::string Client::receive()
@@ -44,6 +43,64 @@ std::string Client::receive()
     }
 
     return _transmission;
+}
+
+const std::string &Client::getUserId() const noexcept
+{
+    return _userId;
+}
+
+void Client::setUserId(std::string &uuid) noexcept
+{
+    _userId = uuid;
+}
+
+const std::string &Client::getTeamId() const noexcept
+{
+    return _teamId;
+}
+
+void Client::setTeamId(std::string &uuid) noexcept
+{
+    _teamId = uuid;
+}
+
+void Client::setThreadId(std::string &uuid) noexcept
+{
+    _threadId = uuid;
+}
+
+const std::string &Client::getChannelId() const noexcept
+{
+    return _channelId;
+}
+
+void Client::setChannelId(std::string &uuid) noexcept
+{
+    _channelId = uuid;
+}
+
+const std::string &Client::getThreadId() const noexcept
+{
+    return _threadId;
+}
+
+void Client::setContext(CommandContextType newContext) noexcept
+{
+    _context = newContext;
+}
+
+const CommandContextType &Client::getContext() const noexcept
+{
+    return _context;
+}
+
+void Client::resetContext() noexcept
+{
+    setContext(UNDEFINED);
+    _teamId.clear();
+    _channelId.clear();
+    _threadId.clear();
 }
 
 } // my_teams

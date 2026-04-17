@@ -5,11 +5,13 @@
 ** StringUtils
 */
 
-#include "StringUtils.hpp"
-
-#include <iostream>
+#include <algorithm>
+#include <regex>
 #include <limits>
 #include <sstream>
+#include <stdexcept>
+#include <exception>
+#include "StringUtils.hpp"
 
 namespace utils {
 std::string StringUtils::cleanString(const std::string &str) noexcept
@@ -27,6 +29,36 @@ std::string StringUtils::cleanString(const std::string &str) noexcept
 
     return word + remaining;
 }
+
+std::vector<std::string> StringUtils::splitQuoted(const std::string &str)
+{
+    bool inQuotes = false;
+    std::string tmp;
+    std::vector<std::string> result;
+
+    for (auto current : str) {
+        if (current == '"') {
+            if (inQuotes)
+                result.push_back(tmp);
+            tmp.clear();
+            inQuotes = !inQuotes;
+           continue;
+        }
+        if (!inQuotes && current == ' ') {
+            if (!tmp.empty()) {
+                result.push_back(tmp);
+                tmp.clear();
+            }
+            continue;
+        }
+        tmp.push_back(current);
+    }
+
+    if (!tmp.empty())
+        result.push_back(tmp);
+    return result;
+}
+
 
 std::vector<std::string> StringUtils::split(const std::string &str) noexcept
 {
@@ -120,5 +152,15 @@ std::string StringUtils::toString(const std::vector<std::string> &words,
     res.pop_back();
 
     return res;
+}
+
+bool StringUtils::contains(const std::string &str, const char &chr)
+{
+    for (const auto &elem: str) {
+        if (elem == chr)
+            return true;
+    }
+
+    return  false;
 }
 } // utils
