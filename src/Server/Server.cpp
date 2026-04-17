@@ -7,6 +7,10 @@
 
 #include "Server.hpp"
 
+#include <uuid/uuid.h>
+
+#include "Query.hpp"
+
 namespace my_teams {
 namespace server {
 Server::Server(const int &port): _router{port}, _db{"db"}
@@ -20,6 +24,17 @@ void Server::run()
     _router.run();
 }
 
+std::string Server::generateUuid() noexcept
+{
+    uuid_t uuid;
+    char uuidStr[37];
+
+    uuid_generate(uuid);
+    uuid_unparse(uuid, uuidStr);
+
+    return std::string{uuidStr};
+}
+
 Server::Handler Server::clientHelp(liteORM::Database &)
 {
     return [](network::Router<UserState>::Context *ctx) {
@@ -31,8 +46,22 @@ Server::Handler Server::clientHelp(liteORM::Database &)
 
 Server::Handler Server::clientLogin(liteORM::Database &database)
 {
-    User user;
-    const auto err = _db.table("users").where("username", "=", ctx->getRequest).first(user);
+    return [&database](network::Router<UserState>::Context *ctx) {
+        User user;
+        const auto err = database.table("user").where("name = ?",
+            ctx->getRequest().body.at("username")).first(user);
+        if (err) {
+            user.uuid = generateUuid();
+            user.name = ctx->getRequest().body.at("username");
+            user.createdAt = std::chrono::system_clock::now();
+            user.updatedAt = std::chrono::system_clock::now();
+        }
+        UserState &temp = ctx->getClientState();
+        temp.user = user;
+        temp.isLoggedIn = true;
+
+        ctx->jsonp(network::StatusCode::STATUS_OK, user);
+    };
 }
 } // server
 } // my_teams
