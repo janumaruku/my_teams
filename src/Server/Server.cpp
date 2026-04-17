@@ -9,46 +9,23 @@
 
 namespace my_teams {
 namespace server {
-Server::Server(const int &port): _router{port}
+Server::Server(const int &port): _router{port}, _db{"db"}
 {}
 
 void Server::run()
 {
-    _router.use([](network::Router<bool>::Context *ctx) {
-        std::cout << "ARMAGEDDON 1" << std::endl;
-        ctx->next();
-    });
-
-
-
-    _router.get("/home", {[](network::Router<bool>::Context *ctx) {
-        ctx->jsonp(network::StatusCode::STATUS_OK,
-            {{"help_message", "Help message"}});
-    }});
-    _router.post("/tebe/true", {[](network::Router<bool>::Context *ctx) {
-        ctx->jsonp(network::StatusCode::STATUS_OK,
-            {{"help_message", "Help message"}});
-    }});
-    _router.post("/tebe/false", {[](network::Router<bool>::Context *ctx) {
-        ctx->jsonp(network::StatusCode::STATUS_OK,
-            {{"help_message", "Help message"}});
-    }});
-
-
-
-    auto group = _router.group("/home");
-    group.use([](network::Router<bool>::Context *ctx) {
-        std::cout << "ARMAGEDDON 4" << std::endl;
-        ctx->next();
-    });
-    group.get("/batard/:id", {[](network::Router<bool>::Context *ctx) {
-            ctx->jsonp(network::StatusCode::STATUS_OK,
-            {{"help_message", "Help message"}});
-    }});
-
-
+    _router.get("/home", {clientHelp(_db)});
 
     _router.run();
+}
+
+Server::Handler Server::clientHelp(liteORM::Database &)
+{
+    return [](network::Router<UserState>::Context *ctx) {
+        nlohmann::json body;
+        body["message"] = "Help message";
+        ctx->jsonp(network::StatusCode::STATUS_OK, body);
+    };
 }
 } // server
 } // my_teams
