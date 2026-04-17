@@ -35,16 +35,14 @@ std::vector<std::string> StringUtils::splitQuoted(const std::string &str)
     bool inQuotes = false;
     std::string tmp;
     std::vector<std::string> result;
-    size_t quotesAmnt = 0;
 
     for (auto current : str) {
         if (current == '"') {
-            quotesAmnt++;
             if (inQuotes)
                 result.push_back(tmp);
             tmp.clear();
             inQuotes = !inQuotes;
-            continue;
+           continue;
         }
         if (!inQuotes && current == ' ') {
             if (!tmp.empty()) {
@@ -58,9 +56,6 @@ std::vector<std::string> StringUtils::splitQuoted(const std::string &str)
 
     if (!tmp.empty())
         result.push_back(tmp);
-
-    if (quotesAmnt != result.size() * 2)
-        throw std::invalid_argument("Missing quote");
     return result;
 }
 

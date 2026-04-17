@@ -6,6 +6,7 @@
 */
 
 
+#include <algorithm>
 #include <iostream>
 #include <stdexcept>
 #include <string>
@@ -60,7 +61,12 @@ void Shell::run()
         if (ShellUtils::isEmptyLine(line))
             continue;    
         try {
-            auto cmd = utils::StringUtils::splitQuoted(line);
+            std::vector<std::string> cmd;
+            auto quotesCount = std::ranges::count(line, '"');
+            if (quotesCount == 0 || quotesCount % 2 != 0)
+                cmd = utils::StringUtils::splitQuoted(line);
+            else
+                throw std::invalid_argument("");
             executeCommand(cmd);
         } catch (const shell::ShellExitException) {
             return;
