@@ -44,6 +44,22 @@ Query Table::where(const std::string &condition, const std::string &value)
     return query.where(condition, value);
 }
 
+bool Table::hasColumn(const std::string &field)
+{
+    const auto itt = std::ranges::find_if(_json.at("columns"), [field](const auto &item) {
+        return item.at("name") == field;
+    });
+
+    if (itt == _json.at("columns").end())
+        return false;
+    return true;
+}
+
+const nlohmann::json &Table::getData() const
+{
+    return _json.at("data");
+}
+
 void Table::load()
 {
     std::ifstream file{_filePath};
@@ -54,6 +70,18 @@ void Table::load()
     file >> _json;
     _name = _json.at("name").get<std::string>();
 
-    std::cout << std::setw(2) << _json << std::endl;
+    // std::cout << std::setw(2) << _json << std::endl;
+}
+
+bool Table::match(const nlohmann::json &entry)
+{
+    const auto &columns = _json.at("columns");
+
+    for (const auto &column: columns) {
+        if (!entry.contains(column.at("name")))
+            return false;
+    }
+
+    return true;
 }
 } // liteORM

@@ -17,7 +17,15 @@ std::string DBErrorCodeCategory::message(int errorValue) const
 
     switch (static_cast<DBErrorCode>(errorValue)) {
     case DBErrorCode::TABLE_NOT_FOUND:
-        return "Connection limit reached";
+        return "Table not found";
+    case DBErrorCode::INVALID_QUERY:
+        return "Invalid query";
+    case DBErrorCode::NOT_FOUND:
+        return "Resource not found";
+    case DBErrorCode::TYPE_MISMATCH:
+        return "Type mismatch";
+    case DBErrorCode::UNKNOWN_FIELD:
+        return "Unknown field";
     default:
         return "Unknown error";
     }

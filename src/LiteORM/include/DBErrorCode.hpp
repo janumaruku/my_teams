@@ -15,6 +15,9 @@
 enum class DBErrorCode : uint8_t {
     TABLE_NOT_FOUND = 1,
     INVALID_QUERY,
+    NOT_FOUND,
+    TYPE_MISMATCH,
+    UNKNOWN_FIELD,
 };
 
 template <> struct std::is_error_code_enum<DBErrorCode>: true_type {};

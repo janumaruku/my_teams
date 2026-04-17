@@ -66,7 +66,7 @@ fclean: clean
 re: fclean all
 
 debug: CXXFLAGS += -g3 -DDEBUG
-debug: re
+debug: all
 
 tests_run:
 	@echo "No test Makefile target configured yet."

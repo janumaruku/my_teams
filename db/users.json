@@ -2,7 +2,7 @@
   "name": "users",
   "columns": [
     {
-      "name": "id",
+      "name": "uuid",
       "type": "uuid"
     },
     {
@@ -18,5 +18,12 @@
       "type": "date"
     }
   ],
-  "data": []
+  "data": [
+    {
+      "uuid": "moi",
+      "name": "Janumaruku",
+      "created_at": 1234567890,
+      "updated_at": 1234567890
+    }
+  ]
 }
