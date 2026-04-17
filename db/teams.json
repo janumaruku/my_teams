@@ -1,4 +1,5 @@
 {
+  "name": "teams",
   "columns": [
     {
       "name": "id",

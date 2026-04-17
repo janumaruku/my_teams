@@ -8,10 +8,13 @@
 #include "Table.hpp"
 
 #include <fstream>
+#include <iostream>
+
+#include "Query.hpp"
 
 namespace liteORM {
-Table::Table(const std::string &name, const std::string &filePath): _filePath{
-    filePath}, _name{name}
+Table::Table(const std::string &filePath): _filePath{
+    filePath}
 {
     load();
 }
@@ -24,6 +27,23 @@ void Table::setError(const std::error_code &err)
     _error = err;
 }
 
+std::error_code Table::getError() const noexcept
+{
+    return _error;
+}
+
+const std::string & Table::getName() const noexcept
+{
+    return _name;
+}
+
+Query Table::where(const std::string &condition, const std::string &value)
+{
+    Query query{*this};
+
+    return query.where(condition, value);
+}
+
 void Table::load()
 {
     std::ifstream file{_filePath};
@@ -32,5 +52,8 @@ void Table::load()
         throw std::runtime_error{"DB: Failed to load table"};
 
     file >> _json;
+    _name = _json.at("name").get<std::string>();
+
+    std::cout << std::setw(2) << _json << std::endl;
 }
 } // liteORM

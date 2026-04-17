@@ -1,4 +1,5 @@
 {
+  "name": "messages",
   "columns": [
     {
       "name": "id",

@@ -24,6 +24,8 @@ private:
     std::string _dbPath;
     std::unordered_map<std::string, Table> _tables;
     Table _tableNotFound;
+
+    void loadDB();
 };
 
 } // liteORM

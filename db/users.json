@@ -1,4 +1,5 @@
 {
+  "name": "users",
   "columns": [
     {
       "name": "id",

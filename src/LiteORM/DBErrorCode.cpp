@@ -22,3 +22,14 @@ std::string DBErrorCodeCategory::message(int errorValue) const
         return "Unknown error";
     }
 }
+
+std::error_condition DBErrorCodeCategory::default_error_condition(
+    int errorValue) const noexcept
+{
+    return {errorValue, *this};
+}
+
+std::error_code make_error_code(DBErrorCode errCode) noexcept
+{
+    return {static_cast<int>(errCode), dbCategory()};
+}

@@ -1,4 +1,5 @@
 {
+  "name": "channels",
   "columns": [
     {
       "name": "id",

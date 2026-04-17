@@ -152,4 +152,14 @@ std::string StringUtils::toString(const std::vector<std::string> &words,
 
     return res;
 }
+
+bool StringUtils::contains(const std::string &str, const char &chr)
+{
+    for (const auto &elem: str) {
+        if (elem == chr)
+            return true;
+    }
+
+    return  false;
+}
 } // utils

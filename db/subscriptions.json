@@ -1,4 +1,5 @@
 {
+  "name": "subscriptions",
   "columns": [
     {
       "name": "id",
