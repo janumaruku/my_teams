@@ -6,36 +6,36 @@
 */
 
 #include "Client.hpp"
+
+#include <chrono>
 #include <memory>
 
 namespace my_teams::client {
 
 Client::Client(const int &port, const std::string &ipAddress): _socket{
-    _ioContext}
+    _ioContext}, _context{UNDEFINED}
 {
     network::Endpoint endPoint{port, ipAddress};
     _socket.connect(endPoint);
     _buffer.resize(1024);
 }
 
-void Client::send(const std::string &message,
-    const network::ConnectedSocket::Callback &handler) const
+void Client::send(const std::string &message) const
 {
-    _socket.write(network::buffer(message + "\r\n"), handler);
+    _socket.write(network::buffer(message + "\r\n"), [](auto, auto) {});
 }
 
 std::string Client::receive()
 {
     _transmission.clear();
 
-    // while (!_buffer.ends_with("\r\n")) {
-    //     _buffer.clear();
+    while (!_transmission.ends_with("\r\n")) {
         _socket.read(network::buffer(_buffer, _buffer.size()),
             [this](const std::error_code &, const std::size_t bytes) {
                 _transmission.insert(_transmission.end(), _buffer.begin(),
                     _buffer.begin() + bytes);
             });
-    // }
+    }
 
     if (_transmission.ends_with("\r\n")) {
         _transmission.pop_back();
@@ -45,42 +45,62 @@ std::string Client::receive()
     return _transmission;
 }
 
-void Client::help()
+const std::string &Client::getUserId() const noexcept
 {
-    std::cout << "Help" << std::endl;
+    return _userId;
 }
 
-void Client::handleWrite()
+void Client::setUserId(std::string &uuid) noexcept
 {
-    const std::string message = "One love";
-    // message += "\r\n";
-    _socket.asyncWrite(network::buffer(message),
-        [this](const std::error_code &err, auto) {
-            if (err) {
-                std::cerr << err.message() << std::endl;
-                handleWrite();
-            } else {
-                std::cout << "Message sent successfully" << std::endl;
-                handleRead();
-            }
-        });
+    _userId = uuid;
 }
 
-void Client::handleRead()
+const std::string &Client::getTeamId() const noexcept
 {
-    _buffer.resize(1024);
-
-    _socket.asyncReadSome(network::buffer(_buffer, _buffer.size()),
-        [this](const std::error_code &err, const std::size_t bytes) {
-            if (err) {
-                std::cerr << err.message() << std::endl;
-                handleRead();
-            } else {
-                _buffer.resize(bytes);
-                std::cout << "Received from server:" << std::endl;
-                std::cout << _buffer << std::endl;
-                handleWrite();
-            }
-        });
+    return _teamId;
 }
+
+void Client::setTeamId(std::string &uuid) noexcept
+{
+    _teamId = uuid;
+}
+
+void Client::setThreadId(std::string &uuid) noexcept
+{
+    _threadId = uuid;
+}
+
+const std::string &Client::getChannelId() const noexcept
+{
+    return _channelId;
+}
+
+void Client::setChannelId(std::string &uuid) noexcept
+{
+    _channelId = uuid;
+}
+
+const std::string &Client::getThreadId() const noexcept
+{
+    return _threadId;
+}
+
+void Client::setContext(CommandContextType newContext) noexcept
+{
+    _context = newContext;
+}
+
+const CommandContextType &Client::getContext() const noexcept
+{
+    return _context;
+}
+
+void Client::resetContext() noexcept
+{
+    setContext(UNDEFINED);
+    _teamId.clear();
+    _channelId.clear();
+    _threadId.clear();
+}
+
 } // my_teams

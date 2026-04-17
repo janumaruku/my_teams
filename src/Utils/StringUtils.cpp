@@ -5,11 +5,13 @@
 ** StringUtils
 */
 
-#include "StringUtils.hpp"
-
-#include <iostream>
+#include <algorithm>
+#include <regex>
 #include <limits>
 #include <sstream>
+#include <stdexcept>
+#include <exception>
+#include "StringUtils.hpp"
 
 namespace utils {
 std::string StringUtils::cleanString(const std::string &str) noexcept
@@ -27,6 +29,41 @@ std::string StringUtils::cleanString(const std::string &str) noexcept
 
     return word + remaining;
 }
+
+std::vector<std::string> StringUtils::splitQuoted(const std::string &str)
+{
+    bool inQuotes = false;
+    std::string tmp;
+    std::vector<std::string> result;
+    size_t quotesAmnt = 0;
+
+    for (auto current : str) {
+        if (current == '"') {
+            quotesAmnt++;
+            if (inQuotes)
+                result.push_back(tmp);
+            tmp.clear();
+            inQuotes = !inQuotes;
+            continue;
+        }
+        if (!inQuotes && current == ' ') {
+            if (!tmp.empty()) {
+                result.push_back(tmp);
+                tmp.clear();
+            }
+            continue;
+        }
+        tmp.push_back(current);
+    }
+
+    if (!tmp.empty())
+        result.push_back(tmp);
+
+    if (quotesAmnt != result.size() * 2)
+        throw std::invalid_argument("Missing quote");
+    return result;
+}
+
 
 std::vector<std::string> StringUtils::split(const std::string &str) noexcept
 {
