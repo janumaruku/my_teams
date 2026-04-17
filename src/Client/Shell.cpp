@@ -5,7 +5,6 @@
 ** 
 */
 
-
 #include <algorithm>
 #include <iostream>
 #include <stdexcept>
@@ -23,13 +22,13 @@ namespace my_teams::client {
 
 // using base parameters would be better to avoid duplication but the compiler refuses to move constexpr, which is normal
 
-Shell::Shell() : _name(BASE_NAME), _prompt(BASE_PROMPT)
+Shell::Shell(): _name(BASE_NAME), _prompt(BASE_PROMPT)
 {
     _shellCommandFactory.registerCreator<shell::ShellExit>(EXIT_PROMPT);
 }
 
-Shell::Shell(std::string name, std::string prompt) :
-     _name(std::move(name)),
+Shell::Shell(std::string name, std::string prompt):
+    _name(std::move(name)),
     _prompt(std::move(prompt))
 
 {
@@ -38,7 +37,7 @@ Shell::Shell(std::string name, std::string prompt) :
 
 bool Shell::executeCommand(const std::vector<std::string> &cmd)
 {
-
+    std::cout << cmd[0] << std::endl;
     try {
         std::vector<std::string> args(cmd.begin() + 1, cmd.end());
         const auto command = _shellCommandFactory.create(cmd.at(0));
@@ -59,15 +58,12 @@ void Shell::run()
             return;
         }
         if (ShellUtils::isEmptyLine(line))
-            continue;    
+            continue;
         try {
             std::vector<std::string> cmd;
-            auto quotesCount = std::ranges::count(line, '"');
-            if (quotesCount == 0 || quotesCount % 2 != 0)
-                cmd = utils::StringUtils::splitQuoted(line);
-            else
-                throw std::invalid_argument("");
+            cmd = utils::StringUtils::splitQuoted(line);
             executeCommand(cmd);
+            std::cout << cmd[0] << std::endl;
         } catch (const shell::ShellExitException) {
             return;
         } catch (const shell::ShellCommandException) {

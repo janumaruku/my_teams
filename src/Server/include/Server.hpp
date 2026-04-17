@@ -8,19 +8,34 @@
 #ifndef MY_TEAMS_SERVER_HPP
 #define MY_TEAMS_SERVER_HPP
 
+#include "Database.hpp"
 #include "Router.hpp"
 
 namespace my_teams {
 namespace server {
 
 class Server {
+    struct UserState {
+        User user;
+        bool isLoggedIn;
+    };
+
 public:
     explicit Server(const int &port);
 
     void run();
 
 private:
-    network::Router<bool> _router;
+    network::Router<UserState> _router;
+    liteORM::Database _db;
+
+    using Handler = std::function<void(network::Router<UserState>::Context *)>;
+
+    static std::string generateUuid() noexcept;
+
+    static Handler clientHelp(liteORM::Database &database);
+
+    static Handler clientLogin(liteORM::Database &database);
 };
 
 } // server
