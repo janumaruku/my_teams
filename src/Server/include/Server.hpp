@@ -36,6 +36,8 @@ private:
     static Handler clientHelp(liteORM::Database &database);
 
     static Handler clientLogin(liteORM::Database &database);
+
+    static Handler clientLogout(liteORM::Database &database);
 };
 
 } // server

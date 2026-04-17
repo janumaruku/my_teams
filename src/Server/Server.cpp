@@ -20,6 +20,7 @@ void Server::run()
 {
     _router.get("/home", {clientHelp(_db)});
     _router.post("/login", {clientLogin(_db)});
+    _router.post("/logout", {clientLogout(_db)});
 
     _router.run();
 }
@@ -61,6 +62,14 @@ Server::Handler Server::clientLogin(liteORM::Database &database)
         temp.isLoggedIn = true;
 
         ctx->jsonp(network::StatusCode::STATUS_OK, user);
+    };
+}
+
+Server::Handler Server::clientLogout(liteORM::Database &)
+{
+    return [](network::Router<UserState>::Context *ctx) {
+        ctx->getClientState().isLoggedIn = false;
+        ctx->jsonp(network::StatusCode::NO_CONTENT, {});
     };
 }
 } // server
