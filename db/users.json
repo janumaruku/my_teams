@@ -1,0 +1,29 @@
+{
+  "name": "users",
+  "columns": [
+    {
+      "name": "uuid",
+      "type": "uuid"
+    },
+    {
+      "name": "name",
+      "type": "string"
+    },
+    {
+      "name": "created_at",
+      "type": "date"
+    },
+    {
+      "name": "updated_at",
+      "type": "date"
+    }
+  ],
+  "data": [
+    {
+      "uuid": "moi",
+      "name": "Janumaruku",
+      "created_at": 1234567890,
+      "updated_at": 1234567890
+    }
+  ]
+}

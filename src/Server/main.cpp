@@ -8,7 +8,9 @@
 #include <string>
 #include "Acceptor.hpp"
 #include "Client.hpp"
+#include "Database.hpp"
 #include "IoContext.hpp"
+#include "Query.hpp"
 #include "Router.hpp"
 #include "Server.hpp"
 

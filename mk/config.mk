@@ -13,12 +13,14 @@ CPPFLAGS	=	-Isrc/Network/include \
 				-Isrc/Server/include \
 				-Isrc/Client/include \
 				-Isrc/Types			\
-				-Ilibs/myteams
+				-Ilibs/myteams \
+				-Isrc/LiteORM/include
 
 LDFLAGS		=	-L$(BUILD_DIR)/libs\
  				-lnetwork\
  				-ldesign-pattern\
  				-lutils \
+ 				-llite-orm \
 				-Llibs/myteams \
 				-lmyteams
 

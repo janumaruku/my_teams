@@ -12,7 +12,9 @@ namespace nlohmann {
 
 void adl_serializer<Timestamp>::to_json(json &j, const Timestamp &t)
 {
-    j = std::format("{:%Y/%m/%d - %H:%M:%S}", t);
+    j = std::chrono::duration_cast<std::chrono::milliseconds>(
+        t.time_since_epoch()
+    ).count();
 }
 
 void adl_serializer<Timestamp>::from_json(const json &j, Timestamp &t)

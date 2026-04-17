@@ -35,6 +35,8 @@ public:
 
     static std::string toString(const std::vector<std::string> &words,
         const char &join);
+
+    static bool contains(const std::string & str, const char &chr);
 };
 } // utils
 

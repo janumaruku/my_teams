@@ -1,0 +1,26 @@
+{
+  "name": "subscriptions",
+  "columns": [
+    {
+      "name": "id",
+      "type": "uuid"
+    },
+    {
+      "name": "team_id",
+      "type": "uuid"
+    },
+    {
+      "name": "user_id",
+      "type": "uuid"
+    },
+    {
+      "name": "created_at",
+      "type": "date"
+    },
+    {
+      "name": "updated_at",
+      "type": "date"
+    }
+  ],
+  "data": []
+}
